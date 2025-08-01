@@ -1,7 +1,10 @@
-// src/api/apiService.js - Complete and Fixed Version
+// src/api/apiService.js - Updated for production
 
-const API_BASE_URL = 'https://bwc-portal-backend-production-1234.railway.app';
+// In src/api/apiService.js
+const API_BASE_URL = 'https://bwc-portal-backend.onrender.com';
+//const API_BASE_URL = 'http://localhost:8000'; // Uncomment for local development
 
+// Helper function to make API calls
 const callApi = async (endpoint, method = 'GET', data = null, token = null) => {
     const url = `${API_BASE_URL}${endpoint}`;
     const headers = {
