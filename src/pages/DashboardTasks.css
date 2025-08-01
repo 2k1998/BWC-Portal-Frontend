@@ -1,0 +1,246 @@
+/* src/pages/DashboardTasks.css - Updated to match Contacts page aesthetic */
+
+/* Main grid container for the entire dashboard layout */
+.dashboard-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    align-items: stretch;
+}
+
+/* Base styling for the task category cards */
+.task-category-card {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-light, #e2e8f0);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.task-category-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.task-category-card h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-gray-light, #e2e8f0);
+    text-align: left;
+    color: var(--color-black, #333);
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.task-category-card p {
+    text-align: center;
+    color: var(--color-gray-dark, #666);
+    font-size: 1em;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: var(--color-gray-light, #f8f9fa);
+    border-radius: 6px;
+    border: 2px dashed var(--color-gray-medium, #ddd);
+    margin: 0;
+}
+
+/* Styling for the list within each card */
+.task-category-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.task-category-list-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--color-gray-light, #e2e8f0);
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.task-category-list-item:hover {
+    background-color: rgba(184, 134, 11, 0.05);
+    transform: translateX(2px);
+    border-color: var(--color-gold-primary, #b8860b);
+}
+
+.task-category-list-item:last-child {
+    border-bottom: none;
+}
+
+.task-category-title {
+    font-weight: 600;
+    color: var(--color-black, #333);
+    margin-bottom: 3px;
+    font-size: 0.95em;
+}
+
+.task-category-deadline {
+    font-style: italic;
+    color: var(--color-gray-dark, #666);
+    font-size: 0.85em;
+}
+
+/* Color-coded border classes with enhanced styling */
+.task-category-card.red-category {
+    border-left: 4px solid #e53e3e;
+}
+
+.task-category-card.red-category h3 {
+    color: #e53e3e;
+}
+
+.task-category-card.red-category:hover {
+    border-color: #e53e3e;
+}
+
+.task-category-card.blue-category {
+    border-left: 4px solid #3182ce;
+}
+
+.task-category-card.blue-category h3 {
+    color: #3182ce;
+}
+
+.task-category-card.blue-category:hover {
+    border-color: #3182ce;
+}
+
+.task-category-card.green-category {
+    border-left: 4px solid #38a169;
+}
+
+.task-category-card.green-category h3 {
+    color: #38a169;
+}
+
+.task-category-card.green-category:hover {
+    border-color: #38a169;
+}
+
+.task-category-card.yellow-category {
+    border-left: 4px solid #d69e2e;
+}
+
+.task-category-card.yellow-category h3 {
+    color: #d69e2e;
+}
+
+.task-category-card.yellow-category:hover {
+    border-color: #d69e2e;
+}
+
+.task-category-card.orange-category {
+    border-left: 4px solid #dd6b20;
+}
+
+.task-category-card.orange-category h3 {
+    color: #dd6b20;
+}
+
+.task-category-card.orange-category:hover {
+    border-color: #dd6b20;
+}
+
+/* Styling for the calendar wrapper within the grid */
+.dashboard-calendar-wrapper {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-light, #e2e8f0);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.dashboard-calendar-wrapper:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border-color: var(--color-gold-primary, #b8860b);
+}
+
+/* Enhanced clickable card styling */
+.clickable-card {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.clickable-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Add task count badges */
+.task-count-badge {
+    background: linear-gradient(135deg, var(--color-gold-primary, #b8860b) 0%, var(--color-gold-accent, #daa520) 100%);
+    color: var(--color-black, #333);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: auto;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Enhanced styling for task categories with count */
+.task-category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--color-gray-light, #e2e8f0);
+}
+
+/* Priority indicators for tasks */
+.task-priority-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+}
+
+.task-priority-indicator.high {
+    background: #e53e3e;
+}
+
+.task-priority-indicator.medium {
+    background: #ed8936;
+}
+
+.task-priority-indicator.low {
+    background: #38a169;
+}
+
+/* Responsive design */
+@media (max-width: 900px) {
+    .dashboard-grid-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .task-category-card {
+        padding: 15px;
+    }
+    
+    .task-category-list-item {
+        padding: 10px 12px;
+    }
+    
+    .dashboard-calendar-wrapper {
+        padding: 15px;
+    }
+}

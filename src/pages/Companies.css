@@ -1,0 +1,233 @@
+/* src/pages/Companies.css - Updated to match Contacts page aesthetic */
+.companies-container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 30px auto;
+    padding: 25px;
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-default, 8px);
+    box-shadow: var(--box-shadow-default, 0 2px 10px rgba(0,0,0,0.1));
+}
+
+.companies-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--color-gold-primary, #b8860b);
+}
+
+.companies-header h1 {
+    margin: 0;
+    color: var(--color-black, #333);
+    font-size: 2em;
+}
+
+/* Styled Add Company Button */
+.add-company-button {
+    background: linear-gradient(135deg, var(--color-gold-primary, #b8860b) 0%, var(--color-gold-accent, #daa520) 100%);
+    color: var(--color-black, #333);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+}
+
+.add-company-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+    background: linear-gradient(135deg, var(--color-gold-accent, #daa520) 0%, var(--color-gold-primary, #b8860b) 100%);
+}
+
+.companies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.no-companies {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--color-gray-dark, #666);
+    font-size: 1.1em;
+    padding: 60px 20px;
+    background: var(--color-gray-light, #f8f9fa);
+    border-radius: 8px;
+    border: 2px dashed var(--color-gray-medium, #ddd);
+}
+
+.no-companies h3 {
+    margin-bottom: 10px;
+    color: var(--color-black, #333);
+}
+
+.company-card {
+    background: white;
+    border: 1px solid var(--color-gray-light, #e2e8f0);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.company-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border-color: var(--color-gold-primary, #b8860b);
+}
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-gray-light, #e2e8f0);
+}
+
+.company-header h3 {
+    margin: 0;
+    color: var(--color-black, #333);
+    font-size: 1.3em;
+}
+
+.company-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+/* Company Action Buttons */
+.view-btn, .edit-btn, .delete-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.view-btn {
+    background: linear-gradient(135deg, var(--color-gold-primary, #b8860b) 0%, var(--color-gold-accent, #daa520) 100%);
+    color: var(--color-black, #333);
+}
+
+.view-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+    color: white;
+}
+
+.edit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(49, 130, 206, 0.3);
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: white;
+}
+
+.delete-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+}
+
+.company-details {
+    color: var(--color-gray-dark, #666);
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+.company-details p {
+    margin: 5px 0;
+    font-size: 0.95em;
+}
+
+.company-details strong {
+    color: var(--color-black, #333);
+}
+
+.company-stats {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--color-gray-light, #e2e8f0);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    text-align: center;
+}
+
+.stat-item {
+    padding: 8px;
+    background: var(--color-gray-light, #f8f9fa);
+    border-radius: 4px;
+}
+
+.stat-number {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--color-gold-primary, #b8860b);
+}
+
+.stat-label {
+    font-size: 0.8em;
+    color: var(--color-gray-dark, #666);
+    text-transform: uppercase;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 1.2em;
+    color: var(--color-gold-primary, #b8860b);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .companies-container {
+        width: 95%;
+        margin: 15px auto;
+        padding: 15px;
+    }
+    
+    .companies-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .companies-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .company-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .company-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

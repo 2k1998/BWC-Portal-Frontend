@@ -1,0 +1,177 @@
+/* src/components/Header.css */
+.app-header {
+    background-color: var(--color-black);
+    padding: 15px 30px;
+    color: var(--color-white);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1050;
+}
+
+.app-header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1800px; /* Allow it to be wider */
+    margin: 0 auto;
+}
+
+/* --- NEW: Left and Right Containers --- */
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.main-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-left: 25px; /* Space between title and links */
+}
+
+.app-title {
+    color: var(--color-gold-accent);
+    text-decoration: none;
+    font-size: 1.8em;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    flex-shrink: 0; /* Prevent the title from shrinking */
+}
+
+.app-title:hover {
+    color: var(--color-gold-primary);
+}
+
+.nav-links a, .main-nav-links a, .nav-right a {
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+    padding: 5px 0;
+}
+
+.nav-links a:hover, .main-nav-links a:hover, .nav-right a:hover {
+    color: var(--color-gold-primary);
+}
+
+/* --- Dropdown Styles (largely unchanged) --- */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    color: var(--color-white);
+    font-family: inherit;
+    font-size: 1.1em;
+    cursor: pointer;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+}
+
+.dropdown:hover .dropdown-toggle {
+    color: var(--color-gold-primary);
+}
+
+.profile-toggle {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between name and avatar */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-default);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    border: 1px solid var(--color-gray-medium);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu a, .dropdown-menu button {
+    color: var(--color-black);
+    padding: 10px 20px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    font-weight: normal;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+    background-color: var(--color-gray-light);
+    color: var(--color-gold-primary);
+}
+
+.logout-button-dropdown {
+    color: var(--color-error) !important;
+    font-weight: bold !important;
+}
+
+.dropdown-divider {
+    height: 1px;
+    margin: 8px 0;
+    overflow: hidden;
+    background-color: #e9ecef;
+}
+
+/* --- Profile Picture and Language Selector Styles --- */
+.header-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--color-gold-accent);
+    background-color: var(--color-gray-dark);
+}
+
+.flag-icon {
+    width: 32px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+    font-size: 1.5rem; /* Make the flag in the nav bar larger */
+}
+
+.flag-icon-small {
+    width: 24px;
+    height: auto;
+    border-radius: 3px;
+}
+
+.language-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.language-select-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+

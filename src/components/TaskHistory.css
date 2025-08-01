@@ -1,0 +1,40 @@
+.task-history-container {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-gray-medium);
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 1rem;
+}
+
+.history-item {
+    padding: 1rem;
+    border-radius: var(--border-radius-small);
+    background-color: #f9f9f9;
+    margin-bottom: 0.75rem;
+}
+
+.history-details {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.9em;
+}
+
+.history-timestamp {
+    color: #666;
+    font-size: 0.9em;
+    margin-left: auto;
+}
+
+.history-comment {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--color-gold-primary);
+    font-style: italic;
+    white-space: pre-wrap;
+}

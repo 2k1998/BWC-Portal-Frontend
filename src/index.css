@@ -1,0 +1,567 @@
+:root {
+  /* BWC Colors */
+  --color-black: #1a1a1a; /* A soft black for backgrounds/text */
+  --color-white: #ffffff;
+  --color-gold-primary: #b8860b; /* DarkGoldenrod - a classic gold */
+  --color-gold-accent: #ffd700; /* Gold - brighter for highlights */
+  --color-gold-text: #a1700b; /* A darker gold for readability on light backgrounds */
+  --color-gray-light: #f0f0f0;
+  --color-gray-medium: #ccc;
+  --color-gray-dark: #666;
+
+  /* Semantic Colors (reusing BWC palette or standard web colors) */
+  --color-success: #28a745; /* Green for success */
+  --color-error: #dc3545;   /* Red for error */
+  --color-info: #17a2b8;    /* Blue for info */
+  --color-warning: #ffc107; /* Orange for warning */
+
+  /* --- NEW: Specific colors for task badges if different from semantic --- */
+  --badge-color-blue: #007bff;   /* For Urgent only */
+  --badge-color-green: #28a745;  /* For Important only */
+  --badge-color-yellow: #ffc107; /* For Not Urgent/Not Important */
+  --badge-color-orange: #fd7e14; /* For All Day Deadline */
+  /* --- END NEW --- */
+
+  /* Other global variables */
+  --border-radius-default: 8px;
+  --box-shadow-default: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --font-family-primary: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-gray-light); /* Light gray background for the whole page */
+  color: var(--color-black); /* Default text color */
+  line-height: 1.6;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-black); /* Default heading color */
+  margin-top: 0;
+  margin-bottom: 0.5em;
+}
+
+a {
+  color: var(--color-gold-primary); /* Default link color */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: var(--font-family-primary);
+}
+
+/* Styling for the react-datepicker input field to match other form inputs */
+.custom-datepicker-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--color-gray-medium);
+  border-radius: 5px;
+  font-size: 1em;
+  box-sizing: border-box;
+  color: var(--color-black);
+  background-color: var(--color-white);
+  font-family: inherit;
+}
+
+.custom-datepicker-input:focus {
+  outline: none;
+  border-color: var(--color-gold-primary);
+  box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2);
+}
+/* Add this to the bottom of your existing index.css file */
+
+/* ======================
+   GLOBAL BUTTON STYLES - BWC Portal Theme
+   ====================== */
+
+/* PRIMARY BUTTONS */
+.btn-primary,
+button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-warning),
+.add-company-button,
+.add-contact-btn,
+.add-task-btn,
+.create-btn,
+.submit-btn,
+.save-btn,
+.add-car-btn,
+.create-rental-btn,
+.add-event-btn,
+.register-btn,
+.login-btn,
+.upload-button {
+    background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-accent) 100%);
+    color: var(--color-black);
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-default);
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary:hover,
+button[type="submit"]:not(.btn-secondary):not(.btn-danger):not(.btn-warning):hover,
+.add-company-button:hover,
+.add-contact-btn:hover,
+.add-task-btn:hover,
+.create-btn:hover,
+.submit-btn:hover,
+.save-btn:hover,
+.add-car-btn:hover,
+.create-rental-btn:hover,
+.add-event-btn:hover,
+.register-btn:hover,
+.login-btn:hover,
+.upload-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+    background: linear-gradient(135deg, var(--color-gold-accent) 0%, var(--color-gold-primary) 100%);
+}
+
+/* SECONDARY BUTTONS */
+.btn-secondary,
+.cancel-btn,
+.back-btn,
+.back-button,
+.csv-upload-btn,
+.modal-cancel-button,
+.close-btn {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-default);
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(74, 85, 104, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-secondary:hover,
+.cancel-btn:hover,
+.back-btn:hover,
+.back-button:hover,
+.csv-upload-btn:hover,
+.modal-cancel-button:hover,
+.close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 85, 104, 0.4);
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+}
+
+/* SUCCESS BUTTONS */
+.btn-success,
+.confirm-btn,
+.mark-complete,
+.add-to-daily-btn,
+.modal-confirm-button,
+.finalize-return {
+    background: linear-gradient(135deg, var(--color-success) 0%, #1e7e34 100%);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: var(--border-radius-default);
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    text-align: center;
+}
+
+.btn-success:hover,
+.confirm-btn:hover,
+.mark-complete:hover,
+.add-to-daily-btn:hover,
+.modal-confirm-button:hover,
+.finalize-return:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+/* DANGER BUTTONS */
+.btn-danger,
+.delete-btn,
+.delete-button,
+.remove-btn,
+.mark-incomplete {
+    background: linear-gradient(135deg, var(--color-error) 0%, #a71e2a 100%);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: var(--border-radius-default);
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+    text-align: center;
+}
+
+.btn-danger:hover,
+.delete-btn:hover,
+.delete-button:hover,
+.remove-btn:hover,
+.mark-incomplete:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+/* INFO BUTTONS */
+.btn-info,
+.edit-btn,
+.edit-button,
+.view-btn {
+    background: linear-gradient(135deg, var(--color-info) 0%, #117a8b 100%);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: var(--border-radius-default);
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+    text-align: center;
+}
+
+.btn-info:hover,
+.edit-btn:hover,
+.edit-button:hover,
+.view-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
+/* TAB BUTTONS */
+.tab-btn {
+    background: none;
+    color: var(--color-gray-dark);
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    padding: 12px 24px;
+    margin-right: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab-btn.active {
+    color: var(--color-gold-primary);
+    border-bottom-color: var(--color-gold-primary);
+    background-color: rgba(184, 134, 11, 0.1);
+}
+
+.tab-btn:hover:not(.active) {
+    color: var(--color-gold-accent);
+    background-color: rgba(184, 134, 11, 0.05);
+}
+
+/* DISABLED STATES */
+button:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+/* FOCUS STATES */
+button:focus {
+    outline: 2px solid var(--color-gold-primary);
+    outline-offset: 2px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .btn-primary,
+    .btn-secondary,
+    .btn-success,
+    .btn-danger,
+    .btn-info,
+    button[type="submit"] {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 12px 16px;
+    }
+}/* Additional CSS to add to your index.css file - for the missing buttons */
+
+/* ======================
+   MISSING BUTTON STYLES
+   ====================== */
+
+/* Tasks Page - "Δημιουργία Νέας Εργασίας" button */
+.hide-create-task-form,
+.show-create-task-form,
+.create-task-toggle,
+.toggle-task-form {
+    background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-accent) 100%);
+    color: var(--color-black);
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-default);
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.hide-create-task-form:hover,
+.show-create-task-form:hover,
+.create-task-toggle:hover,
+.toggle-task-form:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+    background: linear-gradient(135deg, var(--color-gold-accent) 0%, var(--color-gold-primary) 100%);
+}
+
+/* Users Page - Search button */
+.search-button,
+.search-btn,
+input[type="submit"][value*="ναζήτηση"],
+input[type="submit"][value*="Search"],
+button[type="submit"]:contains("Αναζήτηση") {
+    background: linear-gradient(135deg, var(--color-info) 0%, #117a8b 100%);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: var(--border-radius-default);
+    font-size: 0.95em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+    text-align: center;
+}
+
+.search-button:hover,
+.search-btn:hover,
+input[type="submit"][value*="ναζήτηση"]:hover,
+input[type="submit"][value*="Search"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
+/* Admin Panel - Action buttons in table */
+select[name*="role"],
+.role-dropdown,
+.status-dropdown {
+    padding: 6px 10px;
+    border: 1px solid var(--color-gray-medium);
+    border-radius: 4px;
+    background-color: white;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+select[name*="role"]:focus,
+.role-dropdown:focus,
+.status-dropdown:focus {
+    outline: none;
+    border-color: var(--color-gold-primary);
+    box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2);
+}
+
+/* Admin Panel - Table action buttons */
+.table-action-btn,
+td button,
+.action-buttons button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 2px;
+}
+
+/* Specific styling for different action types */
+.table-action-btn[style*="yellow"],
+.table-action-btn[style*="orange"],
+button[style*="background-color: orange"],
+button[style*="background: orange"] {
+    background: linear-gradient(135deg, var(--color-warning) 0%, #b7791f 100%) !important;
+    color: var(--color-black) !important;
+}
+
+.table-action-btn[style*="red"],
+button[style*="background-color: red"],
+button[style*="background: red"] {
+    background: linear-gradient(135deg, var(--color-error) 0%, #a71e2a 100%) !important;
+    color: white !important;
+}
+
+/* Calendar navigation buttons */
+.rbc-btn,
+.rbc-btn-group button,
+.calendar-nav-btn,
+.react-calendar__navigation button {
+    background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-accent) 100%);
+    color: var(--color-black);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(184, 134, 11, 0.3);
+}
+
+.rbc-btn:hover,
+.rbc-btn-group button:hover,
+.calendar-nav-btn:hover,
+.react-calendar__navigation button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(184, 134, 11, 0.4);
+    background: linear-gradient(135deg, var(--color-gold-accent) 0%, var(--color-gold-primary) 100%);
+}
+
+/* Calendar view buttons (Month/Week/Day) */
+.rbc-btn-group .rbc-active,
+.calendar-view-active {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%) !important;
+    color: white !important;
+}
+
+/* Calendar "Today" button */
+.rbc-btn-group button:first-child,
+.today-btn {
+    background: linear-gradient(135deg, var(--color-info) 0%, #117a8b 100%);
+    color: white;
+}
+
+/* Small calendar month/year navigation */
+.react-calendar__navigation__arrow,
+.calendar-arrow {
+    background: none !important;
+    color: var(--color-gold-primary) !important;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.react-calendar__navigation__arrow:hover,
+.calendar-arrow:hover {
+    background: rgba(184, 134, 11, 0.1) !important;
+    transform: scale(1.1);
+}
+
+/* Calendar month buttons (Μήνας, Εβδομάδα, etc.) */
+.react-calendar__viewType-button,
+.calendar-view-btn {
+    background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-accent) 100%) !important;
+    color: var(--color-black) !important;
+    border: none !important;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin: 0 2px;
+    transition: all 0.3s ease;
+}
+
+.react-calendar__viewType-button:hover,
+.calendar-view-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(184, 134, 11, 0.4);
+}
+
+/* Override any inline styles that might be interfering */
+button[style] {
+    background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-accent) 100%) !important;
+    color: var(--color-black) !important;
+    border: none !important;
+    padding: 8px 16px !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+}
+
+button[style]:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(184, 134, 11, 0.4) !important;
+    background: linear-gradient(135deg, var(--color-gold-accent) 0%, var(--color-gold-primary) 100%) !important;
+}
+
+/* Specific overrides for colored buttons that should keep their colors */
+button[style*="red"]:not(:hover),
+button[style*="danger"]:not(:hover) {
+    background: linear-gradient(135deg, var(--color-error) 0%, #a71e2a 100%) !important;
+    color: white !important;
+}
+
+button[style*="green"]:not(:hover),
+button[style*="success"]:not(:hover) {
+    background: linear-gradient(135deg, var(--color-success) 0%, #1e7e34 100%) !important;
+    color: white !important;
+}
+
+button[style*="blue"]:not(:hover),
+button[style*="info"]:not(:hover) {
+    background: linear-gradient(135deg, var(--color-info) 0%, #117a8b 100%) !important;
+    color: white !important;
+}
+
+/* Make sure text inputs and selects don't get button styling */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+select,
+textarea {
+    background: white !important;
+    color: var(--color-black) !important;
+    border: 1px solid var(--color-gray-medium) !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    font-weight: normal !important;
+    transition: border-color 0.3s ease !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="search"]:focus,
+select:focus,
+textarea:focus {
+    outline: none !important;
+    border-color: var(--color-gold-primary) !important;
+    box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2) !important;
+    transform: none !important;
+}

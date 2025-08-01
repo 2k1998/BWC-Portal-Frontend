@@ -1,0 +1,50 @@
+/* src/components/LanguageModal.css */
+.language-modal-content {
+    background: var(--color-white);
+    padding: 30px;
+    border-radius: var(--border-radius-default);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    border-top: 5px solid var(--color-gold-primary);
+}
+
+.language-modal-header h2 {
+    margin: 0 0 25px 0;
+    color: var(--color-black);
+    font-size: 1.6em;
+}
+
+.language-modal-body {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.language-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    border: 2px solid var(--color-gray-medium);
+    border-radius: var(--border-radius-default);
+    background-color: var(--color-gray-light);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1.1em;
+    font-weight: bold;
+    flex: 1;
+}
+
+.language-button:hover {
+    transform: translateY(-5px);
+    border-color: var(--color-gold-primary);
+    box-shadow: var(--box-shadow-default);
+}
+
+.flag-icon {
+    font-size: 3rem;
+    line-height: 1;
+}
