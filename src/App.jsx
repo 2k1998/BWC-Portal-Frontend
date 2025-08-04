@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import 'react-datepicker/dist/react-datepicker.css';
 
 import './App.css'
+import ErrorBoundary from './components/ErrorBoundary'; // Add this import
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -24,90 +25,201 @@ import EventsPage from './pages/EventsPage';
 import { LanguageProvider } from './context/LanguageContext';
 import EditCompanyPage from './pages/EditCompanyPage';
 import ReportsPage from './pages/ReportsPage';
-import ContactsPage from './pages/ContactsPage'; // Make sure this is imported
-import DailyCallsPage from './pages/DailyCallsPage'; // <-- Add this import
-import { CallNotificationProvider } from './context/CallNotificationContext'; // <-- IMPORT NEW PROVIDER
-import CallNotificationModal from './components/CallNotificationModal'; // <-- IMPORT NEW MODAL
+import ContactsPage from './pages/ContactsPage';
+import DailyCallsPage from './pages/DailyCallsPage';
+import { CallNotificationProvider } from './context/CallNotificationContext';
+import CallNotificationModal from './components/CallNotificationModal';
 
-// This component now correctly uses the context because it will be rendered INSIDE AuthProvider
+// Updated PrivateRoute with better error handling
 const PrivateRoute = ({ children }) => {
-  const { currentUser, loading } = useAuth();
+  const { currentUser, loading, initializationComplete } = useAuth();
 
-  if (loading) {
-    return <div className="loading-spinner">Authenticating...</div>;
+  // Show loading spinner during initialization
+  if (!initializationComplete || loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        <div>🔄 Loading...</div>
+      </div>
+    );
   }
 
-  return currentUser ? children : <Navigate to="/login" />;
+  return currentUser ? children : <Navigate to="/login" replace />;
 };
 
-// This component also correctly uses the context
+// Updated PublicOnlyRoute with better error handling
 const PublicOnlyRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
-  if (loading) {
-    return <div className="loading-spinner">Loading...</div>;
+  const { isAuthenticated, loading, initializationComplete } = useAuth();
+  
+  // Show loading spinner during initialization
+  if (!initializationComplete || loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        <div>🔄 Loading...</div>
+      </div>
+    );
   }
-  return !isAuthenticated ? children : <Navigate to="/dashboard" />;
+  
+  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
 };
 
-// This new component contains the part of your app that needs the auth context
+// AppContent with error boundary around critical components
 function AppContent() {
   return (
     <>
-      <Header />
-      <CallNotificationModal /> {/* <-- RENDER THE MODAL HERE */}
+      <ErrorBoundary>
+        <Header />
+      </ErrorBoundary>
+      
+      <ErrorBoundary>
+        <CallNotificationModal />
+      </ErrorBoundary>
+      
       <main>
         <Routes>
-          <Route path="/login" element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
-          <Route path="/forgot-password" element={<PublicOnlyRoute><ForgotPasswordPage /></PublicOnlyRoute>} />
-          <Route path="/register" element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
+          <Route path="/login" element={
+            <ErrorBoundary>
+              <PublicOnlyRoute><LoginPage /></PublicOnlyRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/forgot-password" element={
+            <ErrorBoundary>
+              <PublicOnlyRoute><ForgotPasswordPage /></PublicOnlyRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/register" element={
+            <ErrorBoundary>
+              <PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>
+            </ErrorBoundary>
+          } />
           
-          {/* Protected Routes */}
-          <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-          <Route path="/tasks" element={<PrivateRoute><TasksPage /></PrivateRoute>} />
-          <Route path="/contacts" element={<PrivateRoute><ContactsPage /></PrivateRoute>} />
-          <Route path="/daily-calls" element={<PrivateRoute><DailyCallsPage /></PrivateRoute>} />
-          <Route path="/groups" element={<PrivateRoute><GroupsPage /></PrivateRoute>} />
-          <Route path="/groups/:groupId" element={<PrivateRoute><GroupDetailPage /></PrivateRoute>} />
-          <Route path="/users" element={<PrivateRoute><UsersPage /></PrivateRoute>} />
-          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-          <Route path="/admin-panel" element={<PrivateRoute><AdminPanelPage /></PrivateRoute>} />
-          <Route path="/companies" element={<PrivateRoute><CompaniesPage /></PrivateRoute>} />
-          <Route path="/companies/new" element={<PrivateRoute><NewCompanyPage /></PrivateRoute>} />
-          <Route path="/companies/:companyId" element={<PrivateRoute><CompanyDetailPage /></PrivateRoute>} />
-          <Route path="/companies/edit/:companyId" element={<PrivateRoute><EditCompanyPage /></PrivateRoute>} />
-          <Route path="/events" element={<PrivateRoute><EventsPage /></PrivateRoute>} />
-          <Route path="/events/new" element={<PrivateRoute><AddEventPage /></PrivateRoute>} />
-          <Route path="/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
+          {/* Protected Routes with Error Boundaries */}
+          <Route path="/dashboard" element={
+            <ErrorBoundary>
+              <PrivateRoute><DashboardPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/tasks" element={
+            <ErrorBoundary>
+              <PrivateRoute><TasksPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/contacts" element={
+            <ErrorBoundary>
+              <PrivateRoute><ContactsPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/daily-calls" element={
+            <ErrorBoundary>
+              <PrivateRoute><DailyCallsPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/groups" element={
+            <ErrorBoundary>
+              <PrivateRoute><GroupsPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/groups/:groupId" element={
+            <ErrorBoundary>
+              <PrivateRoute><GroupDetailPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/users" element={
+            <ErrorBoundary>
+              <PrivateRoute><UsersPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/profile" element={
+            <ErrorBoundary>
+              <PrivateRoute><ProfilePage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/admin-panel" element={
+            <ErrorBoundary>
+              <PrivateRoute><AdminPanelPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/companies" element={
+            <ErrorBoundary>
+              <PrivateRoute><CompaniesPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/companies/new" element={
+            <ErrorBoundary>
+              <PrivateRoute><NewCompanyPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/companies/:companyId" element={
+            <ErrorBoundary>
+              <PrivateRoute><CompanyDetailPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/companies/edit/:companyId" element={
+            <ErrorBoundary>
+              <PrivateRoute><EditCompanyPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/events" element={
+            <ErrorBoundary>
+              <PrivateRoute><EventsPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/events/new" element={
+            <ErrorBoundary>
+              <PrivateRoute><AddEventPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
+          <Route path="/reports" element={
+            <ErrorBoundary>
+              <PrivateRoute><ReportsPage /></PrivateRoute>
+            </ErrorBoundary>
+          } />
           
           {/* Redirects and Catch-all */}
-          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={
             <div style={{ textAlign: 'center', marginTop: '50px' }}>
               <h2>404 - Page Not Found</h2>
+              <p><a href="/dashboard">Go to Dashboard</a></p>
             </div>
           } />
         </Routes>
       </main>
-      <NotificationContainer />
+      
+      <ErrorBoundary>
+        <NotificationContainer />
+      </ErrorBoundary>
     </>
   );
 }
 
-// The main App component now sets up all the providers
+// Main App component with all providers and top-level error boundary
 function App() {
   return (
-    <Router>
-      <NotificationProvider>
-        <AuthProvider>
-          <LanguageProvider>
-            {/* --- WRAP AppContent WITH THE NEW PROVIDER --- */}
-            <CallNotificationProvider>
-              <AppContent />
-            </CallNotificationProvider>
-          </LanguageProvider>
-        </AuthProvider>
-      </NotificationProvider>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <NotificationProvider>
+          <AuthProvider>
+            <LanguageProvider>
+              <CallNotificationProvider>
+                <AppContent />
+              </CallNotificationProvider>
+            </LanguageProvider>
+          </AuthProvider>
+        </NotificationProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 
