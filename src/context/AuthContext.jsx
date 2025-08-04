@@ -15,65 +15,88 @@ export const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(localStorage.getItem('accessToken'));
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [initializationComplete, setInitializationComplete] = useState(false);
 
     const fetchCurrentUser = useCallback(async (token) => {
         if (!token) {
             setCurrentUser(null);
-            setLoading(false);
             return null;
         }
+        
         try {
             const user = await authApi.getMe(token);
             setCurrentUser(user);
             return user;
         } catch (error) {
             console.error('AuthContext: Failed to fetch current user.', error);
-            // If fetching the user fails, log them out completely.
-            localStorage.removeItem('accessToken');
-            setAccessToken(null);
-            setCurrentUser(null);
-            throw error; // Re-throw the error so the calling function knows it failed.
+            
+            // Only clear auth if it's a 401 error (invalid token)
+            if (error.message && (error.message.includes('401') || error.message.includes('Unauthorized'))) {
+                console.log('Token invalid, clearing authentication');
+                localStorage.removeItem('accessToken');
+                setAccessToken(null);
+                setCurrentUser(null);
+            }
+            
+            throw error;
         }
     }, []);
 
     useEffect(() => {
         const bootstrapAuth = async () => {
+            console.log('🔄 AuthContext: Bootstrapping authentication...');
             setLoading(true);
+            
             const token = localStorage.getItem('accessToken');
+            
             if (token) {
-                await fetchCurrentUser(token).catch(() => {
-                    // Catch errors on initial load, user will be logged out.
-                });
+                try {
+                    console.log('🔑 AuthContext: Found existing token, validating...');
+                    await fetchCurrentUser(token);
+                    console.log('✅ AuthContext: Token valid, user authenticated');
+                } catch (error) {
+                    console.log('❌ AuthContext: Token validation failed, user will need to login');
+                    // Error already handled in fetchCurrentUser
+                }
+            } else {
+                console.log('🚫 AuthContext: No token found, user not authenticated');
             }
+            
             setLoading(false);
+            setInitializationComplete(true);
+            console.log('✅ AuthContext: Initialization complete');
         };
+        
         bootstrapAuth();
     }, [fetchCurrentUser]);
     
-    // --- THIS IS THE CORRECTED LOGIN FUNCTION ---
     const login = async (email, password) => {
-        // 1. Set global loading state to true at the very beginning.
+        console.log('🔐 AuthContext: Attempting login...');
         setLoading(true);
+        
         try {
-            // 2. Get the token from the API.
+            // 1. Get the token from the API
             const data = await authApi.login(email, password);
+            console.log('✅ AuthContext: Login successful, storing token...');
+            
             localStorage.setItem('accessToken', data.access_token);
             setAccessToken(data.access_token);
 
-            // 3. Directly fetch the user data and wait for it to complete.
+            // 2. Fetch user data with the new token
             await fetchCurrentUser(data.access_token);
+            console.log('✅ AuthContext: User data loaded successfully');
             
         } catch (error) {
-            // 4. If anything fails, ensure loading is off and re-throw the error.
+            console.error('❌ AuthContext: Login failed:', error);
             setLoading(false);
             throw error;
         } finally {
-            // 5. Ensure loading is always set to false when the process is complete.
             setLoading(false);
         }
     };
 
     const logout = () => {
+        console.log('🚪 AuthContext: Logging out...');
         localStorage.removeItem('accessToken');
         setAccessToken(null);
         setCurrentUser(null);
@@ -81,9 +104,10 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         accessToken,
-        isAuthenticated: !!currentUser, // isAuthenticated is now derived directly from currentUser
+        isAuthenticated: !!currentUser && !!accessToken,
         currentUser,
         loading,
+        initializationComplete, // New flag to indicate auth system is ready
         login,
         logout,
         refreshCurrentUser: () => fetchCurrentUser(accessToken),
@@ -94,5 +118,6 @@ export const AuthProvider = ({ children }) => {
             {children}
         </AuthContext.Provider>
     );
-}; 
+};
 export default AuthContext;
+
