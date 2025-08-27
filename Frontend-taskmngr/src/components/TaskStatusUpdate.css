@@ -1,0 +1,232 @@
+/* src/components/TaskStatusUpdate.css */
+.task-status-update {
+    background: white;
+    border: 1px solid var(--color-gray-light, #e2e8f0);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.current-status h4 {
+    margin: 0 0 15px 0;
+    color: var(--color-black, #333);
+    font-size: 1.1em;
+}
+
+.status-display {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.status-badge {
+    color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.large {
+    padding: 8px 16px;
+    font-size: 0.9em;
+}
+
+.status-meta {
+    color: var(--color-gray-dark, #666);
+    font-size: 0.85em;
+}
+
+.status-comments {
+    background: var(--color-gray-light, #f8f9fa);
+    border-left: 4px solid var(--color-gold-primary, #b8860b);
+    padding: 12px 15px;
+    margin-top: 15px;
+    border-radius: 4px;
+}
+
+.status-comments strong {
+    color: var(--color-black, #333);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.status-comments p {
+    margin: 0;
+    color: var(--color-gray-dark, #666);
+    line-height: 1.5;
+}
+
+/* Status Update Section */
+.status-update-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-gray-light, #e2e8f0);
+}
+
+.update-status-btn {
+    background: linear-gradient(135deg, var(--color-gold-primary, #b8860b) 0%, var(--color-gold-accent, #daa520) 100%);
+    color: var(--color-black, #333);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+}
+
+.update-status-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+    background: linear-gradient(135deg, var(--color-gold-accent, #daa520) 0%, var(--color-gold-primary, #b8860b) 100%);
+}
+
+/* Status Form */
+.status-form {
+    background: var(--color-gray-light, #f8f9fa);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.status-form h4 {
+    margin: 0 0 20px 0;
+    color: var(--color-black, #333);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-black, #333);
+    font-weight: 600;
+}
+
+.required {
+    color: #e53e3e;
+}
+
+.status-select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--color-gray-medium, #ddd);
+    border-radius: 6px;
+    font-size: 1em;
+    background: white;
+    transition: border-color 0.3s ease;
+}
+
+.status-select:focus {
+    outline: none;
+    border-color: var(--color-gold-primary, #b8860b);
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+.status-comments-textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--color-gray-medium, #ddd);
+    border-radius: 6px;
+    font-size: 1em;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 100px;
+    transition: border-color 0.3s ease;
+}
+
+.status-comments-textarea:focus {
+    outline: none;
+    border-color: var(--color-gold-primary, #b8860b);
+    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+}
+
+.status-comments-textarea::placeholder {
+    color: var(--color-gray-medium, #999);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.save-status-btn {
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(56, 161, 105, 0.3);
+}
+
+.save-status-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+    background: linear-gradient(135deg, #2f855a 0%, #38a169 100%);
+}
+
+.save-status-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.cancel-btn {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(113, 128, 150, 0.3);
+}
+
+.cancel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(113, 128, 150, 0.4);
+    background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+}
+
+/* Compact View */
+.task-status-compact {
+    display: inline-block;
+}
+
+.task-status-compact .status-badge {
+    cursor: help;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .task-status-update {
+        padding: 15px;
+    }
+    
+    .status-display {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .save-status-btn,
+    .cancel-btn {
+        width: 100%;
+    }
+}

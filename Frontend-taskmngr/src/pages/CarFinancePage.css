@@ -1,0 +1,1194 @@
+/* Action Buttons */
+.action-btn {
+    padding: 35px 44px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+}
+
+.action-btn.income-btn {
+    background: linear-gradient(135deg, #11d684 0%, #0cc265 100%);
+}
+
+.action-btn.income-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(17, 214, 132, 0.3);
+}
+
+.action-btn.expense-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+}
+
+.action-btn.expense-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.3rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #333;
+    transform: rotate(90deg);
+}
+
+.modal-form {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #555;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.btn-cancel,
+.btn-submit {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel {
+    background: #f0f0f0;
+    color: #666;
+}
+
+.btn-cancel:hover {
+    background: #e0e0e0;
+}
+
+.btn-submit {
+    color: white;
+}
+
+.btn-submit.income {
+    background: linear-gradient(135deg, #11d684 0%, #0cc265 100%);
+}
+
+.btn-submit.expense {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive Design - Fixed and Enhanced */
+@media (max-width: 1024px) {
+    .finance-summary-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .car-finance-page {
+        padding: 12px;
+    }
+
+    .car-finance-widget {
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    .widget-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    .widget-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .header-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+
+    .refresh-btn {
+        order: 3;
+        margin-left: auto;
+    }
+
+    .action-btn {
+        flex: 1;
+        min-width: 140px;
+        font-size: 15px;
+        padding: 12px 16px;
+    }
+
+    .finance-summary-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .summary-card {
+        padding: 16px;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+
+    .card-value {
+        font-size: 1.5rem;
+    }
+
+    .card-label {
+        font-size: 0.85rem;
+    }
+
+    .card-subtext {
+        font-size: 0.8rem;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .category-item {
+        padding: 10px;
+    }
+
+    .category-icon {
+        font-size: 1.2rem;
+    }
+
+    .category-name {
+        font-size: 0.75rem;
+    }
+
+    .category-amount {
+        font-size: 0.9rem;
+    }
+
+    .bar-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+    }
+
+    .bar-label {
+        min-width: auto;
+        font-size: 0.85rem;
+    }
+
+    .bar-container {
+        width: 100%;
+        height: 30px;
+    }
+
+    .bar-value {
+        font-size: 0.8rem;
+    }
+
+    .status-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .status-value {
+        font-size: 1.5rem;
+    }
+
+    .status-label {
+        font-size: 0.75rem;
+    }
+
+    .transaction-item {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .transaction-icon {
+        font-size: 1.2rem;
+        min-width: 30px;
+    }
+
+    .transaction-title {
+        font-size: 0.9rem;
+    }
+
+    .transaction-date {
+        font-size: 0.75rem;
+    }
+
+    .transaction-amount {
+        font-size: 1rem;
+    }
+
+    .monthly-net {
+        font-size: 1.1rem;
+    }
+
+    .modal-content {
+        margin: 20px;
+        max-height: 80vh;
+    }
+
+    .modal-header {
+        padding: 16px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .modal-form {
+        padding: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+
+    .modal-actions {
+        padding-top: 16px;
+        flex-direction: column-reverse;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .expense-breakdown h3,
+    .recent-transactions h3,
+    .monthly-overview h3,
+    .fleet-status h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .car-finance-page {
+        padding: 8px;
+    }
+
+    .car-finance-widget {
+        padding: 12px;
+    }
+
+    .widget-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .header-actions {
+        flex-direction: column;
+    }
+
+    .action-btn {
+        width: 100%;
+    }
+
+    .refresh-btn {
+        width: 100%;
+        margin-left: 0;
+        order: 0;
+    }
+
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-item {
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .status-value {
+        font-size: 1.3rem;
+    }
+
+    .transaction-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .transaction-icon {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    .transaction-info {
+        width: 100%;
+        padding-right: 40px;
+    }
+
+    .transaction-amount {
+        margin-top: 8px;
+        font-size: 0.95rem;
+    }
+
+    .monthly-overview {
+        margin-top: 20px;
+    }
+
+    .bar-container {
+        height: 25px;
+    }
+
+    .bar-value {
+        font-size: 0.75rem;
+        padding-right: 8px;
+    }
+
+    .monthly-net-section {
+        flex-direction: column;
+        gap: 5px;
+        padding: 12px;
+    }
+
+    .net-label {
+        font-size: 0.9rem;
+    }
+
+    .monthly-net {
+        font-size: 1rem;
+    }
+
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .modal-content {
+        margin: 10px;
+        border-radius: 8px;
+    }
+
+    .modal-header {
+        padding: 12px;
+    }
+
+    .modal-header h2 {
+        font-size: 1rem;
+    }
+
+    .modal-close {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .modal-form {
+        padding: 12px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .form-group textarea {
+        min-height: 60px;
+    }
+
+    .modal-actions {
+        padding-top: 12px;
+        gap: 8px;
+    }
+
+    .btn-cancel,
+    .btn-submit {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .no-transactions {
+        padding: 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scrollbar Styling for Modal */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Print Styles */
+@media print {
+    .header-actions,
+    .modal-overlay {
+        display: none !important;
+    }
+
+    .car-finance-widget {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    .summary-card {
+        break-inside: avoid;
+    }
+
+    .transaction-list {
+        break-inside: avoid;
+    }
+}/* src/pages/CarFinancePage.css */
+
+.car-finance-page {
+    padding: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    background: #f5f6fa;
+    min-height: 100vh;
+}
+
+.car-finance-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f5f6fa;
+}
+
+.loading-spinner {
+    color: #666;
+    font-style: italic;
+    font-size: 1rem;
+}
+
+/* Main Widget Container */
+.car-finance-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Header Section */
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.widget-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.refresh-btn {
+    padding: 8px 12px;
+    background: #f0f0f0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-btn:hover:not(:disabled) {
+    background: #e0e0e0;
+    transform: rotate(180deg);
+}
+
+.refresh-btn.spinning {
+    animation: spin 1s linear infinite;
+}
+
+.refresh-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.view-all-btn {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.view-all-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Summary Cards */
+.finance-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card.income {
+    background: linear-gradient(135deg, #11d684 0%, #0cc265 100%);
+}
+
+.summary-card.expense {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+}
+
+.summary-card.profit {
+    background: linear-gradient(135deg, #4da0ff 0%, #3867ff 100%);
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    opacity: 0.9;
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.card-value.positive {
+    color: #ffffff;
+}
+
+.card-value.negative {
+    color: #ffe0e0;
+}
+
+.card-subtext {
+    font-size: 0.85rem;
+    opacity: 0.85;
+}
+
+/* Expense Breakdown */
+.expense-breakdown {
+    margin-bottom: 30px;
+}
+
+.expense-breakdown h3 {
+    margin: 0 0 16px 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.category-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #667eea;
+}
+
+.category-icon {
+    font-size: 1.5rem;
+}
+
+.category-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.category-name {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.category-amount {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+}
+
+/* Recent Transactions */
+.recent-transactions {
+    margin-top: 25px;
+}
+
+.recent-transactions h3 {
+    margin: 0 0 16px 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.no-transactions {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+    font-style: italic;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dee2e6;
+}
+
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    cursor: pointer;
+}
+
+.transaction-item.income {
+    border-left-color: #4CAF50;
+}
+
+.transaction-item.expense {
+    border-left-color: #ff6b6b;
+}
+
+.transaction-item:hover {
+    background: #e9ecef;
+    transform: translateX(4px);
+}
+
+.transaction-icon {
+    font-size: 1.5rem;
+    min-width: 35px;
+    text-align: center;
+}
+
+.transaction-info {
+    flex: 1;
+}
+
+.transaction-title {
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 4px;
+}
+
+.transaction-date {
+    font-size: 0.85rem;
+    color: #999;
+}
+
+.transaction-amount {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.transaction-amount.income {
+    color: #4CAF50;
+}
+
+.transaction-amount.expense {
+    color: #ff6b6b;
+}
+
+/* Monthly Overview */
+.monthly-overview {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.monthly-overview h3 {
+    margin: 0 0 20px 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.overview-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.bar-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.bar-label {
+    min-width: 80px;
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.bar-container {
+    flex: 1;
+    height: 35px;
+    background: #f0f0f0;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12px;
+    transition: width 0.5s ease;
+    border-radius: 20px;
+}
+
+.income-bar {
+    background: linear-gradient(135deg, #11d684 0%, #0cc265 100%);
+}
+
+.expense-bar {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+}
+
+.bar-value {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.monthly-net-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.net-label {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.monthly-net {
+    font-size: 1.3rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.monthly-net.positive {
+    color: #4CAF50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.monthly-net.negative {
+    color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+}
+
+/* Fleet Status */
+.fleet-status {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.fleet-status h3 {
+    margin: 0 0 20px 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+}
+
+.status-item {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.status-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.status-value.active {
+    color: #ffa500;
+}
+
+.status-value.available {
+    color: #4CAF50;
+}
+
+.status-value.service {
+    color: #ff6b6b;
+}
+
+.status-label {
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .car-finance-page {
+        padding: 16px;
+    }
+
+    .car-finance-widget {
+        padding: 16px;
+    }
+
+    .widget-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .finance-summary-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .bar-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .bar-label {
+        min-width: auto;
+    }
+
+    .bar-container {
+        width: 100%;
+    }
+
+    .card-value {
+        font-size: 1.5rem;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+
+    .status-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .transaction-item {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .transaction-icon {
+        font-size: 1.2rem;
+    }
+
+    .transaction-amount {
+        font-size: 0.95rem;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-value {
+        font-size: 1.5rem;
+    }
+}

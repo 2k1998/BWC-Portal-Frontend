@@ -1,0 +1,113 @@
+/* src/components/NotificationBell.css */
+.notification-bell-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.notification-bell-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    padding: 5px;
+    color: var(--color-white);
+}
+
+.bell-icon {
+    font-size: 1.8rem;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: var(--color-error);
+    color: var(--color-white);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--color-black);
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 350px;
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-default);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--color-gray-medium);
+    z-index: 1100;
+    /* --- THE FIX: This rule overrides the inherited color --- */
+    /* It tells the browser that all text inside this container should be black. */
+    color: var(--color-black); 
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--color-gray-medium);
+}
+
+.notification-header h3 {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.mark-all-read-button {
+    background: none;
+    border: none;
+    color: var(--color-gold-primary);
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.notification-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--color-gray-light);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.notification-item.unread {
+    background-color: #f8f9fa;
+    font-weight: bold; /* Make unread message text bold */
+}
+
+.notification-item:hover {
+    background-color: var(--color-gray-light);
+}
+
+.notification-item.empty {
+    text-align: center;
+    color: var(--color-gray-dark);
+    padding: 20px;
+    font-style: italic;
+}
+
+.notification-message {
+    margin: 0 0 5px 0;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.notification-time {
+    font-size: 0.8em;
+    color: var(--color-gray-dark);
+    font-weight: normal; /* Ensure timestamp is not bold */
+}

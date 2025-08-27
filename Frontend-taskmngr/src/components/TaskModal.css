@@ -1,0 +1,249 @@
+/* src/components/TaskModal.css */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 2px solid var(--color-gold-primary, #b8860b);
+    background: linear-gradient(135deg, var(--color-white) 0%, #f8f9fa 100%);
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: var(--color-black, #333);
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 2em;
+    color: var(--color-gray-dark, #666);
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-button:hover {
+    background: var(--color-gray-light, #f8f9fa);
+    color: var(--color-black, #333);
+    transform: scale(1.1);
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+/* Task Info Section */
+.task-info-section {
+    margin-bottom: 30px;
+}
+
+.task-info-section h3 {
+    margin: 0 0 20px 0;
+    color: var(--color-black, #333);
+    font-size: 1.2em;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-gray-light, #e2e8f0);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-item strong {
+    color: var(--color-black, #333);
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-item p {
+    margin: 0;
+    color: var(--color-gray-dark, #666);
+    line-height: 1.5;
+    background: var(--color-gray-light, #f8f9fa);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid var(--color-gold-primary, #b8860b);
+}
+
+/* Priority Badges */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge.all-day-badge {
+    background: linear-gradient(135deg, #dd6b20 0%, #c05621 100%);
+    color: white;
+}
+
+.badge.urgent-and-important {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: white;
+}
+
+.badge.urgent-only {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+}
+
+.badge.important-only {
+    background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+    color: white;
+}
+
+.badge.normal {
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    color: white;
+}
+
+/* Task Status Section */
+.task-status-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--color-gray-light, #f8f9fa);
+    border-radius: 8px;
+    border: 1px solid var(--color-gray-medium, #ddd);
+}
+
+.task-status-section h3 {
+    margin: 0 0 20px 0;
+    color: var(--color-black, #333);
+    font-size: 1.2em;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-gray-medium, #ddd);
+}
+
+/* Task Timestamps */
+.task-timestamps {
+    display: flex;
+    gap: 30px;
+    padding: 20px;
+    background: var(--color-gray-light, #f8f9fa);
+    border-radius: 8px;
+    border-top: 3px solid var(--color-gold-primary, #b8860b);
+}
+
+.timestamp-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.timestamp-item strong {
+    color: var(--color-black, #333);
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.timestamp-item:not(strong) {
+    color: var(--color-gray-dark, #666);
+    font-size: 0.95em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 10px;
+    }
+    
+    .modal-content {
+        max-height: 95vh;
+    }
+    
+    .modal-header {
+        padding: 20px;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.3em;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .task-timestamps {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header {
+        padding: 15px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .task-info-section,
+    .task-status-section {
+        margin-bottom: 20px;
+    }
+}
