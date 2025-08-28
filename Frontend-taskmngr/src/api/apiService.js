@@ -1,7 +1,6 @@
 // src/api/apiService.js - Complete and Fixed Version
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 // Helper function to make API calls
 /* callApi is defined at the bottom of this file. */
 
