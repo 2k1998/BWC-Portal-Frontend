@@ -1,7 +1,7 @@
 // src/components/PaymentWidget.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { paymentApi } from '../api/PaymentAPI';
+import { paymentApi } from '../api/apiService';
 import '../styles/PaymentWidget.css';
 // REMOVED: import CarFinanceWidget from './CarFinanceWidget';
 
