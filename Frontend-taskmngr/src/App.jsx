@@ -74,11 +74,11 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
 // This new component contains the part of your app that needs the auth context
 function AppContent() {
-  const { isAuthenticated } = useAuth();
+ 
   
   return (
     <div className="app-with-sidebar">
-      {isAuthenticated && <SidebarNavigation />}
+      <SidebarNavigation />
       <CallNotificationModal />
       <main>
         <Routes>

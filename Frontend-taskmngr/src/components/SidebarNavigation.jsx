@@ -30,12 +30,6 @@ const NavItem = ({ to, label, icon }) => {
 export default function SidebarNavigation() {
   const { currentUser } = useAuth();
 
-  // Robust name resolution
-  const fullName = currentUser
-    ? `${currentUser.first_name ?? ""} ${currentUser.surname ?? ""}`.trim() || currentUser.email
-    : "—";
-  const roleLabel = currentUser?.role ?? "";
-
   return (
     <aside
       style={{
@@ -75,9 +69,11 @@ export default function SidebarNavigation() {
         >
           {(currentUser?.first_name?.[0] || "U").toUpperCase()}
         </div>
-        <div>
-          <div style={{ fontWeight: 700 }}>{fullName || "User"}</div>
-          {roleLabel ? <div style={{ fontSize: 12, opacity: 0.7 }}>{roleLabel}</div> : null}
+        <div className="user-info">
+          <div className="user-name">
+            {(currentUser?.first_name || "") + " " + (currentUser?.surname || "") || currentUser?.email || "User"}
+          </div>
+          <div className="user-role">{currentUser?.role || "Member"}</div>
         </div>
       </div>
 
