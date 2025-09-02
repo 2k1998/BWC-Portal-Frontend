@@ -1,6 +1,6 @@
 // src/pages/GroupsPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { groupApi, authApi } from '../api/apiService';
 import { Link } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';

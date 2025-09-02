@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { useNotification } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext'; // ADD THIS IMPORT
 import { projectApi, companyApi, authApi } from '../api/apiService';

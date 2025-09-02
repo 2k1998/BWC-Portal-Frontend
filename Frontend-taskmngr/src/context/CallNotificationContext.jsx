@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useAuth } from './AuthContext';
+import useAuth from './useAuth';
 import { dailyCallApi } from '../api/apiService'; // Fixed: removed 's' from dailyCallsApi
 
 const CallNotificationContext = createContext();

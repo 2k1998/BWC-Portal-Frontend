@@ -1,6 +1,6 @@
 // src/pages/CommissionsPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { authApi } from '../api/apiService';
 import { paymentApi } from '../api/apiService';
 import { useLanguage } from '../context/LanguageContext'; // Import language context

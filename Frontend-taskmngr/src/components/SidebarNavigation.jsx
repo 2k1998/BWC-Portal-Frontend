@@ -1,7 +1,7 @@
 // src/components/SidebarNavigation.jsx
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { useLanguage } from '../context/LanguageContext';
 import './SidebarNavigation.css';
 

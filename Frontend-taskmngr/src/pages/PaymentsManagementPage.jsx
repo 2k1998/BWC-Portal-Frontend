@@ -1,6 +1,6 @@
 // src/pages/PaymentsPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { useLanguage } from '../context/LanguageContext';
 import { paymentApi } from '../api/apiService';
 import { authApi, companyApi } from '../api/apiService';

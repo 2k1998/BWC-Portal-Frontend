@@ -1,7 +1,7 @@
 // src/pages/CompanyDetailPage.jsx
 import React, { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { companyApi, carApi, rentalApi } from "../api/apiService";
 import { carData } from '../api/carData'; // Import the local car data
 import { useLanguage } from '../context/LanguageContext';

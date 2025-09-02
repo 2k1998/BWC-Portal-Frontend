@@ -1,6 +1,6 @@
 // components/TaskAssignmentDashboard.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { useNotification } from '../context/NotificationContext';
 import { taskManagementApi } from '../api/taskManagementApi';
 import TaskAssignmentNotification from './TaskAssignmentNotification';

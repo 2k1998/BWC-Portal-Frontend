@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { useAuth } from '../context/AuthContext';
+import useAuth from '../context/useAuth';
 import { useLanguage } from '../context/LanguageContext';
 import { useNotification } from '../context/NotificationContext';
 import { dailyCallApi } from '../api/apiService'; // Fixed: removed 's' from dailyCallsApi
