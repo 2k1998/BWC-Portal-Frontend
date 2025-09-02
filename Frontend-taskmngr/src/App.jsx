@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 
 import './App.css'
@@ -12,7 +12,6 @@ import UsersPage from './pages/UsersPage';
 import ProfilePage from './pages/ProfilePage';
 import AdminPanelPage from './pages/AdminPanelPage';
 //import Header from './components/Header';  #out due to sidebar navigation 
-import { AuthProvider } from './context/AuthContext';
 import useAuth from './context/useAuth';
 import { NotificationProvider } from './context/NotificationContext';
 import NotificationContainer from './components/NotificationContainer';
@@ -140,17 +139,13 @@ function AppContent() {
 
 function App() {
   return (
-    <Router>
-      <NotificationProvider>
-        <AuthProvider>
-          <LanguageProvider>
-            <CallNotificationProvider>
-              <AppContent />
-            </CallNotificationProvider>
-          </LanguageProvider>
-        </AuthProvider>
-      </NotificationProvider>
-    </Router>
+    <NotificationProvider>
+      <LanguageProvider>
+        <CallNotificationProvider>
+          <AppContent />
+        </CallNotificationProvider>
+      </LanguageProvider>
+    </NotificationProvider>
   );
 }
 

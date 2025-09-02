@@ -1,7 +1,8 @@
 // src/context/AuthContext.jsx
-import React, { useEffect, useState, useCallback } from "react";
-import { authApi } from "../api/apiService"; // must expose: login(email,password) -> {access_token}, getMe(token)
-import AuthContext from "./AuthContextObject";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { authApi } from "../api/apiService"; // must have: login(email, password) -> { access_token }, getMe(token)
+
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(() => localStorage.getItem("access_token") || null);
@@ -15,7 +16,6 @@ export function AuthProvider({ children }) {
     }
     try {
       const me = await authApi.getMe(token); // GET /users/me
-      // Expected shape includes: id, email, first_name, surname, role, ...
       setCurrentUser(me);
     } catch {
       // token invalid/expired
@@ -25,7 +25,6 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // On mount: if token exists, fetch /users/me
   useEffect(() => {
     (async () => {
       try {
@@ -36,17 +35,19 @@ export function AuthProvider({ children }) {
     })();
   }, [accessToken, hydrateUser]);
 
-  const login = useCallback(async (email, password) => {
-    // POST /token -> { access_token }
-    const data = await authApi.login(email, password);
-    const token = data?.access_token;
-    if (!token) throw new Error("No access_token returned from API");
+  const login = useCallback(
+    async (email, password) => {
+      const data = await authApi.login(email, password); // POST /token
+      const token = data?.access_token;
+      if (!token) throw new Error("No access_token returned from API");
 
-    localStorage.setItem("access_token", token);
-    setAccessToken(token);
-    await hydrateUser(token); // fetch full profile immediately
-    return true;
-  }, [hydrateUser]);
+      localStorage.setItem("access_token", token);
+      setAccessToken(token);
+      await hydrateUser(token);
+      return true;
+    },
+    [hydrateUser]
+  );
 
   const logout = useCallback(() => {
     localStorage.removeItem("access_token");
@@ -61,3 +62,7 @@ export function AuthProvider({ children }) {
   );
 }
 
+// <-- THIS is what SidebarNavigation imports
+export function useAuth() {
+  return useContext(AuthContext);
+}
