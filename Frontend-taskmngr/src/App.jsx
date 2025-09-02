@@ -36,7 +36,7 @@ import CarFinancePage from './pages/CarFinancePage';
 import DocumentsPage from './pages/DocumentsPage';
 import SidebarNavigation from './components/SidebarNavigation';
 import React from 'react';
-// A protected layout that shows the sidebar only when authenticated
+// This component now correctly uses the context because it will be rendered INSIDE AuthProvider
 const PrivateRoute = ({ children }) => {
   const { currentUser, loading } = useAuth();
 
@@ -44,17 +44,7 @@ const PrivateRoute = ({ children }) => {
     return <div className="loading-spinner">Authenticating...</div>;
   }
 
-  if (!currentUser) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // User is authenticated: render the sidebar + page content
-  return (
-    <div className="app-with-sidebar">
-      <SidebarNavigation />
-      <main>{children}</main>
-    </div>
-  );
+  return currentUser ? children : <Navigate to="/login" />;
 };
 
 // This component also correctly uses the context
@@ -82,10 +72,13 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   return children;
 };
 
+// This new component contains the part of your app that needs the auth context
 function AppContent() {
+  const { isAuthenticated } = useAuth();
+  
   return (
     <div className="app-with-sidebar">
-      {/* NO sidebar here */}
+      {isAuthenticated && <SidebarNavigation />}
       <CallNotificationModal />
       <main>
         <Routes>
