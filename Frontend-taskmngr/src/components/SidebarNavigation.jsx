@@ -32,6 +32,7 @@ export default function SidebarNavigation() {
 
   return (
     <aside
+      className="sidebar"
       style={{
         width: 240,
         padding: 16,
