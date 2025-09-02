@@ -1,8 +1,8 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { authApi } from "../api/apiService"; // must have: login(email, password) -> { access_token }, getMe(token)
+import AuthContext from "./AuthContextObject";
 
-const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(() => localStorage.getItem("access_token") || null);
@@ -62,7 +62,4 @@ export function AuthProvider({ children }) {
   );
 }
 
-// <-- THIS is what SidebarNavigation imports
-export function useAuth() {
-  return useContext(AuthContext);
-}
+// Note: Hook is exported from src/context/useAuth.js to keep this file component-only
