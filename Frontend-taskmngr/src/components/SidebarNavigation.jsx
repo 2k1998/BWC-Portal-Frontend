@@ -1,97 +1,198 @@
 // src/components/SidebarNavigation.jsx
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import useAuth from "../context/useAuth";
+import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
+import './SidebarNavigation.css';
 
-const NavItem = ({ to, label, icon }) => {
-  const location = useLocation();
-  const active = location.pathname === to || location.pathname.startsWith(to + "/");
-  return (
-    <Link
-      to={to}
-      className={`sidebar-item ${active ? "active" : ""}`}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 10,
-        padding: "10px 14px",
-        borderRadius: 8,
-        textDecoration: "none",
-        color: active ? "#000" : "#333",
-        background: active ? "rgba(184,134,11,0.12)" : "transparent",
-        fontWeight: active ? 700 : 500,
-      }}
-    >
-      {icon ?? "•"} {label}
-    </Link>
-  );
-};
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
-export default function SidebarNavigation() {
-  const { currentUser } = useAuth();
+function SidebarNavigation() {
+    const { currentUser, logout } = useAuth();
+    const { language, setLanguage, t } = useLanguage();
+    const navigate = useNavigate();
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
-  return (
-    <aside
-      className="sidebar"
-      style={{
-        width: 240,
-        padding: 16,
-        borderRight: "1px solid #eee",
-        minHeight: "100vh",
-        background: "#fff",
-      }}
-    >
-      {/* Brand */}
-      <div style={{ marginBottom: 16, fontWeight: 800, fontSize: 18 }}>BWC Portal</div>
+    const userRole = currentUser?.role;
+    const isAdmin = userRole === "admin";
+    const canSeeContacts = ['Pillar', 'Manager', 'Head', 'admin'].includes(userRole);
+    const canManageProjects = ['admin', 'Manager', 'Head'].includes(userRole);
 
-      {/* User block (safe even if currentUser is null) */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          padding: 12,
-          border: "1px solid #eee",
-          borderRadius: 10,
-          marginBottom: 16,
-        }}
-      >
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: "50%",
-            background: "#D4AF37", // gold-ish
-            display: "grid",
-            placeItems: "center",
-            fontWeight: 700,
-            color: "#333",
-          }}
-        >
-          {(currentUser?.first_name?.[0] || "U").toUpperCase()}
-        </div>
-        <div className="user-info">
-          <div className="user-name">
-            {(currentUser?.first_name || "") + " " + (currentUser?.surname || "") || currentUser?.email || "User"}
-          </div>
-          <div className="user-role">{currentUser?.role || "Member"}</div>
-        </div>
-      </div>
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
 
-      {/* Navigation */}
-      <nav style={{ display: "grid", gap: 6 }}>
-        <NavItem to="/dashboard" label="Πίνακας Ελέγχου" />
-        <NavItem to="/tasks" label="Εργασίες" />
-        <NavItem to="/projects" label="Projects" />
-        <NavItem to="/companies" label="Εταιρείες" />
-        <NavItem to="/contacts" label="Επαφές" />
-        <NavItem to="/groups" label="Ομάδες" />
-        <NavItem to="/events" label="Εκδηλώσεις" />
-        <NavItem to="/documents" label="Έγγραφα" />
-        <NavItem to="/profile" label="Προφίλ" />
-        <NavItem to="/logout" label="Αποσύνδεση" />
-      </nav>
-    </aside>
-  );
+    return (
+        <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+            <div className="sidebar-header">
+                <Link to="/dashboard" className={isCollapsed ? 'sidebar-logo-collapsed' : 'sidebar-logo'}>
+                    <span className="logo-icon">🏢</span>
+                    {!isCollapsed && <span>BWC Portal</span>}
+                </Link>
+                <button 
+                    className="collapse-toggle desktop-only"
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                >
+                    {isCollapsed ? '→' : '←'}
+                </button>
+            </div>
+
+            <div className="sidebar-user">
+                <div className="user-avatar">
+                    {currentUser?.profile_picture_url ? (
+                        <img 
+                            src={`${API_BASE_URL}${currentUser.profile_picture_url}`}
+                            alt="Profile"
+                        />
+                    ) : (
+                        <span>👤</span>
+                    )}
+                </div>
+                {!isCollapsed && (
+                    <div className="user-info">
+                        <div className="user-name">{currentUser?.name || 'User'}</div>
+                        <div className="user-role">{currentUser?.role || 'Member'}</div>
+                    </div>
+                )}
+            </div>
+
+            <nav className="sidebar-nav">
+                <NavLink to="/dashboard" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                    <div className="menu-item-content">
+                        <span className="menu-icon">📊</span>
+                        {!isCollapsed && <span className="menu-label">{t('dashboard')}</span>}
+                    </div>
+                </NavLink>
+
+                <NavLink to="/tasks" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                    <div className="menu-item-content">
+                        <span className="menu-icon">📋</span>
+                        {!isCollapsed && <span className="menu-label">{t('tasks')}</span>}
+                    </div>
+                </NavLink>
+
+                {canManageProjects && (
+                    <NavLink to="/projects" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <span className="menu-icon">💼</span>
+                            {!isCollapsed && <span className="menu-label">{t('projects')}</span>}
+                        </div>
+                    </NavLink>
+                )}
+
+                <NavLink to="/companies" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                    <div className="menu-item-content">
+                        <span className="menu-icon">🏢</span>
+                        {!isCollapsed && <span className="menu-label">{t('companies')}</span>}
+                    </div>
+                </NavLink>
+
+                {canSeeContacts && (
+                    <React.Fragment>
+                        <NavLink to="/contacts" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">👥</span>
+                                {!isCollapsed && <span className="menu-label">{t('contacts')}</span>}
+                            </div>
+                        </NavLink>
+
+                        <NavLink to="/daily-calls" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">📞</span>
+                                {!isCollapsed && <span className="menu-label">{t('daily_calls')}</span>}
+                            </div>
+                        </NavLink>
+                    </React.Fragment>
+                )}
+
+                <NavLink to="/groups" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                    <div className="menu-item-content">
+                        <span className="menu-icon">👫</span>
+                        {!isCollapsed && <span className="menu-label">{t('groups')}</span>}
+                    </div>
+                </NavLink>
+
+                <NavLink to="/events" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                    <div className="menu-item-content">
+                        <span className="menu-icon">📅</span>
+                        {!isCollapsed && <span className="menu-label">{t('events')}</span>}
+                    </div>
+                </NavLink>
+
+                <NavLink to="/documents" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                    <div className="menu-item-content">
+                        <span className="menu-icon">📄</span>
+                        {!isCollapsed && <span className="menu-label">{t('documents')}</span>}
+                    </div>
+                </NavLink>
+
+                {isAdmin && (
+                    <React.Fragment>
+                        <NavLink to="/users" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">👤</span>
+                                {!isCollapsed && <span className="menu-label">{t('users')}</span>}
+                            </div>
+                        </NavLink>
+
+                        <NavLink to="/reports" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">📈</span>
+                                {!isCollapsed && <span className="menu-label">{t('reports')}</span>}
+                            </div>
+                        </NavLink>
+
+                        <NavLink to="/admin-panel" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">⚙️</span>
+                                {!isCollapsed && <span className="menu-label">{t('admin_panel')}</span>}
+                            </div>
+                        </NavLink>
+
+                        <NavLink to="/payments" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">💰</span>
+                                {!isCollapsed && <span className="menu-label">{t('payments')}</span>}
+                            </div>
+                        </NavLink>
+
+                        <NavLink to="/commissions" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">💵</span>
+                                {!isCollapsed && <span className="menu-label">{t('commissions')}</span>}
+                            </div>
+                        </NavLink>
+
+                        <NavLink to="/car-finances" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                            <div className="menu-item-content">
+                                <span className="menu-icon">🚗</span>
+                                {!isCollapsed && <span className="menu-label">{t('car_finance')}</span>}
+                            </div>
+                        </NavLink>
+                    </React.Fragment>
+                )}
+            </nav>
+
+            <div className="sidebar-footer">
+                {/* FIXED: Changed 'gr' to 'el' */}
+                <button className="footer-btn" onClick={() => setLanguage(language === 'en' ? 'el' : 'en')}>
+                    <span className="footer-icon">🌐</span>
+                    {!isCollapsed && <span>{language === 'en' ? 'English' : 'Ελληνικά'}</span>}
+                </button>
+
+                <NavLink to="/profile" className="footer-btn">
+                    <span className="footer-icon">👤</span>
+                    {!isCollapsed && <span>{t('profile')}</span>}
+                </NavLink>
+
+                <button className="footer-btn logout-btn" onClick={handleLogout}>
+                    <span className="footer-icon">🚪</span>
+                    {!isCollapsed && <span>{t('logout')}</span>}
+                </button>
+            </div>
+        </aside>
+    );
 }
 
+export default SidebarNavigation;

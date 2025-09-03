@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { carFinanceApi } from '../api/carFinanceAPI';
 import './CarFinancePage.css';
 

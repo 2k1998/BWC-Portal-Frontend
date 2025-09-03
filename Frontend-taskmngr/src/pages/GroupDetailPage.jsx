@@ -1,7 +1,7 @@
 // src/pages/GroupDetailPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { groupApi, taskApi } from '../api/apiService';
 import { useNotification } from '../context/NotificationContext';

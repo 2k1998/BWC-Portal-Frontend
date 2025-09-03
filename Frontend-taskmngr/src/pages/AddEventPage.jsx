@@ -1,7 +1,7 @@
 // src/pages/AddEventPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useNotification } from '../context/NotificationContext';
 import { eventApi } from '../api/apiService';

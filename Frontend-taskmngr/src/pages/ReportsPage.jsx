@@ -1,6 +1,6 @@
 // src/pages/ReportsPage.jsx
 import React, { useState, useEffect } from 'react';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { reportsApi } from '../api/apiService';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, PointElement, LineElement } from 'chart.js';

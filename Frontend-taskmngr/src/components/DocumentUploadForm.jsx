@@ -1,6 +1,6 @@
 // 3. src/components/DocumentUploadForm.jsx
 import React, { useState } from 'react';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { documentApi } from '../api/apiService';
 import './Modal.css';

@@ -1,7 +1,7 @@
 // src/pages/NewCompanyPage.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext';
 import { companyApi } from '../api/apiService';

@@ -1,7 +1,7 @@
 // src/pages/DashboardPage.jsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { calendarApi, taskApi, eventApi } from '../api/apiService';
 import { useNotification } from '../context/NotificationContext';

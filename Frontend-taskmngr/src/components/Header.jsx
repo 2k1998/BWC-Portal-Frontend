@@ -1,7 +1,7 @@
 // src/components/Header.jsx - Updated with task management integration
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate, NavLink } from 'react-router-dom';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { companyApi } from '../api/apiService';
 import NotificationBell from './NotificationBell';

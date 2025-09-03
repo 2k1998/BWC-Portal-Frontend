@@ -1,6 +1,6 @@
 // src/pages/AdminPanelPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { authApi } from '../api/apiService';
 import { useNotification } from '../context/NotificationContext';

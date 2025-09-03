@@ -1,6 +1,6 @@
 // src/pages/ContactsPage.jsx - Complete and Fixed Version
 import React, { useState, useEffect, useCallback } from 'react';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useNotification } from '../context/NotificationContext';
 import { contactApi, dailyCallApi } from '../api/apiService';

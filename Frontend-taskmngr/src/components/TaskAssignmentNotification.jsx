@@ -1,6 +1,6 @@
 // components/TaskAssignmentNotification.jsx
 import React, { useState } from 'react';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import { taskManagementApi } from '../api/taskManagementApi';
 import './TaskAssignmentNotification.css';

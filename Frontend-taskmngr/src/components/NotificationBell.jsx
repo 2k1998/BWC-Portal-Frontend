@@ -1,6 +1,6 @@
 // src/components/NotificationBell.jsx - Enhanced with Task Management
 import React, { useState, useEffect, useCallback } from 'react';
-import useAuth from '../context/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { notificationApi } from '../api/apiService';
 import { taskManagementApi } from '../api/taskManagementApi';
 import { useNavigate } from 'react-router-dom';
