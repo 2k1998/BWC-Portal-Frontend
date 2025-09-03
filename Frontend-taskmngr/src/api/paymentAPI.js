@@ -1,5 +1,5 @@
 // src/services/paymentApi.js
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
 
 // Helper function that matches your apiService pattern
 const callApi = async (endpoint, method = 'GET', data = null, token = null) => {

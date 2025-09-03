@@ -9,7 +9,7 @@ import { taskManagementApi } from '../api/taskManagementApi';
 import TaskAssignmentDashboard from './TaskAssignmentDashboard';
 import './Header.css';
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const API_BASE_URL = 'https://bwc-portal-backend-w1qr.onrender.com';
 
 function Header() {
     const { isAuthenticated, currentUser, logout, accessToken } = useAuth();

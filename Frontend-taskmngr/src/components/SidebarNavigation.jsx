@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import './SidebarNavigation.css';
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const API_BASE_URL = 'https://bwc-portal-backend-w1qr.onrender.com';
 
 function SidebarNavigation() {
     const { currentUser, logout } = useAuth();

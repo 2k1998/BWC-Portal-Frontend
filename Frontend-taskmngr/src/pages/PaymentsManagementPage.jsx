@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { paymentApi } from '../api/PaymentAPI';
+import { paymentApi } from '../api/paymentAPI';
 import { authApi, companyApi } from '../api/apiService';
 import '../styles/PaymentsPage.css';
 
