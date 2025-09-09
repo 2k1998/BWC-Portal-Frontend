@@ -119,11 +119,24 @@ function CompanyDetailPage() {
             console.log('Making API calls...');
             console.log('API Base URL:', import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com');
             console.log('Full URL will be:', `${import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com'}/companies/${companyId}`);
+            console.log('Access Token present:', !!accessToken);
+            console.log('Access Token preview:', accessToken ? accessToken.substring(0, 20) + '...' : 'null');
             
-            const [fetchedCompany, fetchedTasks] = await Promise.all([
-                companyApi.getById(parseInt(companyId), accessToken),
-                companyApi.getCompanyTasks(parseInt(companyId), accessToken)
-            ]);
+            // Try to fetch company first
+            console.log('Fetching company...');
+            const fetchedCompany = await companyApi.getById(parseInt(companyId), accessToken);
+            console.log('Company fetched successfully:', fetchedCompany);
+            
+            // Then fetch tasks separately to isolate the error
+            console.log('Fetching company tasks...');
+            let fetchedTasks = [];
+            try {
+                fetchedTasks = await companyApi.getCompanyTasks(parseInt(companyId), accessToken);
+                console.log('Tasks fetched successfully:', fetchedTasks);
+            } catch (taskError) {
+                console.warn('Failed to fetch tasks, but continuing with company data:', taskError.message);
+                // Don't fail the whole operation if tasks fail
+            }
             console.log('Fetched company:', fetchedCompany);
             console.log('Fetched tasks:', fetchedTasks);
             setCompany(fetchedCompany);
