@@ -451,7 +451,6 @@ export const callApi = async (endpoint, method = 'GET', data = null, token = nul
     const options = { 
         method, 
         headers,
-        credentials: 'include',  // Include credentials for CORS
         mode: 'cors'  // Explicitly set CORS mode
     };
 
