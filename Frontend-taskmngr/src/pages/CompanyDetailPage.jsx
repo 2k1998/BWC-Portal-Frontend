@@ -109,25 +109,36 @@ function CompanyDetailPage() {
     const isAdmin = currentUser?.role === "admin";
 
     const fetchCompanyData = useCallback(async () => {
-        if (!accessToken || !companyId) return;
+        if (!accessToken || !companyId) {
+            console.log('Missing accessToken or companyId:', { accessToken: !!accessToken, companyId });
+            return;
+        }
         setLoading(true);
+        console.log('Fetching company data for ID:', companyId);
         try {
+            console.log('Making API calls...');
             const [fetchedCompany, fetchedTasks] = await Promise.all([
                 companyApi.getById(parseInt(companyId), accessToken),
                 companyApi.getCompanyTasks(parseInt(companyId), accessToken)
             ]);
+            console.log('Fetched company:', fetchedCompany);
+            console.log('Fetched tasks:', fetchedTasks);
             setCompany(fetchedCompany);
             setCompanyTasks(fetchedTasks);
 
             if (fetchedCompany.name === 'Best Solution Cars') {
+                console.log('Fetching cars and rentals for Best Solution Cars...');
                 const [fetchedCars, fetchedRentals] = await Promise.all([
                     carApi.getCarsForCompany(parseInt(companyId), accessToken),
                     rentalApi.getRentalsForCompany(parseInt(companyId), accessToken)
                 ]);
+                console.log('Fetched cars:', fetchedCars);
+                console.log('Fetched rentals:', fetchedRentals);
                 setCars(fetchedCars);
                 setRentals(fetchedRentals);
             }
         } catch (err) {
+            console.error('Error fetching company data:', err);
             showNotification(err.message || 'Failed to fetch company details.', 'error');
         } finally {
             setLoading(false);
