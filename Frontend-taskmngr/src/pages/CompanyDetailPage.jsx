@@ -114,9 +114,12 @@ function CompanyDetailPage() {
             return;
         }
         setLoading(true);
-        console.log('Fetching company data for ID:', companyId);
+        console.log('Fetching company data for ID:', companyId, 'Type:', typeof companyId);
         try {
             console.log('Making API calls...');
+            console.log('API Base URL:', import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com');
+            console.log('Full URL will be:', `${import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com'}/companies/${companyId}`);
+            
             const [fetchedCompany, fetchedTasks] = await Promise.all([
                 companyApi.getById(parseInt(companyId), accessToken),
                 companyApi.getCompanyTasks(parseInt(companyId), accessToken)
@@ -139,7 +142,14 @@ function CompanyDetailPage() {
             }
         } catch (err) {
             console.error('Error fetching company data:', err);
+            console.error('Error details:', {
+                message: err.message,
+                status: err.status,
+                companyId: companyId,
+                parsedCompanyId: parseInt(companyId)
+            });
             showNotification(err.message || 'Failed to fetch company details.', 'error');
+            // Don't set company to null here, let it remain in loading state or show the error
         } finally {
             setLoading(false);
         }
@@ -238,7 +248,18 @@ function CompanyDetailPage() {
 
 
     if (loading) return <div className="loading-spinner">{t('loading')}</div>;
-    if (!company) return <div className="error-message">Company not found.</div>;
+    if (!company) {
+        return (
+            <div className="error-message">
+                <h2>Company not found</h2>
+                <p>Company ID: {companyId}</p>
+                <p>Check the browser console for more details.</p>
+                <button onClick={() => navigate('/companies')} className="back-button">
+                    ← Back to Companies
+                </button>
+            </div>
+        );
+    }
 
     const gasOptions = ["Empty", "1/4", "1/2", "3/4", "Full"];
 
