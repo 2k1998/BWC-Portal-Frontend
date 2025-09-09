@@ -1,9 +1,7 @@
 // src/api/apiService.js - Complete and Fixed Version
 
-//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
 // Helper function to make API calls
-   // In frontend/Frontend-taskmngr/src/api/apiService.js line 3:
-   const API_BASE_URL = 'http://localhost:8000';
 // Authentication API
 export const authApi = {
     login: (email, password) => {

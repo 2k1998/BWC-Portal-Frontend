@@ -16,7 +16,7 @@ class WebSocketService {
         }
 
         this.accessToken = accessToken;
-        const wsUrl = `${import.meta.env.VITE_API_BASE_URL || 'ws://localhost:8000'}/ws/${accessToken}`.replace('http', 'ws');
+        const wsUrl = `${import.meta.env.VITE_API_BASE_URL || 'wss://bwc-portal-backend-w1qr.onrender.com'}/ws/${accessToken}`.replace('http', 'ws');
         
         try {
             this.ws = new WebSocket(wsUrl);
