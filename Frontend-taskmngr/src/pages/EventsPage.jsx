@@ -7,7 +7,6 @@ import { useNotification } from '../context/NotificationContext';
 import { eventApi } from '../api/apiService';
 import { format } from 'date-fns';
 import './Events.css';
-import { translations } from '../translations';
 
 function EventsPage() {
     const { accessToken, currentUser } = useAuth();
@@ -16,9 +15,7 @@ function EventsPage() {
     const navigate = useNavigate();
 
     // ADD THIS DEBUG CODE TEMPORARILY
-    console.log('Current language:', language);
-    console.log('Translation for event_management:', t('event_management'));
-    console.log('All translations available:', translations);
+    // Debug logging removed for production
     // END DEBUG CODE
 
     const [events, setEvents] = useState([]);

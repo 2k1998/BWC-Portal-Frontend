@@ -72,7 +72,14 @@ function TaskModal({ task, isOpen, onClose, onTaskUpdated }) {
                             {task.owner && (
                                 <div className="info-item">
                                     <strong>Assigned To:</strong>
-                                    <p>{task.owner.full_name || task.owner.email}</p>
+                                    <p>{task.owner.full_name || `${task.owner.first_name} ${task.owner.surname}`.trim() || task.owner.email}</p>
+                                </div>
+                            )}
+                            
+                            {task.created_by && (
+                                <div className="info-item">
+                                    <strong>Created By:</strong>
+                                    <p>{task.created_by.full_name || `${task.created_by.first_name} ${task.created_by.surname}`.trim() || task.created_by.email}</p>
                                 </div>
                             )}
                             

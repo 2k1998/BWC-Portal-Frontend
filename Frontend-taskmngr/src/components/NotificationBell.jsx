@@ -21,17 +21,29 @@ function NotificationBell() {
     const { showNotification } = useNotification();
 
     const fetchNotifications = useCallback(async () => {
-        if (isAuthenticated && accessToken) {
-            try {
-                const [regularNotifs, taskNotifs] = await Promise.all([
-                    notificationApi.getMyNotifications(accessToken),
-                    taskManagementApi.getTaskNotifications({ limit: 10 }, accessToken)
-                ]);
-                
-                setNotifications(regularNotifs);
-                setTaskNotifications(taskNotifs);
-            } catch (error) {
-                console.error("Failed to fetch notifications:", error);
+        // Only fetch if user is authenticated and has a valid token
+        if (!isAuthenticated || !accessToken) {
+            // Clear notifications if user is not authenticated
+            setNotifications([]);
+            setTaskNotifications([]);
+            return;
+        }
+
+        try {
+            const [regularNotifs, taskNotifs] = await Promise.all([
+                notificationApi.getMyNotifications(accessToken),
+                taskManagementApi.getTaskNotifications({ limit: 10 }, accessToken)
+            ]);
+            
+            setNotifications(regularNotifs || []);
+            setTaskNotifications(taskNotifs || []);
+        } catch (error) {
+            console.error("Failed to fetch notifications:", error);
+            
+            // If we get 401, it means the token is invalid - clear notifications
+            if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+                setNotifications([]);
+                setTaskNotifications([]);
             }
         }
     }, [isAuthenticated, accessToken]);

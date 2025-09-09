@@ -11,7 +11,7 @@ import TaskModal from '../components/TaskModal';
 import './Tasks.css';
 
 function TasksPage() {
-  const { accessToken, currentUser, loading: authLoading } = useAuth();
+  const { accessToken, loading: authLoading } = useAuth();
   const { showNotification } = useNotification();
   const { t } = useLanguage();
   const location = useLocation();
@@ -25,8 +25,6 @@ function TasksPage() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
-
-  const isAdmin = currentUser?.role === 'admin';
 
   const fetchTasks = useCallback(async () => {
     if (!accessToken) return;
@@ -177,12 +175,10 @@ function TasksPage() {
         </div>
       )}
 
-      {isAdmin && (
-        <button onClick={() => setShowCreateForm(!showCreateForm)} className="toggle-form-button">
-          {showCreateForm ? t('hide_create_task_form') : t('create_new_task')}
-        </button>
-      )}
-      {isAdmin && showCreateForm && (
+      <button onClick={() => setShowCreateForm(!showCreateForm)} className="toggle-form-button">
+        {showCreateForm ? t('hide_create_task_form') : t('create_new_task')}
+      </button>
+      {showCreateForm && (
         <TaskForm onSubmit={handleCreateTask} submitButtonText={t('add_task')} />
       )}
 

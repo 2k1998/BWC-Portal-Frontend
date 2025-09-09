@@ -1,5 +1,7 @@
 // api/taskManagementApi.js - API service for enhanced task management
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
+import { callApi } from './apiService.js';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
 
 export const taskManagementApi = {
     // ==================== TASK ASSIGNMENT ENDPOINTS ====================
@@ -7,105 +9,37 @@ export const taskManagementApi = {
     /**
      * Assign a task to a user
      */
-    async assignTask(assignmentData, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/assign`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(assignmentData)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to assign task');
-        }
-
-        return response.json();
-    },
+    assignTask: (assignmentData, accessToken) => 
+        callApi('/task-management/assign', 'POST', assignmentData, accessToken),
 
     /**
      * Get pending assignments for current user
      */
-    async getPendingAssignments(accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/assignments/pending`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to fetch pending assignments');
-        }
-
-        return response.json();
-    },
+    getPendingAssignments: (accessToken) => 
+        callApi('/task-management/assignments/pending', 'GET', null, accessToken),
 
     /**
      * Get assignment details
      */
-    async getAssignmentDetails(assignmentId, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/assignments/${assignmentId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to fetch assignment details');
-        }
-
-        return response.json();
-    },
+    getAssignmentDetails: (assignmentId, accessToken) => 
+        callApi(`/task-management/assignments/${assignmentId}`, 'GET', null, accessToken),
 
     /**
      * Respond to a task assignment (accept/reject/discuss)
      */
-    async respondToAssignment(assignmentId, responseData, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/assignments/${assignmentId}/respond`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(responseData)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to respond to assignment');
-        }
-
-        return response.json();
-    },
+    respondToAssignment: (assignmentId, responseData, accessToken) => 
+        callApi(`/task-management/assignments/${assignmentId}/respond`, 'POST', responseData, accessToken),
 
     /**
      * Get all my assignments (assigned to me or by me)
      */
-    async getMyAssignments(params = {}, accessToken) {
+    getMyAssignments: (params = {}, accessToken) => {
         const searchParams = new URLSearchParams();
         
         if (params.status_filter) searchParams.append('status_filter', params.status_filter);
         if (params.assigned_by_me) searchParams.append('assigned_by_me', params.assigned_by_me);
 
-        const response = await fetch(`${API_BASE_URL}/task-management/my-assignments?${searchParams}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to fetch assignments');
-        }
-
-        return response.json();
+        return callApi(`/task-management/my-assignments?${searchParams}`, 'GET', null, accessToken);
     },
 
     // ==================== MESSAGING ENDPOINTS ====================
@@ -113,173 +47,62 @@ export const taskManagementApi = {
     /**
      * Get conversation for an assignment
      */
-    async getConversation(assignmentId, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/conversations/${assignmentId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to fetch conversation');
-        }
-
-        return response.json();
-    },
+    getConversation: (assignmentId, accessToken) => 
+        callApi(`/task-management/conversations/${assignmentId}`, 'GET', null, accessToken),
 
     /**
      * Send a message in a conversation
      */
-    async sendMessage(assignmentId, messageData, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/conversations/${assignmentId}/messages`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(messageData)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to send message');
-        }
-
-        return response.json();
-    },
+    sendMessage: (assignmentId, messageData, accessToken) => 
+        callApi(`/task-management/conversations/${assignmentId}/messages`, 'POST', messageData, accessToken),
 
     /**
      * Complete a conversation
      */
-    async completeConversation(assignmentId, actionData, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/conversations/${assignmentId}/complete`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(actionData)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to complete conversation');
-        }
-
-        return response.json();
-    },
+    completeConversation: (assignmentId, actionData, accessToken) => 
+        callApi(`/task-management/conversations/${assignmentId}/complete`, 'POST', actionData, accessToken),
 
     // ==================== CALL MANAGEMENT ENDPOINTS ====================
 
     /**
      * Schedule a call for task discussion
      */
-    async scheduleCall(assignmentId, callData, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/assignments/${assignmentId}/schedule-call`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(callData)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to schedule call');
-        }
-
-        return response.json();
-    },
+    scheduleCall: (assignmentId, callData, accessToken) => 
+        callApi(`/task-management/assignments/${assignmentId}/schedule-call`, 'POST', callData, accessToken),
 
     /**
      * Mark a call as completed
      */
-    async completeCall(assignmentId, callData, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/assignments/${assignmentId}/complete-call`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(callData)
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to complete call');
-        }
-
-        return response.json();
-    },
+    completeCall: (assignmentId, callData, accessToken) => 
+        callApi(`/task-management/assignments/${assignmentId}/complete-call`, 'POST', callData, accessToken),
 
     // ==================== NOTIFICATION ENDPOINTS ====================
 
     /**
      * Get task notifications
      */
-    async getTaskNotifications(params = {}, accessToken) {
+    getTaskNotifications: (params = {}, accessToken) => {
         const searchParams = new URLSearchParams();
         
         if (params.unread_only) searchParams.append('unread_only', params.unread_only);
         if (params.limit) searchParams.append('limit', params.limit);
 
-        const response = await fetch(`${API_BASE_URL}/task-management/notifications?${searchParams}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to fetch notifications');
-        }
-
-        return response.json();
+        return callApi(`/task-management/notifications?${searchParams}`, 'GET', null, accessToken);
     },
 
     /**
      * Mark task notification as read
      */
-    async markNotificationRead(notificationId, accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/notifications/${notificationId}/read`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to mark notification as read');
-        }
-
-        return response.json();
-    },
+    markNotificationRead: (notificationId, accessToken) => 
+        callApi(`/task-management/notifications/${notificationId}/read`, 'PUT', null, accessToken),
 
     // ==================== DASHBOARD/SUMMARY ENDPOINTS ====================
 
     /**
      * Get assignment summary for dashboard
      */
-    async getAssignmentSummary(accessToken) {
-        const response = await fetch(`${API_BASE_URL}/task-management/summary`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Failed to fetch assignment summary');
-        }
-
-        return response.json();
-    },
+    getAssignmentSummary: (accessToken) => 
+        callApi('/task-management/summary', 'GET', null, accessToken),
 
     // ==================== HELPER METHODS ====================
 

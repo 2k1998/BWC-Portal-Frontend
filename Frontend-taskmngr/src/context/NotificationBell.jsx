@@ -15,12 +15,22 @@ function NotificationBell() {
     const { showNotification } = useNotification();
 
     const fetchNotifications = useCallback(async () => {
-        if (isAuthenticated && accessToken) {
-            try {
-                const data = await notificationApi.getMyNotifications(accessToken);
-                setNotifications(data);
-            } catch (error) {
-                console.error("Failed to fetch notifications:", error);
+        // Only fetch if user is authenticated and has a valid token
+        if (!isAuthenticated || !accessToken) {
+            // Clear notifications if user is not authenticated
+            setNotifications([]);
+            return;
+        }
+
+        try {
+            const data = await notificationApi.getMyNotifications(accessToken);
+            setNotifications(data || []);
+        } catch (error) {
+            console.error("Failed to fetch notifications:", error);
+            
+            // If we get 401, it means the token is invalid - clear notifications
+            if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+                setNotifications([]);
             }
         }
     }, [isAuthenticated, accessToken]);

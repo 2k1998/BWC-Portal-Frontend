@@ -1,9 +1,9 @@
 // src/api/apiService.js - Complete and Fixed Version
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
+//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
 // Helper function to make API calls
-/* callApi is defined at the bottom of this file. */
-
+   // In frontend/Frontend-taskmngr/src/api/apiService.js line 3:
+   const API_BASE_URL = 'http://localhost:8000';
 // Authentication API
 export const authApi = {
     login: (email, password) => {
@@ -24,6 +24,7 @@ export const authApi = {
     updateUserMe: (userData, token) => callApi('/users/me', 'PUT', userData, token),
     uploadProfilePicture: (formData, token) => callApi('/users/me/upload-picture', 'POST', formData, token),
     listAllUsers: (token, search = '') => callApi(`/users/all?search=${encodeURIComponent(search)}`, 'GET', null, token),
+    listBasicUsers: (token) => callApi('/users/basic', 'GET', null, token),
     deleteUser: (userId, token) => callApi(`/users/${userId}`, 'DELETE', null, token),
     updateUserRole: (userId, roleData, token) => callApi(`/users/${userId}/role`, 'PUT', roleData, token),
     updateUserStatus: (userId, statusData, token) => callApi(`/users/${userId}/status`, 'PUT', statusData, token),
@@ -438,19 +439,27 @@ export const paymentApi = {
     // Create commission rule
     createCommissionRule: async (token, ruleData) => 
         callApi('/sales/commission-rules', 'POST', ruleData, token),
+
+    // Update commission rule
+    updateCommissionRule: async (token, ruleId, ruleData) => 
+        callApi(`/sales/commission-rules/${ruleId}`, 'PUT', ruleData, token),
 };
 
 export const callApi = async (endpoint, method = 'GET', data = null, token = null) => {
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
-    const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
-    const options = {
-        method,
-        headers: {
-            'Content-Type': 'application/json',
-            ...(token && { 'Authorization': `Bearer ${token}` })
-        },
-        ...(data && { body: JSON.stringify(data) })
-    };
+    const url = API_BASE_URL + endpoint;
+    const headers = {};
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const options = { method, headers };
+
+    if (data instanceof FormData) {
+        options.body = data;
+        // Do NOT set 'Content-Type' for FormData – browser sets it automatically
+    } else if (data) {
+        headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(data);
+    }
+
     const response = await fetch(url, options);
     if (!response.ok) {
         let errorMsg = `HTTP ${response.status}`;
@@ -464,6 +473,33 @@ export const callApi = async (endpoint, method = 'GET', data = null, token = nul
     }
     if (response.status === 204) return null;
     return response.json();
+};
+
+// Chat API
+export const chatApi = {
+    getConversations: (token) => callApi('/chat/conversations', 'GET', null, token),
+    getConversation: (conversationId, token) => callApi(`/chat/conversations/${conversationId}`, 'GET', null, token),
+    startConversation: (userId, token) => callApi(`/chat/conversations/${userId}`, 'POST', null, token),
+    sendMessage: (conversationId, messageData, token) => callApi(`/chat/conversations/${conversationId}/messages`, 'POST', messageData, token),
+    searchUsers: (query, token, limit = 10) => callApi(`/chat/users/search?query=${encodeURIComponent(query || '')}&limit=${limit}`, 'GET', null, token),
+};
+
+// Approval API
+export const approvalApi = {
+    createRequest: (requestData, token) => callApi('/approvals/', 'POST', requestData, token),
+    getRequests: (params, token) => {
+        const searchParams = new URLSearchParams();
+        if (params.status_filter) searchParams.append('status_filter', params.status_filter);
+        if (params.as_requester) searchParams.append('as_requester', params.as_requester);
+        if (params.as_approver) searchParams.append('as_approver', params.as_approver);
+        return callApi(`/approvals/?${searchParams}`, 'GET', null, token);
+    },
+    getRequest: (requestId, token) => callApi(`/approvals/${requestId}`, 'GET', null, token),
+    respondToRequest: (requestId, responseData, token) => callApi(`/approvals/${requestId}/respond`, 'POST', responseData, token),
+    getNotifications: (unreadOnly, token, limit = 50) => callApi(`/approvals/notifications/?unread_only=${unreadOnly}&limit=${limit}`, 'GET', null, token),
+    markNotificationRead: (notificationId, token) => callApi(`/approvals/notifications/${notificationId}/read`, 'PUT', null, token),
+    dismissNotification: (notificationId, token) => callApi(`/approvals/notifications/${notificationId}`, 'DELETE', null, token),
+    clearAllNotifications: (token) => callApi('/approvals/notifications/clear-all', 'DELETE', null, token),
 };
 
 export default {
@@ -482,4 +518,6 @@ export default {
     projectApi,
     paymentApi,
     documentApi,
+    chatApi,
+    approvalApi,
 }

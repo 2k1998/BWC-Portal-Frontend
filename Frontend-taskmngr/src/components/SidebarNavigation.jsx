@@ -3,13 +3,14 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+// Removed chat hub and notification bell imports - will be placed elsewhere
 import './SidebarNavigation.css';
 
-const API_BASE_URL = 'https://bwc-portal-backend-w1qr.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
 
 function SidebarNavigation() {
     const { currentUser, logout } = useAuth();
-    const { language, setLanguage, t } = useLanguage();
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -17,7 +18,6 @@ function SidebarNavigation() {
     const isAdmin = userRole === "admin";
     const canSeeContacts = ['Pillar', 'Manager', 'Head', 'admin'].includes(userRole);
     const canManageProjects = ['admin', 'Manager', 'Head'].includes(userRole);
-
     const handleLogout = () => {
         logout();
         navigate('/login');
@@ -26,36 +26,41 @@ function SidebarNavigation() {
     return (
         <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
             <div className="sidebar-header">
-                <Link to="/dashboard" className={isCollapsed ? 'sidebar-logo-collapsed' : 'sidebar-logo'}>
-                    <span className="logo-icon">🏢</span>
-                    {!isCollapsed && <span>BWC Portal</span>}
-                </Link>
-                <button 
+                <button
                     className="collapse-toggle desktop-only"
                     onClick={() => setIsCollapsed(!isCollapsed)}
                 >
-                    {isCollapsed ? '→' : '←'}
+                    <div className="burger-menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
                 </button>
             </div>
 
             <div className="sidebar-user">
                 <div className="user-avatar">
                     {currentUser?.profile_picture_url ? (
-                        <img 
+                        <img
                             src={`${API_BASE_URL}${currentUser.profile_picture_url}`}
                             alt="Profile"
                         />
                     ) : (
-                        <span>👤</span>
+                        <span></span>
                     )}
                 </div>
                 {!isCollapsed && (
                     <div className="user-info">
-                        <div className="user-name">{currentUser?.name || 'User'}</div>
+                        {/* Modified: display user's first and last name if available */}
+                        <div className="user-name">
+                            {`${currentUser?.first_name ?? ''} ${currentUser?.surname ?? ''}`.trim() || currentUser?.name || 'User'}
+                        </div>
                         <div className="user-role">{currentUser?.role || 'Member'}</div>
                     </div>
                 )}
             </div>
+
+            {/* Chat Hub and Notification Bell removed - will be placed elsewhere */}
 
             <nav className="sidebar-nav">
                 <NavLink to="/dashboard" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
@@ -65,7 +70,7 @@ function SidebarNavigation() {
                     </div>
                 </NavLink>
 
-                <NavLink to="/tasks" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                <NavLink to="/tasks" className={({ isActive }) => `menu-item  ${isActive ? 'active' : ''}`}>
                     <div className="menu-item-content">
                         <span className="menu-icon">📋</span>
                         {!isCollapsed && <span className="menu-label">{t('tasks')}</span>}
@@ -108,7 +113,7 @@ function SidebarNavigation() {
 
                 <NavLink to="/groups" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                     <div className="menu-item-content">
-                        <span className="menu-icon">👫</span>
+                        <span className="menu-icon">🤝</span>
                         {!isCollapsed && <span className="menu-label">{t('groups')}</span>}
                     </div>
                 </NavLink>
@@ -131,7 +136,7 @@ function SidebarNavigation() {
                     <React.Fragment>
                         <NavLink to="/users" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">👤</span>
+                                <span className="menu-icon">👨🏻‍💻</span>
                                 {!isCollapsed && <span className="menu-label">{t('users')}</span>}
                             </div>
                         </NavLink>
@@ -175,12 +180,6 @@ function SidebarNavigation() {
             </nav>
 
             <div className="sidebar-footer">
-                {/* FIXED: Changed 'gr' to 'el' */}
-                <button className="footer-btn" onClick={() => setLanguage(language === 'en' ? 'el' : 'en')}>
-                    <span className="footer-icon">🌐</span>
-                    {!isCollapsed && <span>{language === 'en' ? 'English' : 'Ελληνικά'}</span>}
-                </button>
-
                 <NavLink to="/profile" className="footer-btn">
                     <span className="footer-icon">👤</span>
                     {!isCollapsed && <span>{t('profile')}</span>}

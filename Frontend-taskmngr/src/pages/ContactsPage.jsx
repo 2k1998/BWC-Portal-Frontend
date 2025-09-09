@@ -41,7 +41,7 @@ function ContactsPage() {
         } finally {
             setLoading(false);
         }
-    }, [accessToken, showNotification]);
+    }, [accessToken, showNotification, t]);
 
     useEffect(() => {
         fetchAllData();
@@ -60,7 +60,7 @@ function ContactsPage() {
             delimitersToGuess: [',', '\t', '|', ';'],
             complete: async (results) => {
                 const rows = results.data;
-                console.log("Parsed CSV data:", rows);
+                // CSV data parsed successfully
 
                 if (!rows || rows.length === 0) {
                     showNotification(t('csv_empty_or_unreadable') || 'CSV file is empty or could not be parsed.', 'warning');
@@ -89,16 +89,13 @@ function ContactsPage() {
                 }).filter(contact => contact.first_name); // Only include contacts with a first name
 
                 if (mappedContacts.length === 0) {
-                    console.log("No valid contacts found. Aborting API call.");
                     showNotification(t('no_valid_contacts_in_csv') || 'No valid contacts found in the CSV file. Please check the column headers.', 'warning');
                     setIsImporting(false);
                     return;
                 }
 
-                console.log(`Found ${mappedContacts.length} valid contacts. Sending to backend...`);
                 try {
                     const response = await contactApi.importBatch(mappedContacts, accessToken);
-                    console.log("Backend response:", response);
                     showNotification(response.message, 'success');
                     fetchAllData();
                 } catch (err) {

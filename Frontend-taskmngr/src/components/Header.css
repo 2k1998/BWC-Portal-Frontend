@@ -141,12 +141,7 @@
 
 /* --- Profile Picture and Language Selector Styles --- */
 .header-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid var(--color-gold-accent);
-    background-color: var(--color-gray-dark);
+    display: none !important;
 }
 
 .flag-icon {
@@ -257,7 +252,7 @@
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .task-management-section:hover .task-summary-tooltip {
@@ -498,8 +493,8 @@
     }
     
     .header-avatar {
-        width: 32px;
-        height: 32px;
+        width: 18px;
+        height: 18px;
     }
     
     .flag-icon {

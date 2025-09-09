@@ -28,13 +28,18 @@ import ContactsPage from './pages/ContactsPage';
 import DailyCallsPage from './pages/DailyCallsPage';
 import ProjectsPage from './pages/ProjectsPage'; // <-- Add this import
 import { CallNotificationProvider } from './context/CallNotificationContext';
+import { RealtimeProvider } from './context/RealtimeContext';
 import CallNotificationModal from './components/CallNotificationModal';
 import PaymentsPage from './pages/PaymentsManagementPage';
 import CommissionsPage from './pages/CommissionsPage';
 import PaymentDetailPage from './pages/PaymentDetailPage'; // Make sure this exists
 import CarFinancePage from './pages/CarFinancePage';
 import DocumentsPage from './pages/DocumentsPage';
+import ChatPage from './pages/ChatPage';
+import ApprovalsPage from './pages/ApprovalsPage';
 import SidebarNavigation from './components/SidebarNavigation';
+import TopBar from './components/TopBar';
+import UserStatusSidebar from './components/UserStatusSidebar';
 import React from 'react';
 // This component now correctly uses the context because it will be rendered INSIDE AuthProvider
 const PrivateRoute = ({ children }) => {
@@ -77,8 +82,10 @@ function AppContent() {
   const { isAuthenticated } = useAuth();
   
   return (
-    <div className="app-with-sidebar">
+    <div className="app-with-sidebar with-right-sidebar">
+      {isAuthenticated && <TopBar />}
       {isAuthenticated && <SidebarNavigation />}
+      {isAuthenticated && <UserStatusSidebar />}
       <CallNotificationModal />
       <main>
         <Routes>
@@ -112,6 +119,8 @@ function AppContent() {
           <Route path="/events/new" element={<PrivateRoute><AddEventPage /></PrivateRoute>} />
           <Route path="/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
           <Route path="/documents" element={<PrivateRoute><DocumentsPage /></PrivateRoute>} />
+          <Route path="/chat/:userId" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
+          <Route path="/approvals" element={<PrivateRoute><ApprovalsPage /></PrivateRoute>} />
           
           {/* New route for Car Finance Page */}
           <Route
@@ -144,7 +153,9 @@ function App() {
         <AuthProvider>
           <LanguageProvider>
             <CallNotificationProvider>
-              <AppContent />
+              <RealtimeProvider>
+                <AppContent />
+              </RealtimeProvider>
             </CallNotificationProvider>
           </LanguageProvider>
         </AuthProvider>

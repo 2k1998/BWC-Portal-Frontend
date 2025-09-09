@@ -1,0 +1,192 @@
+/* TopBar.css - Clean version without profile stuff */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar-left {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-center {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+}
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.top-bar-item {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f39c12;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 24px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.top-bar-logo:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logo-icon {
+    font-size: 28px;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f39c12;
+}
+
+@media (max-width: 768px) {
+    .logo-text {
+        display: none;
+    }
+}
+
+/* Language Toggle */
+.language-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.language-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.language-icon {
+    font-size: 16px;
+}
+
+.language-text {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Chat and Notification buttons */
+.top-bar .chat-trigger,
+.top-bar .notification-trigger {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+    color: white;
+}
+
+.top-bar .chat-trigger:hover,
+.top-bar .notification-trigger:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.top-bar .chat-trigger.active,
+.top-bar .notification-trigger.active {
+    background-color: #f39c12;
+    color: white;
+}
+
+.notification-badge,
+.chat-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: #e41e3f;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dropdown positioning adjustments for top bar */
+.top-bar .chat-dropdown,
+.top-bar .notification-dropdown {
+    top: 50px;
+    right: 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .top-bar {
+        padding: 0 12px;
+    }
+    
+    .top-bar-actions {
+        gap: 12px;
+    }
+    
+    .top-bar .chat-trigger,
+    .top-bar .notification-trigger {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .language-toggle {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar-actions {
+        gap: 8px;
+    }
+    
+    .language-toggle {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+}

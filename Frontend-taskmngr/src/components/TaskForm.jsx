@@ -45,16 +45,13 @@ function TaskForm({ onSubmit, submitButtonText }) {
                 .then(data => setCompanies(data))
                 .finally(() => setLoadingCompanies(false));
 
-            if (isAdmin) {
-                setLoadingUsers(true);
-                authApi.listAllUsers(accessToken)
-                    .then(data => setUsers(data))
-                    .finally(() => setLoadingUsers(false));
-            } else {
-                setLoadingUsers(false);
-            }
+            // Allow all users to see other users for task assignment
+            setLoadingUsers(true);
+            authApi.listAllUsers(accessToken)
+                .then(data => setUsers(data))
+                .finally(() => setLoadingUsers(false));
         }
-    }, [accessToken, isAdmin]);
+    }, [accessToken]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -62,8 +59,8 @@ function TaskForm({ onSubmit, submitButtonText }) {
             title, description, start_date: startDate?.toISOString(),
             deadline: deadline?.toISOString(), deadline_all_day: isAllDay,
             urgency: isUrgent, important: isImportant, company_id: parseInt(selectedCompanyId),
-            owner_id: isAdmin ? (selectedUserId ? parseInt(selectedUserId) : null) : null,
-            department: selectedDepartment || null, // <-- INCLUDE DEPARTMENT
+            owner_id: selectedUserId ? parseInt(selectedUserId) : null,
+            department: selectedDepartment || null,
         };
         onSubmit(taskData);
     };
@@ -99,19 +96,17 @@ function TaskForm({ onSubmit, submitButtonText }) {
             </div>
             {/* --- END NEW DROPDOWN --- */}
 
-            {isAdmin && (
-                <div className="form-group">
-                    <label>{t('assign_to_user')}:</label>
-                    <select value={selectedUserId} onChange={e => setSelectedUserId(e.target.value)} disabled={loadingUsers}>
-                        <option value="">{t('assign_to_self')}</option>
-                        {users.map(user => (
-                            <option key={user.id} value={user.id}>
-                                {user.full_name} ({user.email})
-                            </option>
-                        ))}
-                    </select>
-                </div>
-            )}
+            <div className="form-group">
+                <label>{t('assign_to_user')}:</label>
+                <select value={selectedUserId} onChange={e => setSelectedUserId(e.target.value)} disabled={loadingUsers}>
+                    <option value="">{loadingUsers ? t('loading') : t('assign_to_self')}</option>
+                    {users.map(user => (
+                        <option key={user.id} value={user.id}>
+                            {user.full_name || `${user.first_name} ${user.surname}`.trim() || user.email}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             <div className="form-group">
                 <label>{t('start_date')}:</label>
