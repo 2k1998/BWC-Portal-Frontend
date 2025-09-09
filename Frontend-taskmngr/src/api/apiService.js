@@ -448,7 +448,12 @@ export const callApi = async (endpoint, method = 'GET', data = null, token = nul
     const headers = {};
     if (token) headers['Authorization'] = `Bearer ${token}`;
 
-    const options = { method, headers };
+    const options = { 
+        method, 
+        headers,
+        credentials: 'include',  // Include credentials for CORS
+        mode: 'cors'  // Explicitly set CORS mode
+    };
 
     if (data instanceof FormData) {
         options.body = data;
@@ -458,19 +463,24 @@ export const callApi = async (endpoint, method = 'GET', data = null, token = nul
         options.body = JSON.stringify(data);
     }
 
-    const response = await fetch(url, options);
-    if (!response.ok) {
-        let errorMsg = `HTTP ${response.status}`;
-        try {
-            const err = await response.json();
-            errorMsg = err.detail || err.message || errorMsg;
-        } catch {
-            // Intentionally left blank: error response is not JSON
+    try {
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            let errorMsg = `HTTP ${response.status}`;
+            try {
+                const err = await response.json();
+                errorMsg = err.detail || err.message || errorMsg;
+            } catch {
+                // Intentionally left blank: error response is not JSON
+            }
+            throw new Error(errorMsg);
         }
-        throw new Error(errorMsg);
+        if (response.status === 204) return null;
+        return response.json();
+    } catch (error) {
+        console.error(`API call failed: ${method} ${url}`, error);
+        throw error;
     }
-    if (response.status === 204) return null;
-    return response.json();
 };
 
 // Chat API
