@@ -1,8 +1,1 @@
-# SPA fallback for Render
 /*    /index.html   200
-
-# Specific routes
-/projects    /index.html   200
-/tasks      /index.html   200
-/dashboard  /index.html   200
-/companies  /index.html   200
