@@ -263,6 +263,8 @@ export const projectApi = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
+      mode: 'cors',
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -281,6 +283,8 @@ export const projectApi = {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
+      mode: 'cors',
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -300,6 +304,8 @@ export const projectApi = {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(projectData),
+      mode: 'cors',
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -451,7 +457,8 @@ export const callApi = async (endpoint, method = 'GET', data = null, token = nul
     const options = { 
         method, 
         headers,
-        mode: 'cors'  // Explicitly set CORS mode
+        mode: 'cors',  // Explicitly set CORS mode
+        credentials: 'include'  // Include credentials for authenticated requests
     };
 
     if (data instanceof FormData) {
