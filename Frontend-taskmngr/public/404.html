@@ -5,14 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BWC Portal</title>
     <script>
-      // Only redirect if we're not already on index.html
-      if (!window.location.pathname.includes('index.html')) {
-        // Preserve the current path and redirect to index.html
-        const currentPath = window.location.pathname;
-        const currentSearch = window.location.search;
-        const currentHash = window.location.hash;
-        window.location.replace('/index.html' + currentPath + currentSearch + currentHash);
-      }
+      // Redirect to root and let React Router handle the routing
+      window.location.replace('/');
     </script>
   </head>
   <body>
