@@ -1,1 +1,21 @@
+# SPA fallback
 /*    /index.html   200
+
+# Specific routes
+/projects    /index.html   200
+/tasks      /index.html   200
+/dashboard  /index.html   200
+/companies  /index.html   200
+/events     /index.html   200
+/groups     /index.html   200
+/users      /index.html   200
+/profile    /index.html   200
+/admin-panel /index.html   200
+/reports    /index.html   200
+/contacts   /index.html   200
+/daily-calls /index.html   200
+/payments   /index.html   200
+/commissions /index.html   200
+/documents  /index.html   200
+/approvals  /index.html   200
+/car-finances /index.html   200
