@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +14,7 @@ function DailyCallsPage() {
 
     const [dailyCalls, setDailyCalls] = useState([]);
     const [loading, setLoading] = useState(true);
+    const updateTimeouts = useRef({});
 
     const fetchDailyCalls = useCallback(async () => {
         if (!accessToken) return;
@@ -34,6 +35,15 @@ function DailyCallsPage() {
         fetchDailyCalls();
     }, [fetchDailyCalls]);
 
+    // Cleanup timeouts on unmount
+    useEffect(() => {
+        return () => {
+            Object.values(updateTimeouts.current).forEach(timeout => {
+                if (timeout) clearTimeout(timeout);
+            });
+        };
+    }, []);
+
     const handleUpdate = async (callId, updateData) => {
         try {
             // Fixed: use correct function name
@@ -44,6 +54,20 @@ function DailyCallsPage() {
             const errorMessage = err.message || err.detail || err.toString() || t('failed_to_update_call');
             showNotification(errorMessage, 'error');
         }
+    };
+
+    const handleDateChange = (callId, date) => {
+        // Clear any existing timeout for this call
+        if (updateTimeouts.current[callId]) {
+            clearTimeout(updateTimeouts.current[callId]);
+        }
+        
+        // Set a new timeout to update after 1 second of no changes
+        updateTimeouts.current[callId] = setTimeout(() => {
+            if (date) {
+                handleUpdate(callId, { next_call_at: date.toISOString() });
+            }
+        }, 1000);
     };
 
     const handleRemove = async (callId) => {
@@ -92,7 +116,7 @@ function DailyCallsPage() {
                                     <td>
                                         <DatePicker
                                             selected={call.next_call_at ? new Date(call.next_call_at) : null}
-                                            onChange={(date) => handleUpdate(call.id, { next_call_at: date ? date.toISOString() : null })}
+                                            onChange={(date) => handleDateChange(call.id, date)}
                                             showTimeInput
                                             timeInputLabel={`${t('time')}:`}
                                             dateFormat="dd/MM/yyyy HH:mm"
