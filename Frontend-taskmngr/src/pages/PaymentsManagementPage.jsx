@@ -47,7 +47,7 @@ const PaymentsPage = () => {
         description: '',
         amount: 0,
         currency: 'EUR',
-        payment_type: 'salary',
+        payment_type: 'base_salary',
         due_date: new Date().toISOString().split('T')[0],
         employee_id: null,
         company_id: null,
@@ -168,7 +168,8 @@ const PaymentsPage = () => {
             fetchPayments();
         } catch (error) {
             console.error('Error creating payment:', error);
-            alert('Failed to create payment: ' + error.message);
+            const errorMessage = error.message || error.detail || error.toString() || 'Unknown error occurred';
+            alert('Failed to create payment: ' + errorMessage);
         }
     };
 
@@ -218,7 +219,7 @@ const PaymentsPage = () => {
             description: '',
             amount: 0,
             currency: 'EUR',
-            payment_type: 'salary',
+            payment_type: 'base_salary',
             due_date: new Date().toISOString().split('T')[0],
             employee_id: null,
             company_id: null,
@@ -350,13 +351,16 @@ const PaymentsPage = () => {
                             onChange={(e) => setFilters({...filters, payment_type_filter: e.target.value})}
                         >
                             <option value="">{t('all_types') || 'All Types'}</option>
-                            <option value="salary">{t('salary') || 'Salary'}</option>
+                            <option value="base_salary">{t('salary') || 'Salary'}</option>
                             <option value="commission_payment">{t('commission') || 'Commission'}</option>
                             <option value="bonus">{t('bonus') || 'Bonus'}</option>
-                            <option value="expense_reimbursement">{t('expense_reimbursement') || 'Expense'}</option>
-                            <option value="rent_income">{t('rent_income') || 'Rent Income'}</option>
-                            <option value="service_income">{t('service_income') || 'Service Income'}</option>
+                            <option value="business_expense">{t('expense_reimbursement') || 'Expense'}</option>
+                            <option value="car_rental_income">{t('rent_income') || 'Rent Income'}</option>
+                            <option value="other_income">{t('service_income') || 'Service Income'}</option>
                             <option value="other_income">{t('other_income') || 'Other Income'}</option>
+                            <option value="office_rent">{t('office_rent') || 'Office Rent'}</option>
+                            <option value="utility_bill">{t('utility_bill') || 'Utility Bill'}</option>
+                            <option value="equipment_purchase">{t('equipment_purchase') || 'Equipment Purchase'}</option>
                             <option value="other_expense">{t('other_expense') || 'Other Expense'}</option>
                         </select>
                     </div>
@@ -545,13 +549,16 @@ const PaymentsPage = () => {
                                     value={newPayment.payment_type}
                                     onChange={(e) => setNewPayment({...newPayment, payment_type: e.target.value})}
                                 >
-                                    <option value="salary">{t('salary') || 'Salary'}</option>
+                                    <option value="base_salary">{t('salary') || 'Salary'}</option>
                                     <option value="commission_payment">{t('commission') || 'Commission'}</option>
                                     <option value="bonus">{t('bonus') || 'Bonus'}</option>
-                                    <option value="expense_reimbursement">{t('expense_reimbursement') || 'Expense Reimbursement'}</option>
-                                    <option value="rent_income">{t('rent_income') || 'Rent Income'}</option>
-                                    <option value="service_income">{t('service_income') || 'Service Income'}</option>
+                                    <option value="business_expense">{t('expense_reimbursement') || 'Expense Reimbursement'}</option>
+                                    <option value="car_rental_income">{t('rent_income') || 'Rent Income'}</option>
+                                    <option value="other_income">{t('service_income') || 'Service Income'}</option>
                                     <option value="other_income">{t('other_income') || 'Other Income'}</option>
+                                    <option value="office_rent">{t('office_rent') || 'Office Rent'}</option>
+                                    <option value="utility_bill">{t('utility_bill') || 'Utility Bill'}</option>
+                                    <option value="equipment_purchase">{t('equipment_purchase') || 'Equipment Purchase'}</option>
                                     <option value="other_expense">{t('other_expense') || 'Other Expense'}</option>
                                 </select>
                             </div>
@@ -698,13 +705,16 @@ const PaymentsPage = () => {
                                     value={selectedPayment.payment_type}
                                     onChange={(e) => setSelectedPayment({...selectedPayment, payment_type: e.target.value})}
                                 >
-                                    <option value="salary">{t('salary') || 'Salary'}</option>
+                                    <option value="base_salary">{t('salary') || 'Salary'}</option>
                                     <option value="commission_payment">{t('commission') || 'Commission'}</option>
                                     <option value="bonus">{t('bonus') || 'Bonus'}</option>
-                                    <option value="expense_reimbursement">{t('expense_reimbursement') || 'Expense Reimbursement'}</option>
-                                    <option value="rent_income">{t('rent_income') || 'Rent Income'}</option>
-                                    <option value="service_income">{t('service_income') || 'Service Income'}</option>
+                                    <option value="business_expense">{t('expense_reimbursement') || 'Expense Reimbursement'}</option>
+                                    <option value="car_rental_income">{t('rent_income') || 'Rent Income'}</option>
+                                    <option value="other_income">{t('service_income') || 'Service Income'}</option>
                                     <option value="other_income">{t('other_income') || 'Other Income'}</option>
+                                    <option value="office_rent">{t('office_rent') || 'Office Rent'}</option>
+                                    <option value="utility_bill">{t('utility_bill') || 'Utility Bill'}</option>
+                                    <option value="equipment_purchase">{t('equipment_purchase') || 'Equipment Purchase'}</option>
                                     <option value="other_expense">{t('other_expense') || 'Other Expense'}</option>
                                 </select>
                             </div>

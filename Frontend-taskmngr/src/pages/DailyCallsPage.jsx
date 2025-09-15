@@ -23,7 +23,8 @@ function DailyCallsPage() {
             const data = await dailyCallApi.getMyDailyCalls(accessToken);
             setDailyCalls(data);
         } catch (err) {
-            showNotification(err.message || t('failed_to_fetch_daily_calls'), 'error');
+            const errorMessage = err.message || err.detail || err.toString() || t('failed_to_fetch_daily_calls');
+            showNotification(errorMessage, 'error');
         } finally {
             setLoading(false);
         }
@@ -40,7 +41,8 @@ function DailyCallsPage() {
             showNotification(t('call_updated_success'), 'success');
             fetchDailyCalls();
         } catch (err) {
-            showNotification(err.message || t('failed_to_update_call'), 'error');
+            const errorMessage = err.message || err.detail || err.toString() || t('failed_to_update_call');
+            showNotification(errorMessage, 'error');
         }
     };
 
@@ -52,7 +54,8 @@ function DailyCallsPage() {
                 showNotification(t('call_removed_success'), 'success');
                 fetchDailyCalls();
             } catch (err) {
-                showNotification(err.message || t('failed_to_remove_call'), 'error');
+                const errorMessage = err.message || err.detail || err.toString() || t('failed_to_remove_call');
+                showNotification(errorMessage, 'error');
             }
         }
     };
