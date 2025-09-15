@@ -14,6 +14,7 @@ function DailyCallsPage() {
 
     const [dailyCalls, setDailyCalls] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedDates, setSelectedDates] = useState({});
     const updateTimeouts = useRef({});
 
     const fetchDailyCalls = useCallback(async () => {
@@ -23,6 +24,15 @@ function DailyCallsPage() {
             // Fixed: use correct function name
             const data = await dailyCallApi.getMyDailyCalls(accessToken);
             setDailyCalls(data);
+            
+            // Initialize selected dates for each call
+            const initialDates = {};
+            data.forEach(call => {
+                if (call.next_call_at) {
+                    initialDates[call.id] = new Date(call.next_call_at);
+                }
+            });
+            setSelectedDates(initialDates);
         } catch (err) {
             const errorMessage = err.message || err.detail || err.toString() || t('failed_to_fetch_daily_calls');
             showNotification(errorMessage, 'error');
@@ -37,8 +47,9 @@ function DailyCallsPage() {
 
     // Cleanup timeouts on unmount
     useEffect(() => {
+        const timeouts = updateTimeouts.current;
         return () => {
-            Object.values(updateTimeouts.current).forEach(timeout => {
+            Object.values(timeouts).forEach(timeout => {
                 if (timeout) clearTimeout(timeout);
             });
         };
@@ -57,17 +68,32 @@ function DailyCallsPage() {
     };
 
     const handleDateChange = (callId, date) => {
+        // Update local state immediately for visual feedback
+        setSelectedDates(prev => ({
+            ...prev,
+            [callId]: date
+        }));
+    };
+
+    const handleDateSelect = (callId, date) => {
         // Clear any existing timeout for this call
         if (updateTimeouts.current[callId]) {
             clearTimeout(updateTimeouts.current[callId]);
         }
         
-        // Set a new timeout to update after 1 second of no changes
+        // Set a new timeout to update after 3 seconds of no changes
         updateTimeouts.current[callId] = setTimeout(() => {
             if (date) {
                 handleUpdate(callId, { next_call_at: date.toISOString() });
             }
-        }, 1000);
+        }, 3000);
+    };
+
+    const handleSaveDate = (callId) => {
+        const date = selectedDates[callId];
+        if (date) {
+            handleUpdate(callId, { next_call_at: date.toISOString() });
+        }
     };
 
     const handleRemove = async (callId) => {
@@ -114,15 +140,35 @@ function DailyCallsPage() {
                                         />
                                     </td>
                                     <td>
-                                        <DatePicker
-                                            selected={call.next_call_at ? new Date(call.next_call_at) : null}
-                                            onChange={(date) => handleDateChange(call.id, date)}
-                                            showTimeInput
-                                            timeInputLabel={`${t('time')}:`}
-                                            dateFormat="dd/MM/yyyy HH:mm"
-                                            className="date-picker-input"
-                                            placeholderText={t('set_next_call')}
-                                        />
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <DatePicker
+                                                selected={selectedDates[call.id] || (call.next_call_at ? new Date(call.next_call_at) : null)}
+                                                onChange={(date) => handleDateChange(call.id, date)}
+                                                onSelect={(date) => handleDateSelect(call.id, date)}
+                                                showTimeInput
+                                                timeInputLabel={`${t('time')}:`}
+                                                dateFormat="dd/MM/yyyy HH:mm"
+                                                className="date-picker-input"
+                                                placeholderText={t('set_next_call')}
+                                                timeFormat="HH:mm"
+                                                timeIntervals={15}
+                                            />
+                                            <button 
+                                                className="save-button" 
+                                                onClick={() => handleSaveDate(call.id)}
+                                                style={{
+                                                    padding: '4px 8px',
+                                                    fontSize: '12px',
+                                                    backgroundColor: '#4CAF50',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '4px',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                {t('save') || 'Save'}
+                                            </button>
+                                        </div>
                                     </td>
                                     <td>
                                         <button className="remove-button" onClick={() => handleRemove(call.id)}>
