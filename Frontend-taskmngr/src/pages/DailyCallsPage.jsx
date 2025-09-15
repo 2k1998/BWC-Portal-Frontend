@@ -92,7 +92,7 @@ function DailyCallsPage() {
                                     <td>
                                         <DatePicker
                                             selected={call.next_call_at ? new Date(call.next_call_at) : null}
-                                            onChange={(date) => handleUpdate(call.id, { next_call_at: date })}
+                                            onChange={(date) => handleUpdate(call.id, { next_call_at: date ? date.toISOString() : null })}
                                             showTimeInput
                                             timeInputLabel={`${t('time')}:`}
                                             dateFormat="dd/MM/yyyy HH:mm"
