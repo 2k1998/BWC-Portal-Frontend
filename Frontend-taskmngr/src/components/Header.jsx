@@ -7,6 +7,16 @@ import { companyApi } from '../api/apiService';
 import NotificationBell from './NotificationBell';
 import { taskManagementApi } from '../api/taskManagementApi';
 import TaskAssignmentDashboard from './TaskAssignmentDashboard';
+import { 
+    ClipboardList, 
+    DollarSign, 
+    TrendingUp, 
+    Car, 
+    Clock, 
+    MessageCircle, 
+    Phone, 
+    X 
+} from 'lucide-react';
 import './Header.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
@@ -111,9 +121,9 @@ function Header() {
                                                 More ▼
                                             </button>
                                             <div className="dropdown-menu">
-                                                <NavLink to="/payments">💰 Payments</NavLink>
-                                                <NavLink to="/commissions">📈 Commissions</NavLink>
-                                                <NavLink to="/car-finances">🚗 Car Finance</NavLink>
+                                                <NavLink to="/payments"><DollarSign size={16} /> Payments</NavLink>
+                                                <NavLink to="/commissions"><TrendingUp size={16} /> Commissions</NavLink>
+                                                <NavLink to="/car-finances"><Car size={16} /> Car Finance</NavLink>
                                             </div>
                                         </div>
                                     </>
@@ -132,7 +142,7 @@ function Header() {
                                         className="task-summary-btn"
                                         title="Task Management Dashboard"
                                     >
-                                        <span className="task-icon">📋</span>
+                                        <ClipboardList className="task-icon" size={20} />
                                         <span className="task-label">Tasks</span>
                                         {urgentTaskCount > 0 && (
                                             <span className="task-urgent-badge">{urgentTaskCount}</span>
@@ -144,17 +154,17 @@ function Header() {
                                         <div className="task-summary-tooltip">
                                             {taskSummary.pending_assignments > 0 && (
                                                 <div className="summary-line">
-                                                    ⏳ {taskSummary.pending_assignments} pending acceptance
+                                                    <Clock size={16} /> {taskSummary.pending_assignments} pending acceptance
                                                 </div>
                                             )}
                                             {taskSummary.active_discussions > 0 && (
                                                 <div className="summary-line">
-                                                    💬 {taskSummary.active_discussions} active discussions
+                                                    <MessageCircle size={16} /> {taskSummary.active_discussions} active discussions
                                                 </div>
                                             )}
                                             {taskSummary.pending_calls > 0 && (
                                                 <div className="summary-line">
-                                                    📞 {taskSummary.pending_calls} pending calls
+                                                    <Phone size={16} /> {taskSummary.pending_calls} pending calls
                                                 </div>
                                             )}
                                         </div>
@@ -224,7 +234,7 @@ function Header() {
                             <div className="summary-items">
                                 {taskSummary.pending_assignments > 0 && (
                                     <div className="summary-item pending-item">
-                                        <span className="summary-icon">⏳</span>
+                                        <Clock className="summary-icon" size={16} />
                                         <span className="summary-text">
                                             {taskSummary.pending_assignments} task{taskSummary.pending_assignments !== 1 ? 's' : ''} need your response
                                         </span>
@@ -233,7 +243,7 @@ function Header() {
                                 
                                 {taskSummary.active_discussions > 0 && (
                                     <div className="summary-item discussion-item">
-                                        <span className="summary-icon">💬</span>
+                                        <MessageCircle className="summary-icon" size={16} />
                                         <span className="summary-text">
                                             {taskSummary.active_discussions} active discussion{taskSummary.active_discussions !== 1 ? 's' : ''}
                                         </span>
@@ -242,7 +252,7 @@ function Header() {
                                 
                                 {taskSummary.pending_calls > 0 && (
                                     <div className="summary-item call-item">
-                                        <span className="summary-icon">📞</span>
+                                        <Phone className="summary-icon" size={16} />
                                         <span className="summary-text">
                                             {taskSummary.pending_calls} scheduled call{taskSummary.pending_calls !== 1 ? 's' : ''}
                                         </span>
@@ -271,7 +281,7 @@ function Header() {
                                 onClick={() => setShowTaskDashboard(false)}
                                 className="modal-close"
                             >
-                                ✕
+                                <X size={20} />
                             </button>
                         </div>
                         <div className="modal-body dashboard-modal-body">

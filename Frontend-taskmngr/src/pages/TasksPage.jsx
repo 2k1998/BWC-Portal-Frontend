@@ -146,22 +146,69 @@ function TasksPage() {
 
   return (
     <div className="tasks-container">
-      <h1>{t('my_tasks')}</h1>
+      <div className="tasks-header">
+        <h1>{t('my_tasks')}</h1>
+        <div className="header-actions">
+          <button 
+            onClick={() => setShowCreateForm(!showCreateForm)} 
+            className="create-task-btn"
+          >
+            <span className="btn-icon">+</span>
+            {showCreateForm ? t('hide_form') : t('create_new_task')}
+          </button>
+        </div>
+      </div>
 
+      {/* Enhanced Filter Section */}
       <div className="filter-section">
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="status-filter"
-        >
-          <option value="all">{t('all_statuses') || 'All Statuses'}</option>
-          <option value="new">{t('status_new') || 'New'}</option>
-          <option value="received">{t('status_received') || 'Received'}</option>
-          <option value="on_process">{t('status_on_process') || 'On Process'}</option>
-          <option value="pending">{t('status_pending') || 'Pending'}</option>
-          <option value="completed">{t('status_completed') || 'Completed'}</option>
-          <option value="loose_end">{t('status_loose_end') || 'Loose End'}</option>
-        </select>
+        <div className="filter-controls">
+          <div className="filter-group">
+            <label className="filter-label">{t('filter_by_status')}:</label>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="status-filter"
+            >
+              <option value="all">{t('all_statuses') || 'All Statuses'}</option>
+              <option value="new">{t('status_new') || 'New'}</option>
+              <option value="received">{t('status_received') || 'Received'}</option>
+              <option value="on_process">{t('status_on_process') || 'On Process'}</option>
+              <option value="pending">{t('status_pending') || 'Pending'}</option>
+              <option value="completed">{t('status_completed') || 'Completed'}</option>
+              <option value="loose_end">{t('status_loose_end') || 'Loose End'}</option>
+            </select>
+          </div>
+          
+          <div className="filter-group">
+            <label className="filter-label">{t('quick_filters')}:</label>
+            <div className="quick-filters">
+              <button 
+                className={`quick-filter-btn urgent-important ${activeFilter === 'urgentImportant' ? 'active' : ''}`}
+                onClick={() => navigate('/tasks?filter=urgentImportant')}
+              >
+                {t('urgent_important')}
+              </button>
+              <button 
+                className={`quick-filter-btn urgent-only ${activeFilter === 'urgentOnly' ? 'active' : ''}`}
+                onClick={() => navigate('/tasks?filter=urgentOnly')}
+              >
+                {t('urgent_only')}
+              </button>
+              <button 
+                className={`quick-filter-btn important-only ${activeFilter === 'importantOnly' ? 'active' : ''}`}
+                onClick={() => navigate('/tasks?filter=importantOnly')}
+              >
+                {t('important_only')}
+              </button>
+              <button 
+                className={`quick-filter-btn all-day ${activeFilter === 'allDayDeadline' ? 'active' : ''}`}
+                onClick={() => navigate('/tasks?filter=allDayDeadline')}
+              >
+                {t('all_day_tasks')}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {activeFilter && (
@@ -175,11 +222,13 @@ function TasksPage() {
         </div>
       )}
 
-      <button onClick={() => setShowCreateForm(!showCreateForm)} className="toggle-form-button">
-        {showCreateForm ? t('hide_create_task_form') : t('create_new_task')}
-      </button>
+      {/* Task Creation Form */}
       {showCreateForm && (
-        <TaskForm onSubmit={handleCreateTask} submitButtonText={t('add_task')} />
+        <TaskForm 
+          onSubmit={handleCreateTask} 
+          submitButtonText={t('add_task')} 
+          onCancel={() => setShowCreateForm(false)}
+        />
       )}
 
       <div className="active-tasks-section">

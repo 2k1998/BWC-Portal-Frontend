@@ -1,6 +1,7 @@
 // src/components/ProjectCard.jsx
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { Edit, Trash2, AlertTriangle } from 'lucide-react';
 
 const PROJECT_TYPES = {
   new_store: 'New Store',
@@ -77,14 +78,14 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
               onClick={() => onEdit(project)}
               title="Edit Project"
             >
-              ✏️
+              <Edit size={16} />
             </button>
             <button
               className="action-btn delete-btn"
               onClick={() => onDelete(project.id, project.name)}
               title="Delete Project"
             >
-              🗑️
+              <Trash2 size={16} />
             </button>
           </div>
         )}
@@ -137,7 +138,7 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
             <label>Expected Completion</label>
             <span className={isOverdue ? 'overdue-date' : ''}>
               {formatDate(project.expected_completion_date)}
-              {isOverdue && <span className="overdue-indicator">⚠️</span>}
+              {isOverdue && <AlertTriangle className="overdue-indicator" size={16} />}
             </span>
           </div>
 

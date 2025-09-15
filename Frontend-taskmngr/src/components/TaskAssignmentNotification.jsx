@@ -2,12 +2,14 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import { useLanguage } from '../context/LanguageContext';
 import { taskManagementApi } from '../api/taskManagementApi';
 import './TaskAssignmentNotification.css';
 
 const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
     const { accessToken } = useAuth();
     const { showNotification } = useNotification();
+    const { t } = useLanguage();
     const [loading, setLoading] = useState(false);
     const [showRejectForm, setShowRejectForm] = useState(false);
     const [showDiscussForm, setShowDiscussForm] = useState(false);
@@ -26,16 +28,16 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
             await taskManagementApi.respondToAssignment(assignment.id, payload, accessToken);
             
             showNotification(
-                action === 'accept' ? 'Task accepted successfully!' :
-                action === 'reject' ? 'Task rejected successfully!' :
-                'Discussion started successfully!',
+                action === 'accept' ? t('task_accepted_success') :
+                action === 'reject' ? t('task_rejected_success') :
+                t('discussion_started_success'),
                 'success'
             );
             
             onUpdate?.();
             onClose?.();
         } catch (error) {
-            showNotification(error.message || 'Failed to respond to assignment', 'error');
+            showNotification(error.message || t('failed_to_respond_assignment'), 'error');
         } finally {
             setLoading(false);
         }
@@ -51,7 +53,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                 <div className="task-info">
                     <h3 className="task-title">{assignment.task.title}</h3>
                     <p className="assignment-from">
-                        Assigned by: <strong>{assignment.assigned_by.full_name}</strong>
+                        {t('assigned_by')}: <strong>{assignment.assigned_by.full_name}</strong>
                     </p>
                     <p className="assignment-date">
                         {formatDate(assignment.assigned_at)}
@@ -59,35 +61,35 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                 </div>
                 <div className="task-priority">
                     {assignment.task.urgency && (
-                        <span className="priority-badge urgent">Urgent</span>
+                        <span className="priority-badge urgent">{t('urgent')}</span>
                     )}
                     {assignment.task.important && (
-                        <span className="priority-badge important">Important</span>
+                        <span className="priority-badge important">{t('important')}</span>
                     )}
                 </div>
             </div>
 
             {assignment.task.description && (
                 <div className="task-description">
-                    <h4>Description:</h4>
+                    <h4>{t('description')}:</h4>
                     <p>{assignment.task.description}</p>
                 </div>
             )}
 
             {assignment.assignment_message && (
                 <div className="assignment-message">
-                    <h4>Message from {assignment.assigned_by.full_name}:</h4>
+                    <h4>{t('message_from')} {assignment.assigned_by.full_name}:</h4>
                     <p className="message-content">{assignment.assignment_message}</p>
                 </div>
             )}
 
             {assignment.task.deadline && (
                 <div className="task-deadline">
-                    <h4>Deadline:</h4>
+                    <h4>{t('deadline')}:</h4>
                     <p className="deadline-date">
                         {formatDate(assignment.task.deadline)}
                         {new Date(assignment.task.deadline) < new Date() && (
-                            <span className="overdue-indicator"> (Overdue)</span>
+                            <span className="overdue-indicator"> ({t('overdue')})</span>
                         )}
                     </p>
                 </div>
@@ -101,7 +103,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                             disabled={loading}
                             className="btn-accept"
                         >
-                            {loading ? 'Accepting...' : 'Accept Task'}
+                            {loading ? t('accepting') : t('accept_task')}
                         </button>
                         
                         <button
@@ -109,7 +111,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                             disabled={loading}
                             className="btn-reject"
                         >
-                            Reject Task
+                            {t('reject_task')}
                         </button>
                         
                         <button
@@ -117,18 +119,18 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                             disabled={loading}
                             className="btn-discuss"
                         >
-                            Discuss Task
+                            {t('discuss_task')}
                         </button>
                     </>
                 )}
 
                 {showRejectForm && (
                     <div className="response-form reject-form">
-                        <h4>Reject Task</h4>
+                        <h4>{t('reject_task')}</h4>
                         <textarea
                             value={rejectionReason}
                             onChange={(e) => setRejectionReason(e.target.value)}
-                            placeholder="Please provide a reason for rejection..."
+                            placeholder={t('provide_rejection_reason')}
                             className="rejection-reason"
                             rows="3"
                             required
@@ -139,7 +141,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                                 disabled={loading || !rejectionReason.trim()}
                                 className="btn-submit-reject"
                             >
-                                {loading ? 'Rejecting...' : 'Confirm Rejection'}
+                                {loading ? t('rejecting') : t('confirm_rejection')}
                             </button>
                             <button
                                 onClick={() => {
@@ -149,7 +151,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                                 disabled={loading}
                                 className="btn-cancel"
                             >
-                                Cancel
+                                {t('cancel')}
                             </button>
                         </div>
                     </div>
@@ -157,11 +159,11 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
 
                 {showDiscussForm && (
                     <div className="response-form discuss-form">
-                        <h4>Start Discussion</h4>
+                        <h4>{t('start_discussion')}</h4>
                         <textarea
                             value={responseMessage}
                             onChange={(e) => setResponseMessage(e.target.value)}
-                            placeholder="What would you like to discuss about this task?"
+                            placeholder={t('discuss_task_placeholder')}
                             className="discussion-message"
                             rows="3"
                         />
@@ -173,7 +175,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                                     value="message"
                                     defaultChecked
                                 />
-                                Continue with messages
+                                {t('continue_with_messages')}
                             </label>
                             <label className="option-label">
                                 <input
@@ -181,7 +183,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                                     name="discussionType"
                                     value="call"
                                 />
-                                Request a phone call
+                                {t('request_phone_call')}
                             </label>
                         </div>
                         <div className="form-actions">
@@ -190,7 +192,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                                 disabled={loading}
                                 className="btn-submit-discuss"
                             >
-                                {loading ? 'Starting Discussion...' : 'Start Discussion'}
+                                {loading ? t('starting_discussion') : t('start_discussion')}
                             </button>
                             <button
                                 onClick={() => {
@@ -200,7 +202,7 @@ const TaskAssignmentNotification = ({ assignment, onUpdate, onClose }) => {
                                 disabled={loading}
                                 className="btn-cancel"
                             >
-                                Cancel
+                                {t('cancel')}
                             </button>
                         </div>
                     </div>

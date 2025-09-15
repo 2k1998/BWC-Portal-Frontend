@@ -1,12 +1,24 @@
 // src/components/PaymentWidget.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { paymentApi } from '../api/apiService';
+import { 
+    DollarSign, 
+    Banknote, 
+    CheckCircle, 
+    Briefcase, 
+    AlertCircle, 
+    AlertTriangle, 
+    Calendar, 
+    CreditCard 
+} from 'lucide-react';
 import '../styles/PaymentWidget.css';
 // REMOVED: import CarFinanceWidget from './CarFinanceWidget';
 
 const PaymentWidget = () => {
     const { accessToken, isAdmin } = useAuth();
+    const { t } = useLanguage();
     const [loading, setLoading] = useState(true);
     const [paymentData, setPaymentData] = useState({
         upcomingPayments: [],
@@ -89,7 +101,7 @@ const PaymentWidget = () => {
     if (loading) {
         return (
             <div className="payment-widget loading">
-                <div className="loading-spinner">Loading payment data...</div>
+                <div className="loading-spinner">{t('loading_payment_data')}</div>
             </div>
         );
     }
@@ -97,7 +109,7 @@ const PaymentWidget = () => {
     return (
         <div className="payment-widget">
             <div className="widget-header">
-                <h2>💰 Financial Overview</h2>
+                <h2><DollarSign size={24} /> Financial Overview</h2>
                 <div className="header-actions">
                     <button 
                         className="view-all-btn"
@@ -111,24 +123,24 @@ const PaymentWidget = () => {
             {/* Summary Cards */}
             <div className="payment-summary-cards">
                 <div className="summary-card">
-                    <div className="card-icon">💵</div>
+                    <Banknote className="card-icon" size={24} />
                     <div className="card-content">
-                        <div className="card-label">Total Pending</div>
+                        <div className="card-label">{t('total_pending')}</div>
                         <div className="card-value">{formatCurrency(paymentData.totalPending)}</div>
                     </div>
                 </div>
                 
                 <div className="summary-card">
-                    <div className="card-icon">✅</div>
+                    <CheckCircle className="card-icon" size={24} />
                     <div className="card-content">
-                        <div className="card-label">Paid This Month</div>
+                        <div className="card-label">{t('paid_this_month')}</div>
                         <div className="card-value">{formatCurrency(paymentData.totalPaid)}</div>
                     </div>
                 </div>
                 
                 {isAdmin && (
                     <div className="summary-card">
-                        <div className="card-icon">💼</div>
+                        <Briefcase className="card-icon" size={24} />
                         <div className="card-content">
                             <div className="card-label">Commissions (Month)</div>
                             <div className="card-value">{formatCurrency(paymentData.currentMonthCommissions)}</div>
@@ -140,11 +152,11 @@ const PaymentWidget = () => {
             {/* Overdue Payments */}
             {paymentData.overduePayments.length > 0 && (
                 <div className="overdue-payments">
-                    <h3>🔴 Overdue Payments</h3>
+                    <h3><AlertCircle size={20} /> {t('overdue')} {t('payments')}</h3>
                     <div className="payment-list">
                         {paymentData.overduePayments.map(payment => (
                             <div key={payment.id} className="payment-item overdue">
-                                <div className="payment-icon">⚠️</div>
+                                <AlertTriangle className="payment-icon" size={20} />
                                 <div className="payment-info">
                                     <div className="payment-title">{payment.title}</div>
                                     <div className="payment-details">
@@ -154,7 +166,7 @@ const PaymentWidget = () => {
                                 <div className="payment-amount-section">
                                     <div className="payment-amount overdue">{formatCurrency(payment.amount)}</div>
                                     <div className="payment-date">
-                                        Overdue since: {formatDate(payment.due_date)}
+                                        {t('overdue_since')} {formatDate(payment.due_date)}
                                     </div>
                                 </div>
                             </div>
@@ -165,14 +177,14 @@ const PaymentWidget = () => {
 
             {/* Upcoming Payments */}
             <div className="upcoming-payments">
-                <h3>📅 Upcoming Payments</h3>
+                <h3><Calendar size={20} /> {t('upcoming_payments')}</h3>
                 {paymentData.upcomingPayments.length === 0 ? (
-                    <p className="no-payments">No upcoming payments</p>
+                    <p className="no-payments">{t('no_upcoming_payments')}</p>
                 ) : (
                     <div className="payment-list">
                         {paymentData.upcomingPayments.map(payment => (
                             <div key={payment.id} className="payment-item">
-                                <div className="payment-icon">💳</div>
+                                <CreditCard className="payment-icon" size={20} />
                                 <div className="payment-info">
                                     <div className="payment-title">{payment.title}</div>
                                     <div className="payment-details">

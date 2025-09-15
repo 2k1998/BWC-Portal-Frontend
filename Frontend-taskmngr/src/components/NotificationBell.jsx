@@ -1,16 +1,29 @@
 // src/components/NotificationBell.jsx - Enhanced with Task Management
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { notificationApi } from '../api/apiService';
 import { taskManagementApi } from '../api/taskManagementApi';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotification } from '../context/NotificationContext';
 import TaskAssignmentNotification from './TaskAssignmentNotification';
+import { 
+    Bell, 
+    ClipboardList, 
+    CheckCircle, 
+    XCircle, 
+    MessageCircle, 
+    Mail, 
+    Phone, 
+    PhoneCall,
+    X
+} from 'lucide-react';
 import './NotificationBell.css';
 
 function NotificationBell() {
     const { accessToken, isAuthenticated } = useAuth();
+    const { t } = useLanguage();
     const [notifications, setNotifications] = useState([]);
     const [taskNotifications, setTaskNotifications] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -133,15 +146,16 @@ function NotificationBell() {
 
     const getNotificationIcon = (type) => {
         const icons = {
-            'task_assigned': '📋',
-            'task_accepted': '✅',
-            'task_rejected': '❌',
-            'discussion_requested': '💬',
-            'message_received': '📨',
-            'call_scheduled': '📞',
-            'call_completed': '☎️'
+            'task_assigned': ClipboardList,
+            'task_accepted': CheckCircle,
+            'task_rejected': XCircle,
+            'discussion_requested': MessageCircle,
+            'message_received': Mail,
+            'call_scheduled': Phone,
+            'call_completed': PhoneCall
         };
-        return icons[type] || '🔔';
+        const IconComponent = icons[type] || Bell;
+        return <IconComponent size={16} />;
     };
 
     const formatNotificationTime = (timestamp) => {
@@ -176,7 +190,7 @@ function NotificationBell() {
         <>
             <div className="notification-bell-container" onMouseLeave={() => setIsOpen(false)}>
                 <button className="notification-bell-button" onMouseEnter={() => setIsOpen(true)}>
-                    <span className="bell-icon">🔔</span>
+                    <Bell className="bell-icon" size={20} />
                     {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                 </button>
 
@@ -220,7 +234,7 @@ function NotificationBell() {
                             {displayNotifications.length === 0 ? (
                                 <div className="notification-item empty">
                                     <div className="empty-state">
-                                        <span className="empty-icon">🔔</span>
+                                        <Bell className="empty-icon" size={24} />
                                         <p>No notifications</p>
                                     </div>
                                 </div>
@@ -234,7 +248,7 @@ function NotificationBell() {
                                         <div className="notification-icon">
                                             {notification.type === 'task' 
                                                 ? getNotificationIcon(notification.notification_type)
-                                                : '🔔'
+                                                : <Bell size={16} />
                                             }
                                         </div>
                                         <div className="notification-content">
@@ -274,7 +288,7 @@ function NotificationBell() {
                             
                             {allNotifications.length > 0 && (
                                 <button className="clear-all-button" onClick={handleClearAll}>
-                                    Clear All
+                                    {t('clear_all')}
                                 </button>
                             )}
                         </div>
@@ -303,7 +317,7 @@ function NotificationBell() {
                                 }}
                                 className="modal-close"
                             >
-                                ✕
+                                <X size={20} />
                             </button>
                         </div>
                         <div className="modal-body">

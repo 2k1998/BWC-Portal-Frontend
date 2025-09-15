@@ -17,8 +17,10 @@
     margin-left: var(--sidebar-width);
     margin-top: var(--topbar-height);
     transition: margin-left var(--transition-speed) ease;
-    background: #f5f6fa;
+    background: var(--color-gray-50);
     min-height: calc(100vh - var(--topbar-height));
+    padding: 0;
+    overflow-x: auto;
 }
 
 .app-with-sidebar.sidebar-collapsed main {
@@ -401,7 +403,9 @@
 
     .app-with-sidebar main {
         margin-left: 0;
+        margin-right: 0;
         padding-top: var(--header-height);
+        padding-bottom: 80px; /* Space for mobile bottom nav */
     }
 
     .desktop-only {

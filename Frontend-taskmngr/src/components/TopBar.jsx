@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import EnhancedNotificationBell from './EnhancedNotificationBell';
 import ChatHub from './ChatHub';
+import { Building2, Globe } from 'lucide-react';
 import './TopBar.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
@@ -15,7 +16,7 @@ function TopBar() {
         <div className="top-bar">
             <div className="top-bar-left">
                 <Link to="/dashboard" className="top-bar-logo">
-                    <span className="logo-icon">🏢</span>
+                    <Building2 className="logo-icon" size={24} />
                     <span className="logo-text">BWC Portal</span>
                 </Link>
             </div>
@@ -43,7 +44,7 @@ function TopBar() {
                             onClick={() => setLanguage(language === 'en' ? 'el' : 'en')}
                             title="Switch Language"
                         >
-                            <span className="language-icon">🌐</span>
+                            <Globe className="language-icon" size={20} />
                             <span className="language-text">
                                 {language === 'en' ? 'EN' : 'ΕΛ'}
                             </span>

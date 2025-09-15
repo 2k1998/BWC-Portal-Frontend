@@ -23,15 +23,15 @@ function TaskModal({ task, isOpen, onClose, onTaskUpdated }) {
 
     const getPriorityBadge = () => {
         if (task.deadline_all_day) {
-            return <span className="badge all-day-badge">All Day Deadline</span>;
+            return <span className="badge all-day-badge">{t('all_day_deadline')}</span>;
         } else if (task.urgency && task.important) {
-            return <span className="badge urgent-and-important">Urgent & Important</span>;
+            return <span className="badge urgent-and-important">{t('urgent_and_important')}</span>;
         } else if (task.urgency) {
-            return <span className="badge urgent-only">Urgent</span>;
+            return <span className="badge urgent-only">{t('urgent_only')}</span>;
         } else if (task.important) {
-            return <span className="badge important-only">Important</span>;
+            return <span className="badge important-only">{t('important_only')}</span>;
         } else {
-            return <span className="badge normal">Normal</span>;
+            return <span className="badge normal">{t('normal')}</span>;
         }
     };
 
@@ -46,7 +46,7 @@ function TaskModal({ task, isOpen, onClose, onTaskUpdated }) {
                 <div className="modal-body">
                     {/* Task Basic Info */}
                     <div className="task-info-section">
-                        <h3>Task Details</h3>
+                        <h3>{t('task_details')}</h3>
                         
                         <div className="info-grid">
                             <div className="info-item">
@@ -101,7 +101,7 @@ function TaskModal({ task, isOpen, onClose, onTaskUpdated }) {
                     
                     {/* Task Status Section */}
                     <div className="task-status-section">
-                        <h3>Task Status</h3>
+                        <h3>{t('task_status')}</h3>
                         <TaskStatusUpdate 
                             task={task} 
                             onStatusUpdated={handleStatusUpdated}

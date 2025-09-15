@@ -1,4 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { 
+    Car, 
+    RotateCcw, 
+    Banknote, 
+    Wrench, 
+    TrendingUp, 
+    TrendingDown, 
+    Hammer, 
+    Fuel, 
+    Shield, 
+    ClipboardList, 
+    DollarSign 
+} from 'lucide-react';
 
 const CarFinanceWidget = ({ accessToken, paymentApi }) => {
     const [loading, setLoading] = useState(true);
@@ -228,19 +241,19 @@ const CarFinanceWidget = ({ accessToken, paymentApi }) => {
 
     const getCategoryIcon = (category) => {
         const categoryLower = category?.toLowerCase() || '';
-        if (categoryLower.includes('service')) return '🔧';
-        if (categoryLower.includes('repair')) return '🔨';
-        if (categoryLower.includes('fuel') || categoryLower.includes('gas')) return '⛽';
-        if (categoryLower.includes('insurance')) return '🛡️';
-        if (categoryLower.includes('rental')) return '🚗';
-        return '💰';
+        if (categoryLower.includes('service')) return <Wrench size={16} />;
+        if (categoryLower.includes('repair')) return <Hammer size={16} />;
+        if (categoryLower.includes('fuel') || categoryLower.includes('gas')) return <Fuel size={16} />;
+        if (categoryLower.includes('insurance')) return <Shield size={16} />;
+        if (categoryLower.includes('rental')) return <Car size={16} />;
+        return <DollarSign size={16} />;
     };
 
     if (loading) {
         return (
             <div className="car-finance-widget loading">
                 <div className="widget-header">
-                    <h2>🚗 Car Fleet Finances</h2>
+                    <h2><Car size={24} /> Car Fleet Finances</h2>
                 </div>
                 <div className="loading-spinner">Loading financial data...</div>
             </div>
@@ -250,15 +263,15 @@ const CarFinanceWidget = ({ accessToken, paymentApi }) => {
     return (
         <div className="car-finance-widget">
             <div className="widget-header">
-                <h2>🚗 Car Fleet Finances</h2>
+                <h2><Car size={24} /> Car Fleet Finances</h2>
                 <div className="header-actions">
                     <button 
                         className="refresh-btn"
                         onClick={fetchCarFinanceData}
                         title="Refresh data"
-                    >
-                        🔄
-                    </button>
+                        >
+                            <RotateCcw size={20} />
+                        </button>
                     <button 
                         className="view-all-btn"
                         onClick={() => window.location.href = '/payments'}
@@ -271,7 +284,7 @@ const CarFinanceWidget = ({ accessToken, paymentApi }) => {
             {/* Main Summary Cards */}
             <div className="finance-summary-cards">
                 <div className="summary-card income">
-                    <div className="card-icon">💵</div>
+                    <Banknote className="card-icon" size={24} />
                     <div className="card-content">
                         <div className="card-label">Total Rental Income</div>
                         <div className="card-value">{formatCurrency(financeData.totalRentalIncome)}</div>
@@ -282,7 +295,7 @@ const CarFinanceWidget = ({ accessToken, paymentApi }) => {
                 </div>
 
                 <div className="summary-card expense">
-                    <div className="card-icon">🔧</div>
+                    <Wrench className="card-icon" size={24} />
                     <div className="card-content">
                         <div className="card-label">Total Service Expenses</div>
                         <div className="card-value">{formatCurrency(financeData.totalServiceExpenses)}</div>
@@ -293,7 +306,7 @@ const CarFinanceWidget = ({ accessToken, paymentApi }) => {
                 </div>
 
                 <div className={`summary-card ${financeData.netProfit >= 0 ? 'profit' : 'loss'}`}>
-                    <div className="card-icon">{financeData.netProfit >= 0 ? '📈' : '📉'}</div>
+                    {financeData.netProfit >= 0 ? <TrendingUp className="card-icon" size={24} /> : <TrendingDown className="card-icon" size={24} />}
                     <div className="card-content">
                         <div className="card-label">Net Profit</div>
                         <div className="card-value">{formatCurrency(financeData.netProfit)}</div>
@@ -309,35 +322,35 @@ const CarFinanceWidget = ({ accessToken, paymentApi }) => {
                 <h3>Service Expenses Breakdown</h3>
                 <div className="category-grid">
                     <div className="category-item">
-                        <span className="category-icon">🔧</span>
+                        <Wrench className="category-icon" size={20} />
                         <div className="category-details">
                             <span className="category-name">Service</span>
                             <span className="category-amount">{formatCurrency(financeData.serviceCategories.service)}</span>
                         </div>
                     </div>
                     <div className="category-item">
-                        <span className="category-icon">🔨</span>
+                        <Hammer className="category-icon" size={20} />
                         <div className="category-details">
                             <span className="category-name">Repairs</span>
                             <span className="category-amount">{formatCurrency(financeData.serviceCategories.repair)}</span>
                         </div>
                     </div>
                     <div className="category-item">
-                        <span className="category-icon">⛽</span>
+                        <Fuel className="category-icon" size={20} />
                         <div className="category-details">
                             <span className="category-name">Fuel</span>
                             <span className="category-amount">{formatCurrency(financeData.serviceCategories.fuel)}</span>
                         </div>
                     </div>
                     <div className="category-item">
-                        <span className="category-icon">🛡️</span>
+                        <Shield className="category-icon" size={20} />
                         <div className="category-details">
                             <span className="category-name">Insurance</span>
                             <span className="category-amount">{formatCurrency(financeData.serviceCategories.insurance)}</span>
                         </div>
                     </div>
                     <div className="category-item">
-                        <span className="category-icon">📋</span>
+                        <ClipboardList className="category-icon" size={20} />
                         <div className="category-details">
                             <span className="category-name">Other</span>
                             <span className="category-amount">{formatCurrency(financeData.serviceCategories.other)}</span>

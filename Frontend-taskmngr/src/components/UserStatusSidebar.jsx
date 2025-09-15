@@ -1,6 +1,7 @@
 // src/components/UserStatusSidebar.jsx - Right sidebar showing user online status
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { useRealtime } from '../hooks/useRealtime';
 import { authApi, chatApi } from '../api/apiService';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-ba
 
 function UserStatusSidebar({ isCollapsed = false }) {
     const { currentUser, accessToken } = useAuth();
+    const { t } = useLanguage();
     const { isConnected } = useRealtime();
     const [users, setUsers] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState(new Set());
@@ -110,9 +112,9 @@ function UserStatusSidebar({ isCollapsed = false }) {
     return (
         <div className="user-status-sidebar">
             <div className="sidebar-header">
-                <h3>Contacts</h3>
+                <h3>{t('contacts')}</h3>
                 <div className="online-summary">
-                    <span className="online-count">{onlineUsers.size} online</span>
+                    <span className="online-count">{onlineUsers.size} {t('online')}</span>
                 </div>
             </div>
 
@@ -154,7 +156,7 @@ function UserStatusSidebar({ isCollapsed = false }) {
                 {users.length === 0 && (
                     <div className="no-users">
                         <span>👥</span>
-                        <p>No contacts found</p>
+                        <p>{t('no_contacts_found')}</p>
                     </div>
                 )}
             </div>

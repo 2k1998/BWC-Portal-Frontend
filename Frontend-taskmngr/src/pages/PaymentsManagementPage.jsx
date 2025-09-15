@@ -4,6 +4,16 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { paymentApi } from '../api/apiService';
 import { authApi, companyApi } from '../api/apiService';
+import { 
+    DollarSign, 
+    AlertTriangle, 
+    CheckCircle, 
+    TrendingUp, 
+    TrendingDown, 
+    Check, 
+    Edit, 
+    Trash2 
+} from 'lucide-react';
 import '../styles/PaymentsPage.css';
 
 const PaymentsPage = () => {
@@ -284,37 +294,37 @@ const PaymentsPage = () => {
             {/* Statistics Cards */}
             <div className="statistics-cards">
                 <div className="stat-card">
-                    <div className="stat-icon pending">💰</div>
+                    <DollarSign className="stat-icon pending" size={24} />
                     <div className="stat-content">
-                        <div className="stat-label">Total Pending</div>
+                        <div className="stat-label">{t('total_pending')}</div>
                         <div className="stat-value">{formatCurrency(statistics.totalPending)}</div>
                     </div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-icon overdue">⚠️</div>
+                    <AlertTriangle className="stat-icon overdue" size={24} />
                     <div className="stat-content">
-                        <div className="stat-label">Overdue</div>
+                        <div className="stat-label">{t('overdue')}</div>
                         <div className="stat-value overdue">{formatCurrency(statistics.totalOverdue)}</div>
                     </div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-icon paid">✅</div>
+                    <CheckCircle className="stat-icon paid" size={24} />
                     <div className="stat-content">
-                        <div className="stat-label">Total Paid</div>
+                        <div className="stat-label">{t('total_paid')}</div>
                         <div className="stat-value paid">{formatCurrency(statistics.totalPaid)}</div>
                     </div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-icon income">📈</div>
+                    <TrendingUp className="stat-icon income" size={24} />
                     <div className="stat-content">
-                        <div className="stat-label">Monthly Income</div>
+                        <div className="stat-label">{t('monthly_income')}</div>
                         <div className="stat-value income">{formatCurrency(statistics.monthlyIncome)}</div>
                     </div>
                 </div>
                 <div className="stat-card">
-                    <div className="stat-icon expense">📉</div>
+                    <TrendingDown className="stat-icon expense" size={24} />
                     <div className="stat-content">
-                        <div className="stat-label">Monthly Expenses</div>
+                        <div className="stat-label">{t('monthly_expenses')}</div>
                         <div className="stat-value expense">{formatCurrency(statistics.monthlyExpenses)}</div>
                     </div>
                 </div>
@@ -417,7 +427,7 @@ const PaymentsPage = () => {
                     <tbody>
                         {payments.length === 0 ? (
                             <tr>
-                                <td colSpan="7" className="no-data">No payments found</td>
+                                <td colSpan="7" className="no-data">{t('no_payments_found')}</td>
                             </tr>
                         ) : (
                             payments.map(payment => (
@@ -447,7 +457,7 @@ const PaymentsPage = () => {
                                                         onClick={() => handleUpdateStatus(payment.id, 'paid')}
                                                         title={t('mark_as_paid') || 'Mark as Paid'}
                                                     >
-                                                        ✓
+                                                        <Check size={16} />
                                                     </button>
                                                     <button 
                                                         className="btn-action btn-edit"
@@ -457,7 +467,7 @@ const PaymentsPage = () => {
                                                         }}
                                                         title={t('edit')}
                                                     >
-                                                        ✏️
+                                                        <Edit size={16} />
                                                     </button>
                                                 </>
                                             )}
@@ -466,7 +476,7 @@ const PaymentsPage = () => {
                                                 onClick={() => handleDeletePayment(payment.id)}
                                                 title={t('delete')}
                                             >
-                                                🗑️
+                                                <Trash2 size={16} />
                                             </button>
                                         </div>
                                     </td>

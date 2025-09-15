@@ -18,7 +18,6 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import EventModal from '../components/EventModal';
 import LanguageModal from '../components/LanguageModal';
-import PaymentWidget from '../components/PaymentWidget';
 import './CalendarDashboard.css';
 import './DashboardTasks.css';
 
@@ -156,33 +155,55 @@ function DashboardPage() {
         event={upcomingEvent}
       />
 
-      <h1>
-        {t('welcome_back')}, {currentUser?.first_name || 'User'}!
-      </h1>
-      <p>{t('dashboard_intro')}</p>
+      <header className="dashboard-header">
+        <div className="welcome-section">
+          <h1 className="dashboard-title">
+            {t('welcome_back')}, {currentUser?.first_name || 'User'}!
+          </h1>
+          <p className="dashboard-subtitle">{t('dashboard_intro')}</p>
+        </div>
+        <div className="dashboard-actions">
+          <button 
+            className="btn btn-primary btn-sm"
+            onClick={() => navigate('/tasks')}
+            aria-label="View all tasks"
+          >
+            View All Tasks
+          </button>
+        </div>
+      </header>
 
       <div className="dashboard-grid-container">
-        <div className="clickable-card" onClick={() => handleCategoryClick('urgentImportant')}>
-          {renderTaskListCard(categorizedTasks.urgentImportant, 'urgent_important', 'red-category')}
-        </div>
-        <div className="clickable-card" onClick={() => handleCategoryClick('urgentOnly')}>
-          {renderTaskListCard(categorizedTasks.urgentOnly, 'urgent', 'blue-category')}
-        </div>
-        <div className="clickable-card" onClick={() => handleCategoryClick('importantOnly')}>
-          {renderTaskListCard(categorizedTasks.importantOnly, 'important', 'green-category')}
-        </div>
-        <div className="clickable-card" onClick={() => handleCategoryClick('normal')}>
-          {renderTaskListCard(categorizedTasks.normal, 'normal', 'yellow-category')}
-        </div>
-        <div className="clickable-card" onClick={() => handleCategoryClick('allDayDeadline')}>
-          {renderTaskListCard(
-            categorizedTasks.allDayDeadline,
-            'all_day_deadlines',
-            'orange-category'
-          )}
+        {/* Row 1: Urgent & Important | Urgent */}
+        <div className="dashboard-row">
+          <div className="clickable-card" onClick={() => handleCategoryClick('urgentImportant')}>
+            {renderTaskListCard(categorizedTasks.urgentImportant, 'urgent_important', 'red-category')}
+          </div>
+          <div className="clickable-card" onClick={() => handleCategoryClick('urgentOnly')}>
+            {renderTaskListCard(categorizedTasks.urgentOnly, 'urgent', 'blue-category')}
+          </div>
         </div>
 
-        <div className="dashboard-calendar-wrapper">
+        {/* Row 2: Important | All Day Deadlines */}
+        <div className="dashboard-row">
+          <div className="clickable-card" onClick={() => handleCategoryClick('importantOnly')}>
+            {renderTaskListCard(categorizedTasks.importantOnly, 'important', 'green-category')}
+          </div>
+          <div className="clickable-card" onClick={() => handleCategoryClick('allDayDeadline')}>
+            {renderTaskListCard(
+              categorizedTasks.allDayDeadline,
+              'all_day_deadlines',
+              'orange-category'
+            )}
+          </div>
+        </div>
+
+        {/* Row 3: Not Urgent, Not Important | Calendar */}
+        <div className="dashboard-row">
+          <div className="clickable-card" onClick={() => handleCategoryClick('normal')}>
+            {renderTaskListCard(categorizedTasks.normal, 'normal', 'yellow-category')}
+          </div>
+          <div className="dashboard-calendar-wrapper">
           <div className="custom-month-navigation">
             <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="nav-arrow-button">
               &lt;
@@ -234,16 +255,12 @@ function DashboardPage() {
               agenda: t('agenda'),
             }}
           />
-        </div>
-
-        {isAdmin && (
-          <div className="dashboard-payment-section">
-            <PaymentWidget />
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
 }
 
 export default DashboardPage;
+

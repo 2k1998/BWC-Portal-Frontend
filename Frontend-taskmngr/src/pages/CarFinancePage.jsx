@@ -1,10 +1,24 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { carFinanceApi } from '../api/carFinanceAPI';
+import { 
+    Car, 
+    RotateCcw, 
+    DollarSign, 
+    Wrench, 
+    TrendingUp, 
+    Hammer, 
+    Fuel, 
+    Shield, 
+    ClipboardList, 
+    X 
+} from 'lucide-react';
 import './CarFinancePage.css';
 
 const CarFinancePage = () => {
     const { currentUser: user, accessToken } = useAuth();
+    const { t } = useLanguage();
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [showIncomeModal, setShowIncomeModal] = useState(false);
@@ -153,7 +167,7 @@ const CarFinancePage = () => {
         e.preventDefault();
         try {
             if (!newIncome.car_id || !newIncome.amount || !newIncome.customer_name) {
-                alert('Please fill in all required fields');
+                alert(t('please_fill_required_fields') || 'Please fill in all required fields');
                 return;
             }
             
@@ -176,7 +190,7 @@ const CarFinancePage = () => {
             await fetchAllData();
         } catch (error) {
             console.error('Error adding income:', error);
-            alert('Failed to add income record');
+            alert(t('failed_to_add_income') || 'Failed to add income record');
         }
     };
 
@@ -184,7 +198,7 @@ const CarFinancePage = () => {
         e.preventDefault();
         try {
             if (!newExpense.car_id || !newExpense.amount || !newExpense.vendor) {
-                alert('Please fill in all required fields');
+                alert(t('please_fill_required_fields') || 'Please fill in all required fields');
                 return;
             }
             
@@ -209,7 +223,7 @@ const CarFinancePage = () => {
             await fetchAllData();
         } catch (error) {
             console.error('Error adding expense:', error);
-            alert('Failed to add expense record');
+            alert(t('failed_to_add_expense') || 'Failed to add expense record');
         }
     };
 
@@ -234,7 +248,7 @@ const CarFinancePage = () => {
     if (loading) {
         return (
             <div className="car-finance-loading">
-                <div className="loading-spinner">Loading car finance data...</div>
+                <div className="loading-spinner">{t('loading_car_finance_data')}</div>
             </div>
         );
     }
@@ -244,26 +258,26 @@ const CarFinancePage = () => {
             <div className="car-finance-widget">
                 {/* Header */}
                 <div className="widget-header">
-                    <h2>🚗 Car Fleet Finances</h2>
+                    <h2><Car size={24} /> {t('car_fleet_finances')}</h2>
                     <div className="header-actions">
                         <button 
                             className={`refresh-btn ${refreshing ? 'spinning' : ''}`}
                             onClick={handleRefresh}
                             disabled={refreshing}
                         >
-                            🔄
+                            <RotateCcw size={20} />
                         </button>
                         <button 
                             className="action-btn income-btn"
                             onClick={() => setShowIncomeModal(true)}
                         >
-                            + Add Income
+                            + {t('add_income')}
                         </button>
                         <button 
                             className="action-btn expense-btn"
                             onClick={() => setShowExpenseModal(true)}
                         >
-                            + Add Expense
+                            + {t('add_expense')}
                         </button>
                     </div>
                 </div>
@@ -271,75 +285,75 @@ const CarFinancePage = () => {
                 {/* Summary Cards */}
                 <div className="finance-summary-cards">
                     <div className="summary-card income">
-                        <div className="card-icon">💰</div>
+                        <DollarSign className="card-icon" size={24} />
                         <div className="card-content">
-                            <div className="card-label">Total Rental Income</div>
+                            <div className="card-label">{t('total_rental_income')}</div>
                             <div className="card-value">{formatCurrency(financeData.totalIncome)}</div>
-                            <div className="card-subtext">This month: {formatCurrency(financeData.monthlyIncome)}</div>
+                            <div className="card-subtext">{t('this_month')}: {formatCurrency(financeData.monthlyIncome)}</div>
                         </div>
                     </div>
 
                     <div className="summary-card expense">
-                        <div className="card-icon">🔧</div>
+                        <Wrench className="card-icon" size={24} />
                         <div className="card-content">
-                            <div className="card-label">Total Service Expenses</div>
+                            <div className="card-label">{t('total_service_expenses')}</div>
                             <div className="card-value">{formatCurrency(financeData.totalExpenses)}</div>
-                            <div className="card-subtext">This month: {formatCurrency(financeData.monthlyExpenses)}</div>
+                            <div className="card-subtext">{t('this_month')}: {formatCurrency(financeData.monthlyExpenses)}</div>
                         </div>
                     </div>
 
                     <div className="summary-card profit">
-                        <div className="card-icon">📈</div>
+                        <TrendingUp className="card-icon" size={24} />
                         <div className="card-content">
-                            <div className="card-label">Net Profit</div>
+                            <div className="card-label">{t('net_profit')}</div>
                             <div className={`card-value ${financeData.netProfit >= 0 ? 'positive' : 'negative'}`}>
                                 {formatCurrency(financeData.netProfit)}
                             </div>
-                            <div className="card-subtext">{financeData.netProfit >= 0 ? 'Profitable' : 'Loss'}</div>
+                            <div className="card-subtext">{financeData.netProfit >= 0 ? t('profitable') : t('loss')}</div>
                         </div>
                     </div>
                 </div>
 
                 {/* Service Expenses Breakdown */}
                 <div className="expense-breakdown">
-                    <h3>Service Expenses Breakdown</h3>
+                    <h3>{t('service_expenses_breakdown')}</h3>
                     <div className="category-grid">
                         <div className="category-item">
-                            <div className="category-icon">🔧</div>
+                            <Wrench className="category-icon" size={20} />
                             <div className="category-details">
-                                <div className="category-name">Service</div>
+                                <div className="category-name">{t('service')}</div>
                                 <div className="category-amount">{formatCurrency(financeData.expenseBreakdown.service)}</div>
                             </div>
                         </div>
                         
                         <div className="category-item">
-                            <div className="category-icon">🔨</div>
+                            <Hammer className="category-icon" size={20} />
                             <div className="category-details">
-                                <div className="category-name">Repairs</div>
+                                <div className="category-name">{t('repairs')}</div>
                                 <div className="category-amount">{formatCurrency(financeData.expenseBreakdown.repairs)}</div>
                             </div>
                         </div>
                         
                         <div className="category-item">
-                            <div className="category-icon">⛽</div>
+                            <Fuel className="category-icon" size={20} />
                             <div className="category-details">
-                                <div className="category-name">Fuel</div>
+                                <div className="category-name">{t('fuel')}</div>
                                 <div className="category-amount">{formatCurrency(financeData.expenseBreakdown.fuel)}</div>
                             </div>
                         </div>
                         
                         <div className="category-item">
-                            <div className="category-icon">🛡️</div>
+                            <Shield className="category-icon" size={20} />
                             <div className="category-details">
-                                <div className="category-name">Insurance</div>
+                                <div className="category-name">{t('insurance')}</div>
                                 <div className="category-amount">{formatCurrency(financeData.expenseBreakdown.insurance)}</div>
                             </div>
                         </div>
                         
                         <div className="category-item">
-                            <div className="category-icon">📋</div>
+                            <ClipboardList className="category-icon" size={20} />
                             <div className="category-details">
-                                <div className="category-name">Other</div>
+                                <div className="category-name">{t('other')}</div>
                                 <div className="category-amount">{formatCurrency(financeData.expenseBreakdown.other)}</div>
                             </div>
                         </div>
@@ -348,10 +362,10 @@ const CarFinancePage = () => {
 
                 {/* Recent Transactions */}
                 <div className="recent-transactions">
-                    <h3>Recent Car-Related Transactions</h3>
+                    <h3>{t('recent_car_transactions')}</h3>
                     {financeData.recentTransactions.length === 0 ? (
                         <div className="no-transactions">
-                            No car-related transactions found
+                            {t('no_car_transactions_found')}
                         </div>
                     ) : (
                         <div className="transaction-list">
@@ -361,7 +375,7 @@ const CarFinancePage = () => {
                                     className={`transaction-item ${trans.type}`}
                                 >
                                     <div className="transaction-icon">
-                                        {trans.type === 'income' ? '💰' : '💸'}
+                                        {trans.type === 'income' ? <DollarSign size={20} /> : <DollarSign size={20} />}
                                     </div>
                                     <div className="transaction-info">
                                         <div className="transaction-title">
@@ -384,10 +398,10 @@ const CarFinancePage = () => {
 
                 {/* Monthly Overview */}
                 <div className="monthly-overview">
-                    <h3>Monthly Overview</h3>
+                    <h3>{t('monthly_overview')}</h3>
                     <div className="overview-bars">
                         <div className="bar-group">
-                            <div className="bar-label">Income</div>
+                            <div className="bar-label">{t('income')}</div>
                             <div className="bar-container">
                                 <div 
                                     className="bar income-bar"
@@ -401,7 +415,7 @@ const CarFinancePage = () => {
                         </div>
                         
                         <div className="bar-group">
-                            <div className="bar-label">Expenses</div>
+                            <div className="bar-label">{t('expenses')}</div>
                             <div className="bar-container">
                                 <div 
                                     className="bar expense-bar"
@@ -416,7 +430,7 @@ const CarFinancePage = () => {
                     </div>
                     
                     <div className="monthly-net-section">
-                        <span className="net-label">Net this month:</span>
+                        <span className="net-label">{t('net_this_month')}:</span>
                         <span className={`monthly-net ${financeData.netProfit >= 0 ? 'positive' : 'negative'}`}>
                             {formatCurrency(financeData.netProfit)}
                         </span>
@@ -425,23 +439,23 @@ const CarFinancePage = () => {
 
                 {/* Fleet Status */}
                 <div className="fleet-status">
-                    <h3>Fleet Status</h3>
+                    <h3>{t('fleet_status')}</h3>
                     <div className="status-grid">
                         <div className="status-item">
                             <div className="status-value">{financeData.carStatistics.totalCars}</div>
-                            <div className="status-label">Total Cars</div>
+                            <div className="status-label">{t('total_cars')}</div>
                         </div>
                         <div className="status-item">
                             <div className="status-value active">{financeData.carStatistics.activeCars}</div>
-                            <div className="status-label">Currently Rented</div>
+                            <div className="status-label">{t('currently_rented')}</div>
                         </div>
                         <div className="status-item">
                             <div className="status-value available">{financeData.carStatistics.availableCars}</div>
-                            <div className="status-label">Available</div>
+                            <div className="status-label">{t('available')}</div>
                         </div>
                         <div className="status-item">
                             <div className="status-value service">{financeData.carStatistics.inServiceCars}</div>
-                            <div className="status-label">In Service</div>
+                            <div className="status-label">{t('in_service')}</div>
                         </div>
                     </div>
                 </div>
@@ -452,17 +466,17 @@ const CarFinancePage = () => {
                 <div className="modal-overlay" onClick={() => setShowIncomeModal(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h2>Add Rental Income</h2>
+                            <h2>{t('add_rental_income')}</h2>
                             <button 
                                 className="modal-close"
                                 onClick={() => setShowIncomeModal(false)}
                             >
-                                ×
+                                <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleAddIncome} className="modal-form">
                             <div className="form-group">
-                                <label>Customer Name *</label>
+                                <label>{t('customer_name')} *</label>
                                 <input 
                                     type="text" 
                                     value={newIncome.customer_name}
@@ -471,13 +485,13 @@ const CarFinancePage = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Car *</label>
+                                <label>{t('car')} *</label>
                                 <select 
                                     value={newIncome.car_id}
                                     onChange={(e) => setNewIncome({...newIncome, car_id: e.target.value})}
                                     required
                                 >
-                                    <option value="">Select a car</option>
+                                    <option value="">{t('select_a_car')}</option>
                                     {availableCars.map(car => (
                                         <option key={car.id} value={car.id}>
                                             {car.manufacturer} {car.model} - {car.license_plate}
@@ -486,7 +500,7 @@ const CarFinancePage = () => {
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label>Amount (€) *</label>
+                                <label>{t('amount_eur')} *</label>
                                 <input 
                                     type="number" 
                                     step="0.01"
@@ -496,7 +510,7 @@ const CarFinancePage = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Date *</label>
+                                <label>{t('date')} *</label>
                                 <input 
                                     type="date" 
                                     value={newIncome.date}
@@ -505,7 +519,7 @@ const CarFinancePage = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Description</label>
+                                <label>{t('description')}</label>
                                 <textarea 
                                     value={newIncome.description}
                                     onChange={(e) => setNewIncome({...newIncome, description: e.target.value})}
@@ -518,13 +532,13 @@ const CarFinancePage = () => {
                                     className="btn-cancel"
                                     onClick={() => setShowIncomeModal(false)}
                                 >
-                                    Cancel
+                                    {t('cancel')}
                                 </button>
                                 <button 
                                     type="submit"
                                     className="btn-submit income"
                                 >
-                                    Add Income
+                                    {t('add_income')}
                                 </button>
                             </div>
                         </form>
@@ -537,23 +551,23 @@ const CarFinancePage = () => {
                 <div className="modal-overlay" onClick={() => setShowExpenseModal(false)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
-                            <h2>Add Service Expense</h2>
+                            <h2>{t('add_service_expense')}</h2>
                             <button 
                                 className="modal-close"
                                 onClick={() => setShowExpenseModal(false)}
                             >
-                                ×
+                                <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleAddExpense} className="modal-form">
                             <div className="form-group">
-                                <label>Car *</label>
+                                <label>{t('car')} *</label>
                                 <select 
                                     value={newExpense.car_id}
                                     onChange={(e) => setNewExpense({...newExpense, car_id: e.target.value})}
                                     required
                                 >
-                                    <option value="">Select a car</option>
+                                    <option value="">{t('select_a_car')}</option>
                                     {availableCars.map(car => (
                                         <option key={car.id} value={car.id}>
                                             {car.manufacturer} {car.model} - {car.license_plate}
@@ -562,22 +576,22 @@ const CarFinancePage = () => {
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label>Service Type *</label>
+                                <label>{t('service_type')} *</label>
                                 <select 
                                     value={newExpense.service_type}
                                     onChange={(e) => setNewExpense({...newExpense, service_type: e.target.value})}
                                     required
                                 >
-                                    <option value="maintenance">Maintenance</option>
-                                    <option value="repair">Repair</option>
-                                    <option value="fuel">Fuel</option>
-                                    <option value="insurance">Insurance</option>
-                                    <option value="registration">Registration</option>
-                                    <option value="other">Other</option>
+                                    <option value="maintenance">{t('maintenance')}</option>
+                                    <option value="repair">{t('repair')}</option>
+                                    <option value="fuel">{t('fuel')}</option>
+                                    <option value="insurance">{t('insurance')}</option>
+                                    <option value="registration">{t('registration')}</option>
+                                    <option value="other">{t('other')}</option>
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label>Vendor *</label>
+                                <label>{t('vendor')} *</label>
                                 <input 
                                     type="text" 
                                     value={newExpense.vendor}
@@ -586,7 +600,7 @@ const CarFinancePage = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Amount (€) *</label>
+                                <label>{t('amount_eur')} *</label>
                                 <input 
                                     type="number" 
                                     step="0.01"
@@ -596,7 +610,7 @@ const CarFinancePage = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Date *</label>
+                                <label>{t('date')} *</label>
                                 <input 
                                     type="date" 
                                     value={newExpense.date}
@@ -605,7 +619,7 @@ const CarFinancePage = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Mileage</label>
+                                <label>{t('mileage')}</label>
                                 <input 
                                     type="number" 
                                     value={newExpense.mileage || ''}
@@ -613,7 +627,7 @@ const CarFinancePage = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <label>Description</label>
+                                <label>{t('description')}</label>
                                 <textarea 
                                     value={newExpense.description}
                                     onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
@@ -626,13 +640,13 @@ const CarFinancePage = () => {
                                     className="btn-cancel"
                                     onClick={() => setShowExpenseModal(false)}
                                 >
-                                    Cancel
+                                    {t('cancel')}
                                 </button>
                                 <button 
                                     type="submit"
                                     className="btn-submit expense"
                                 >
-                                    Add Expense
+                                    {t('add_expense')}
                                 </button>
                             </div>
                         </form>

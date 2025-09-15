@@ -21,7 +21,7 @@ import NewCompanyPage from './pages/NewCompanyPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import AddEventPage from './pages/AddEventPage';
 import EventsPage from './pages/EventsPage';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import EditCompanyPage from './pages/EditCompanyPage';
 import ReportsPage from './pages/ReportsPage';
 import ContactsPage from './pages/ContactsPage';
@@ -40,13 +40,15 @@ import ApprovalsPage from './pages/ApprovalsPage';
 import SidebarNavigation from './components/SidebarNavigation';
 import TopBar from './components/TopBar';
 import UserStatusSidebar from './components/UserStatusSidebar';
+import MobileBottomNav from './components/MobileBottomNav';
 import React from 'react';
 // This component now correctly uses the context because it will be rendered INSIDE AuthProvider
 const PrivateRoute = ({ children }) => {
   const { currentUser, loading } = useAuth();
+  const { t } = useLanguage();
 
   if (loading) {
-    return <div className="loading-spinner">Authenticating...</div>;
+    return <div className="loading-spinner">{t('authenticating')}</div>;
   }
 
   return currentUser ? children : <Navigate to="/login" />;
@@ -55,8 +57,9 @@ const PrivateRoute = ({ children }) => {
 // This component also correctly uses the context
 const PublicOnlyRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
+  const { t } = useLanguage();
   if (loading) {
-    return <div className="loading-spinner">Loading...</div>;
+    return <div className="loading-spinner">{t('loading')}</div>;
   }
   return !isAuthenticated ? children : <Navigate to="/dashboard" />;
 };
@@ -64,9 +67,10 @@ const PublicOnlyRoute = ({ children }) => {
 // Add your ProtectedRoute definition if not already present
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { currentUser, loading } = useAuth();
+  const { t } = useLanguage();
 
   if (loading) {
-    return <div className="loading-spinner">Authenticating...</div>;
+    return <div className="loading-spinner">{t('authenticating')}</div>;
   }
 
   // Check for required role
@@ -80,12 +84,14 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 // This new component contains the part of your app that needs the auth context
 function AppContent() {
   const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   
   return (
     <div className="app-with-sidebar with-right-sidebar">
       {isAuthenticated && <TopBar />}
       {isAuthenticated && <SidebarNavigation />}
       {isAuthenticated && <UserStatusSidebar />}
+      {isAuthenticated && <MobileBottomNav />}
       <CallNotificationModal />
       <main>
         <Routes>
@@ -135,7 +141,7 @@ function AppContent() {
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="*" element={
             <div style={{ textAlign: 'center', marginTop: '50px' }}>
-              <h2>404 - Page Not Found</h2>
+              <h2>{t('page_not_found')}</h2>
             </div>
           } />
         </Routes>

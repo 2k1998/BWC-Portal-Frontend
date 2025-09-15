@@ -1,15 +1,18 @@
 // src/components/ChatHub.jsx - Chat hub component for sidebar
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { chatApi } from '../api/apiService';
 import { useRealtime } from '../hooks/useRealtime';
 import { useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotification } from '../context/NotificationContext';
+import { MessageCircle, Search, Frown, X } from 'lucide-react';
 import './ChatHub.css';
 
 function ChatHub({ isCollapsed = false }) {
     const { accessToken, isAuthenticated, currentUser } = useAuth();
+    const { t } = useLanguage();
     const { getTotalUnreadMessageCount, getUnreadMessageCount } = useRealtime();
     const [conversations, setConversations] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
@@ -92,9 +95,9 @@ function ChatHub({ isCollapsed = false }) {
         if (conversations.length === 0) {
             return (
                 <div className="no-conversations">
-                    <span>💬</span>
-                    <p>No conversations yet</p>
-                    <small>Search for users above to start chatting</small>
+                    <MessageCircle size={24} />
+                    <p>{t('no_conversations_yet')}</p>
+                    <small>{t('search_users_to_start_chatting')}</small>
                 </div>
             );
         }
@@ -145,7 +148,7 @@ function ChatHub({ isCollapsed = false }) {
         if (isSearching) {
             return (
                 <div className="search-loading">
-                    <span>🔍</span>
+                    <Search size={24} />
                     <p>Searching...</p>
                 </div>
             );
@@ -154,8 +157,8 @@ function ChatHub({ isCollapsed = false }) {
         if (searchQuery && searchResults.length === 0) {
             return (
                 <div className="no-results">
-                    <span>😔</span>
-                    <p>No users found</p>
+                    <Frown size={24} />
+                    <p>{t('no_users_found')}</p>
                 </div>
             );
         }
@@ -194,7 +197,7 @@ function ChatHub({ isCollapsed = false }) {
                 className={`chat-trigger ${isOpen ? 'active' : ''}`}
                 onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="chat-icon">💬</span>
+                <MessageCircle className="chat-icon" size={20} />
                 {totalUnread > 0 && (
                     <span className="chat-badge">{totalUnread}</span>
                 )}
@@ -203,12 +206,12 @@ function ChatHub({ isCollapsed = false }) {
             {isOpen && (
                 <div className="chat-dropdown">
                     <div className="chat-header">
-                        <h3>Messages</h3>
+                        <h3>{t('messages')}</h3>
                         <button 
                             className="close-btn"
                             onClick={() => setIsOpen(false)}
                         >
-                            ✕
+                            <X size={20} />
                         </button>
                     </div>
 
@@ -225,12 +228,12 @@ function ChatHub({ isCollapsed = false }) {
                     <div className="chat-content">
                         {searchQuery ? (
                             <div className="search-results">
-                                <div className="section-header">Search Results</div>
+                                <div className="section-header">{t('search_results')}</div>
                                 {renderSearchResults()}
                             </div>
                         ) : (
                             <div className="conversations">
-                                <div className="section-header">Recent Conversations</div>
+                                <div className="section-header">{t('recent_conversations')}</div>
                                 {renderConversations()}
                             </div>
                         )}

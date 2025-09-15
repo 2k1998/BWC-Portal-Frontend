@@ -3,6 +3,25 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { 
+    BarChart3, 
+    ClipboardList, 
+    Briefcase, 
+    Building2, 
+    Users, 
+    Phone, 
+    Handshake, 
+    Calendar, 
+    FileText, 
+    UserCog, 
+    TrendingUp, 
+    Settings, 
+    DollarSign, 
+    Banknote, 
+    Car, 
+    User, 
+    LogOut 
+} from 'lucide-react';
 // Removed chat hub and notification bell imports - will be placed elsewhere
 import './SidebarNavigation.css';
 
@@ -18,9 +37,21 @@ function SidebarNavigation() {
     const isAdmin = userRole === "admin";
     const canSeeContacts = ['Pillar', 'Manager', 'Head', 'admin'].includes(userRole);
     const canManageProjects = ['admin', 'Manager', 'Head'].includes(userRole);
+    
     const handleLogout = () => {
         logout();
         navigate('/login');
+    };
+
+    const handleKeyDown = (e, action) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            action();
+        }
+    };
+
+    const handleCollapseToggle = () => {
+        setIsCollapsed(!isCollapsed);
     };
 
     return (
@@ -28,9 +59,12 @@ function SidebarNavigation() {
             <div className="sidebar-header">
                 <button
                     className="collapse-toggle desktop-only"
-                    onClick={() => setIsCollapsed(!isCollapsed)}
+                    onClick={handleCollapseToggle}
+                    onKeyDown={(e) => handleKeyDown(e, handleCollapseToggle)}
+                    aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                    aria-expanded={!isCollapsed}
                 >
-                    <div className="burger-menu">
+                    <div className="burger-menu" aria-hidden="true">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -62,17 +96,21 @@ function SidebarNavigation() {
 
             {/* Chat Hub and Notification Bell removed - will be placed elsewhere */}
 
-            <nav className="sidebar-nav">
-                <NavLink to="/dashboard" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+            <nav className="sidebar-nav" role="navigation" aria-label="Main navigation">
+                <NavLink 
+                    to="/dashboard" 
+                    className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+                    aria-label="Go to Dashboard"
+                >
                     <div className="menu-item-content">
-                        <span className="menu-icon">📊</span>
+                        <BarChart3 className="menu-icon" aria-hidden="true" size={20} />
                         {!isCollapsed && <span className="menu-label">{t('dashboard')}</span>}
                     </div>
                 </NavLink>
 
                 <NavLink to="/tasks" className={({ isActive }) => `menu-item  ${isActive ? 'active' : ''}`}>
                     <div className="menu-item-content">
-                        <span className="menu-icon">📋</span>
+                        <ClipboardList className="menu-icon" size={20} />
                         {!isCollapsed && <span className="menu-label">{t('tasks')}</span>}
                     </div>
                 </NavLink>
@@ -80,7 +118,7 @@ function SidebarNavigation() {
                 {canManageProjects && (
                     <NavLink to="/projects" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                         <div className="menu-item-content">
-                            <span className="menu-icon">💼</span>
+                            <Briefcase className="menu-icon" size={20} />
                             {!isCollapsed && <span className="menu-label">{t('projects')}</span>}
                         </div>
                     </NavLink>
@@ -88,7 +126,7 @@ function SidebarNavigation() {
 
                 <NavLink to="/companies" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                     <div className="menu-item-content">
-                        <span className="menu-icon">🏢</span>
+                        <Building2 className="menu-icon" size={20} />
                         {!isCollapsed && <span className="menu-label">{t('companies')}</span>}
                     </div>
                 </NavLink>
@@ -97,14 +135,14 @@ function SidebarNavigation() {
                     <React.Fragment>
                         <NavLink to="/contacts" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">👥</span>
+                                <Users className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('contacts')}</span>}
                             </div>
                         </NavLink>
 
                         <NavLink to="/daily-calls" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">📞</span>
+                                <Phone className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('daily_calls')}</span>}
                             </div>
                         </NavLink>
@@ -113,21 +151,21 @@ function SidebarNavigation() {
 
                 <NavLink to="/groups" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                     <div className="menu-item-content">
-                        <span className="menu-icon">🤝</span>
+                        <Handshake className="menu-icon" size={20} />
                         {!isCollapsed && <span className="menu-label">{t('groups')}</span>}
                     </div>
                 </NavLink>
 
                 <NavLink to="/events" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                     <div className="menu-item-content">
-                        <span className="menu-icon">📅</span>
+                        <Calendar className="menu-icon" size={20} />
                         {!isCollapsed && <span className="menu-label">{t('events')}</span>}
                     </div>
                 </NavLink>
 
                 <NavLink to="/documents" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                     <div className="menu-item-content">
-                        <span className="menu-icon">📄</span>
+                        <FileText className="menu-icon" size={20} />
                         {!isCollapsed && <span className="menu-label">{t('documents')}</span>}
                     </div>
                 </NavLink>
@@ -136,42 +174,42 @@ function SidebarNavigation() {
                     <React.Fragment>
                         <NavLink to="/users" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">👨🏻‍💻</span>
+                                <UserCog className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('users')}</span>}
                             </div>
                         </NavLink>
 
                         <NavLink to="/reports" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">📈</span>
+                                <TrendingUp className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('reports')}</span>}
                             </div>
                         </NavLink>
 
                         <NavLink to="/admin-panel" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">⚙️</span>
+                                <Settings className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('admin_panel')}</span>}
                             </div>
                         </NavLink>
 
                         <NavLink to="/payments" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">💰</span>
+                                <DollarSign className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('payments')}</span>}
                             </div>
                         </NavLink>
 
                         <NavLink to="/commissions" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">💵</span>
+                                <Banknote className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('commissions')}</span>}
                             </div>
                         </NavLink>
 
                         <NavLink to="/car-finances" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                             <div className="menu-item-content">
-                                <span className="menu-icon">🚗</span>
+                                <Car className="menu-icon" size={20} />
                                 {!isCollapsed && <span className="menu-label">{t('car_finance')}</span>}
                             </div>
                         </NavLink>
@@ -181,12 +219,17 @@ function SidebarNavigation() {
 
             <div className="sidebar-footer">
                 <NavLink to="/profile" className="footer-btn">
-                    <span className="footer-icon">👤</span>
+                    <User className="footer-icon" size={20} />
                     {!isCollapsed && <span>{t('profile')}</span>}
                 </NavLink>
 
-                <button className="footer-btn logout-btn" onClick={handleLogout}>
-                    <span className="footer-icon">🚪</span>
+                <button 
+                    className="footer-btn logout-btn" 
+                    onClick={handleLogout}
+                    onKeyDown={(e) => handleKeyDown(e, handleLogout)}
+                    aria-label="Logout from application"
+                >
+                    <LogOut className="footer-icon" aria-hidden="true" size={20} />
                     {!isCollapsed && <span>{t('logout')}</span>}
                 </button>
             </div>

@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext'; // ADD THIS IMPORT
 import { projectApi, companyApi, authApi } from '../api/apiService';
 import ProjectCard from '../components/ProjectCard';
 import ProjectForm from '../components/ProjectForm';
+import { ClipboardList } from 'lucide-react';
 import './Projects.css';
 
 function ProjectsPage() {
@@ -275,7 +276,7 @@ function ProjectsPage() {
       <div className="projects-content">
         {projects.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">📋</div>
+            <ClipboardList className="empty-icon" size={48} />
             <h3>{t('no_projects_found')}</h3>
             <p>
               {searchTerm || statusFilter !== 'all' || typeFilter !== 'all' || companyFilter !== 'all'

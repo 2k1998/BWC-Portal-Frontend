@@ -1,6 +1,6 @@
 /* src/styles/PaymentsPage.css */
 .payments-page {
-    padding: 20px;
+    padding: var(--spacing-xl);
     max-width: 1400px;
     margin: 0 auto;
 }
@@ -9,8 +9,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
+    margin-bottom: var(--spacing-3xl);
+    padding-bottom: var(--spacing-xl);
     border-bottom: 2px solid #e0e0e0;
 }
 
@@ -22,25 +22,25 @@
 
 .header-actions {
     display: flex;
-    gap: 10px;
+    gap: var(--spacing-sm);
 }
 
 /* Statistics Cards */
 .statistics-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-3xl);
 }
 
 .stat-card {
     background: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: var(--spacing-xl);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: var(--spacing-md);
     transition: transform 0.3s;
 }
 
@@ -409,26 +409,54 @@ button:disabled {
     .filter-row {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
+    
+    .statistics-cards {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: var(--spacing-lg);
+    }
 }
 
 @media (max-width: 768px) {
+    .payments-page {
+        padding: var(--spacing-md);
+    }
+    
     .page-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
     }
     
     .header-actions {
         width: 100%;
         justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    
+    .statistics-cards {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .stat-card {
+        padding: var(--spacing-md);
+    }
+    
+    .filters-section {
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
     }
     
     .filter-row {
         grid-template-columns: 1fr;
+        gap: var(--spacing-md);
     }
     
     .payments-table-container {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
     
     .payments-table {
@@ -440,6 +468,64 @@ button:disabled {
     }
     
     .modal-content {
-        padding: 20px;
+        padding: var(--spacing-md);
+        margin: var(--spacing-sm);
+        width: calc(100vw - 2rem);
+        max-width: none;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .btn-action {
+        width: 100%;
+        padding: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .payments-page {
+        padding: var(--spacing-sm);
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card {
+        padding: var(--spacing-sm);
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-sm);
+    }
+    
+    .stat-icon {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .modal-content {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        padding: var(--spacing-sm);
+    }
+    
+    .payments-table th,
+    .payments-table td {
+        padding: var(--spacing-sm);
+        font-size: 0.85rem;
     }
 }

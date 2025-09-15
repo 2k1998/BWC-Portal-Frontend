@@ -1,6 +1,7 @@
 // src/components/EnhancedNotificationBell.jsx - Enhanced notification bell with approvals
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import { notificationApi, approvalApi } from '../api/apiService';
 import { taskManagementApi } from '../api/taskManagementApi';
 import { useRealtime } from '../hooks/useRealtime';
@@ -11,6 +12,7 @@ import './EnhancedNotificationBell.css';
 
 function EnhancedNotificationBell() {
     const { accessToken, isAuthenticated } = useAuth();
+    const { t } = useLanguage();
     const { getTotalUnreadNotificationCount } = useRealtime();
     const [notifications, setNotifications] = useState([]);
     const [taskNotifications, setTaskNotifications] = useState([]);
@@ -251,7 +253,7 @@ function EnhancedNotificationBell() {
                                 e.stopPropagation();
                                 handleDismissNotification(notification.id, 'approval');
                             }}
-                            title="Dismiss notification"
+                            title={t('dismiss_notification')}
                         >
                             ✕
                         </button>
@@ -316,7 +318,7 @@ function EnhancedNotificationBell() {
             return (
                 <div className="no-notifications">
                     <span>🔔</span>
-                    <p>No notifications</p>
+                    <p>{t('no_notifications')}</p>
                 </div>
             );
         }
@@ -374,15 +376,15 @@ function EnhancedNotificationBell() {
             {isOpen && (
                 <div className="notification-dropdown">
                     <div className="notification-header">
-                        <h3>Notifications</h3>
+                        <h3>{t('notifications')}</h3>
                         <div className="notification-header-actions">
                             {unreadCount > 0 && (
                                 <button 
                                     className="mark-all-read-btn"
                                     onClick={handleMarkAllAsRead}
-                                    title="Mark all as read"
+                                    title={t('mark_all_as_read')}
                                 >
-                                    ✓ Mark All Read
+                                    ✓ {t('mark_all_as_read')}
                                 </button>
                             )}
                             <button 
@@ -418,9 +420,9 @@ function EnhancedNotificationBell() {
                             <button 
                                 className="clear-all-btn"
                                 onClick={handleClearAllApprovalNotifications}
-                                title="Clear all approval notifications"
+                                title={t('clear_all_approval_notifications')}
                             >
-                                🗑️ Clear All
+                                🗑️ {t('clear_all')}
                             </button>
                         )}
                     </div>

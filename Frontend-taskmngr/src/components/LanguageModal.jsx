@@ -1,9 +1,10 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { Globe } from 'lucide-react';
 import './LanguageModal.css'; // We'll create this CSS file next
 
 function LanguageModal({ isOpen, onClose }) {
-    const { setLanguage } = useLanguage();
+    const { setLanguage, t } = useLanguage();
 
     if (!isOpen) {
         return null;
@@ -18,16 +19,16 @@ function LanguageModal({ isOpen, onClose }) {
         <div className="modal-overlay">
             <div className="language-modal-content">
                 <div className="language-modal-header">
-                    <h2>Select Your Language / Επιλέξτε τη γλώσσα σας</h2>
+                    <h2>{t('select_language')} / {t('select_language_greek')}</h2>
                 </div>
                 <div className="language-modal-body">
                     <button onClick={() => handleSelect('en')} className="language-button">
-                        <span className="flag-icon">🇺🇸</span>
-                        <span>English</span>
+                        <Globe className="flag-icon" size={20} />
+                        <span>{t('english')}</span>
                     </button>
                     <button onClick={() => handleSelect('el')} className="language-button">
-                        <span className="flag-icon">🇬🇷</span>
-                        <span>Ελληνικά (Greek)</span>
+                        <Globe className="flag-icon" size={20} />
+                        <span>{t('greek')}</span>
                     </button>
                 </div>
             </div>

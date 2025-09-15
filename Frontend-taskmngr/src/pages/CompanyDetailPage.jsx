@@ -16,6 +16,7 @@ import "./CompanyDetailPage.css";
 const CustomCarDropdown = ({ options, value, onChange, placeholder, disabled, showLogo = false }) => {
     const [filter, setFilter] = useState('');
     const [isOpen, setIsOpen] = useState(false);
+    const { t } = useLanguage();
 
     // This ensures the input shows the selected value, but allows typing to filter
     const displayValue = isOpen ? filter : value || '';
@@ -60,7 +61,7 @@ const CustomCarDropdown = ({ options, value, onChange, placeholder, disabled, sh
                             </div>
                         ))
                     ) : (
-                        <div className="dropdown-option disabled">No results found</div>
+                        <div className="dropdown-option disabled">{t('no_results_found')}</div>
                     )}
                 </div>
             )}
@@ -264,7 +265,7 @@ function CompanyDetailPage() {
     if (!company) {
         return (
             <div className="error-message">
-                <h2>Company not found</h2>
+                <h2>{t('company_not_found')}</h2>
                 <p>Company ID: {companyId}</p>
                 <p>Check the browser console for more details.</p>
                 <button onClick={() => navigate('/companies')} className="back-button">

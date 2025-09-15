@@ -1,0 +1,230 @@
+/* Loading Spinner Component - Enhanced with Accessibility */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  min-height: 60px; /* Ensure minimum touch target */
+}
+
+/* Focus management for accessibility */
+.loading-spinner:focus {
+  outline: 2px solid var(--color-gold-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.spinner {
+  position: relative;
+  display: inline-block;
+}
+
+.spinner-ring {
+  position: absolute;
+  border: 3px solid transparent;
+  border-top: 3px solid var(--color-gold-primary);
+  border-radius: 50%;
+  animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.spinner-ring:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.spinner-ring:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.spinner-ring:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Size variants */
+.spinner-small .spinner-ring {
+  width: 20px;
+  height: 20px;
+}
+
+.spinner-medium .spinner-ring {
+  width: 32px;
+  height: 32px;
+}
+
+.spinner-large .spinner-ring {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+.spinner-text {
+  font-size: 0.9rem;
+  color: var(--color-gray-dark);
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.spinner-overlay .spinner-text {
+  font-size: 1rem;
+  color: var(--color-black);
+  font-weight: 600;
+}
+
+/* Progress bar styles */
+.spinner-progress {
+  width: 100%;
+  max-width: 200px;
+  height: 8px;
+  background-color: var(--color-gray-light);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  margin-top: var(--spacing-sm);
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-gold-primary) 0%, var(--color-gold-accent) 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-black);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Button loading state */
+.btn-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.btn-primary.btn-loading::after {
+  border-top-color: var(--color-black);
+}
+
+.btn-secondary.btn-loading::after,
+.btn-info.btn-loading::after {
+  border-top-color: white;
+}
+
+/* Inline loading state */
+.inline-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.9rem;
+  color: var(--color-gray-dark);
+}
+
+.inline-loading .spinner {
+  width: 16px;
+  height: 16px;
+}
+
+.inline-loading .spinner-ring {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+/* Table loading state */
+.table-loading {
+  position: relative;
+  min-height: 200px;
+}
+
+.table-loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.table-loading .loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+}
+
+/* Form loading state */
+.form-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.form-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.form-loading .loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+}
