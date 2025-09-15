@@ -145,13 +145,15 @@ function DailyCallsPage() {
                                                 selected={selectedDates[call.id] || (call.next_call_at ? new Date(call.next_call_at) : null)}
                                                 onChange={(date) => handleDateChange(call.id, date)}
                                                 onSelect={(date) => handleDateSelect(call.id, date)}
-                                                showTimeInput
+                                                showTimeSelect
                                                 timeInputLabel={`${t('time')}:`}
-                                                dateFormat="dd/MM/yyyy HH:mm"
+                                                dateFormat="dd/MM/yyyy h:mm aa"
                                                 className="date-picker-input"
                                                 placeholderText={t('set_next_call')}
-                                                timeFormat="HH:mm"
+                                                timeFormat="h:mm aa"
                                                 timeIntervals={15}
+                                                timeCaption="Time"
+                                                isClearable={true}
                                             />
                                             <button 
                                                 className="save-button" 
