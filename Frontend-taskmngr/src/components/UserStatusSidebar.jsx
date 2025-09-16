@@ -13,7 +13,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-ba
 function UserStatusSidebar({ isCollapsed = false }) {
     const { currentUser, accessToken } = useAuth();
     const { t } = useLanguage();
-    const { isConnected } = useRealtime();
+    const { isConnected, websocketService } = useRealtime();
     const [users, setUsers] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState(new Set());
     const [userLastSeen, setUserLastSeen] = useState({});
@@ -37,7 +37,7 @@ function UserStatusSidebar({ isCollapsed = false }) {
         return () => clearInterval(interval);
     }, [fetchUsers]);
 
-    // Update online status from real user data
+    // Update online status from REST data initially
     useEffect(() => {
         const online = new Set();
         const lastSeen = {};
@@ -53,6 +53,39 @@ function UserStatusSidebar({ isCollapsed = false }) {
         setOnlineUsers(online);
         setUserLastSeen(lastSeen);
     }, [users]);
+
+    // Subscribe to presence updates via websocket for live updates
+    useEffect(() => {
+        if (!websocketService) return;
+        const offUpdate = websocketService.on('presence_update', (data) => {
+            setOnlineUsers((prev) => {
+                const next = new Set(prev);
+                if (data.is_online) {
+                    next.add(data.user_id);
+                } else {
+                    next.delete(data.user_id);
+                }
+                return next;
+            });
+            if (data.last_seen) {
+                setUserLastSeen((prev) => ({ ...prev, [data.user_id]: new Date(data.last_seen) }));
+            }
+        });
+        const offSnapshot = websocketService.on('presence_snapshot', (data) => {
+            const online = new Set();
+            const lastSeen = {};
+            (data.online || []).forEach((u) => {
+                online.add(u.user_id);
+                if (u.last_seen) lastSeen[u.user_id] = new Date(u.last_seen);
+            });
+            setOnlineUsers(online);
+            setUserLastSeen((prev) => ({ ...prev, ...lastSeen }));
+        });
+        return () => {
+            offUpdate();
+            offSnapshot();
+        };
+    }, [websocketService]);
 
     const startChat = async (userId) => {
         try {

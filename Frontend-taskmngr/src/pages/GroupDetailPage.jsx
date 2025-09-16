@@ -31,6 +31,7 @@ function GroupDetailPage() {
                 groupApi.getGroupMembers(Number(groupId), accessToken),
                 groupApi.getGroupTasks(Number(groupId), accessToken)
             ]);
+            console.log('Group data:', groupData); // Debug log
             setGroup(groupData);
             setMembers(membersData);
             setTasks(tasksData);
@@ -91,6 +92,15 @@ function GroupDetailPage() {
         <div className="group-detail-container">
             <button onClick={() => navigate(-1)}>{t('back')}</button>
             <h1>{t('group')}: {group?.name || `ID: ${groupId}`}</h1>
+            {(() => {
+                const computedHead = group?.head || members.find(m => m.role === 'Head');
+                return computedHead ? (
+                    <div className="group-head-display">
+                        {t('head')}: {computedHead.first_name || ''} {computedHead.surname || ''}
+                        <span className="role-badge">{computedHead.role}</span>
+                    </div>
+                ) : null;
+            })()}
             <div className="section-card">
                 <h2>{t('members')}</h2>
                 <ul className="member-list">
@@ -99,7 +109,7 @@ function GroupDetailPage() {
                     ) : (
                         members.map(member => (
                             <li key={member.id} className="member-item">
-                                {member.full_name || member.email} (ID: {member.id})
+                                {member.full_name || member.email}
                             </li>
                         ))
                     )}

@@ -25,6 +25,7 @@ function GroupsPage() {
         setLoading(true);
         try {
             const fetchedGroups = await groupApi.getGroups(accessToken);
+            console.log('Fetched groups:', fetchedGroups); // Debug log
             setGroups(fetchedGroups);
         } catch (err) {
             showNotification(err.message || t('failed_to_fetch_groups'), 'error');
@@ -142,6 +143,16 @@ function GroupsPage() {
                         groups.map(group => (
                             <div key={group.id} className="group-item">
                                 <Link to={`/groups/${group.id}`} className="group-name-link">{group.name}</Link>
+                                {/* Display team head if available */}
+                                {(() => {
+                                    const computedHead = group.head || (group.members || []).find(m => m.role === 'Head');
+                                    return computedHead ? (
+                                        <div className="group-head-display">
+                                            {t('head')}: {computedHead.first_name || ''} {computedHead.surname || ''}
+                                            <span className="role-badge">{computedHead.role}</span>
+                                        </div>
+                                    ) : null;
+                                })()}
                                 <div className="group-actions">
                                     {isAdmin && (<button onClick={() => handleDeleteGroup(group.id, group.name)} className="action-button delete-button">{t('delete')}</button>)}
                                 </div>

@@ -32,6 +32,7 @@ class WebSocketService {
             this.ws.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
+                    // Special handling for presence messages: fall through to listeners
                     this.handleMessage(data);
                 } catch (error) {
                     console.error('Error parsing WebSocket message:', error);

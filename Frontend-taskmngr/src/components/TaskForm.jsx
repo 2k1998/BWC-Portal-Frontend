@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { companyApi, authApi } from '../api/apiService';
+import { companyApi, authApi, groupApi } from '../api/apiService';
 import { Zap, Star } from 'lucide-react';
 import './TaskForm.css';
 
@@ -23,6 +23,7 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
     const [loadingCompanies, setLoadingCompanies] = useState(true);
 
     const [users, setUsers] = useState([]);
+    const [priorityMemberIds, setPriorityMemberIds] = useState(new Set());
     const [selectedUserId, setSelectedUserId] = useState('');
     const [loadingUsers, setLoadingUsers] = useState(true);
     const [selectedDepartment, setSelectedDepartment] = useState('');
@@ -48,15 +49,41 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
                 .finally(() => setLoadingCompanies(false));
 
             setLoadingUsers(true);
-            authApi.listAllUsers(accessToken)
-                .then(data => {
-                    setUsers(data);
-                    // Set current user as default assignment
-                    if (currentUser && !isQuickMode) {
-                        setSelectedUserId(currentUser.id.toString());
+            // Fetch users and groups to prioritize team members
+            Promise.all([
+                authApi.listAllUsers(accessToken),
+                groupApi.getGroups(accessToken).catch(() => [])
+            ])
+            .then(([allUsers, groups]) => {
+                // Determine groups the current user is a member of (non-admin gets only own groups)
+                const myGroupIds = new Set(
+                    (groups || [])
+                        .filter(g => Array.isArray(g.members) ? g.members.some(m => m.id === currentUser?.id) : true)
+                        .map(g => g.id)
+                );
+                // Collect member ids from these groups
+                const memberIds = new Set();
+                (groups || []).forEach(g => {
+                    if (myGroupIds.has(g.id) && Array.isArray(g.members)) {
+                        g.members.forEach(m => memberIds.add(m.id));
                     }
-                })
-                .finally(() => setLoadingUsers(false));
+                });
+                setPriorityMemberIds(memberIds);
+                // Sort users: team members first, then alphabetical by name/email
+                const byName = (u) => (u.full_name || `${u.first_name || ''} ${u.surname || ''}`.trim() || u.email || '').toLowerCase();
+                const sorted = [...allUsers].sort((a, b) => {
+                    const aPri = memberIds.has(a.id) ? 0 : 1;
+                    const bPri = memberIds.has(b.id) ? 0 : 1;
+                    if (aPri !== bPri) return aPri - bPri;
+                    return byName(a).localeCompare(byName(b));
+                });
+                setUsers(sorted);
+                // Set current user as default assignment
+                if (currentUser && !isQuickMode) {
+                    setSelectedUserId(currentUser.id.toString());
+                }
+            })
+            .finally(() => setLoadingUsers(false));
 
             // Set today as default start date
             if (!isQuickMode) {

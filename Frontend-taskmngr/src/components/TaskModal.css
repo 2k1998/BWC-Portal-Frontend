@@ -54,27 +54,66 @@
 .close-button {
     background: none;
     border: none;
-    font-size: 2em;
+    font-size: 1.2em; /* smaller text */
     color: var(--color-gray-dark, #666);
     cursor: pointer;
-    padding: 0;
-    width: 40px;
-    height: 40px;
+    padding: 6px 12px; /* button-like */
+    width: auto;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: 8px;
     transition: all 0.3s ease;
+    background: var(--color-gray-light, #f3f4f6);
+    border: 1px solid var(--color-gray-medium, #ddd);
+    font-weight: 600;
 }
 
 .close-button:hover {
-    background: var(--color-gray-light, #f8f9fa);
-    color: var(--color-black, #333);
-    transform: scale(1.1);
+    background: linear-gradient(135deg, var(--color-gold-primary, #b8860b) 0%, #e5c06b 100%);
+    color: var(--color-black, #111);
+    border-color: var(--color-gold-primary, #b8860b);
 }
 
 .modal-body {
     padding: 30px;
+}
+
+/* Edit form inputs */
+.task-edit-form input[type="text"],
+.task-edit-form input[type="datetime-local"],
+.task-edit-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-gray-medium, #d1d5db);
+    border-radius: 8px;
+    background: var(--color-white, #fff);
+    color: var(--color-black, #111);
+}
+
+.task-edit-form textarea { min-height: 90px; }
+
+.modal-confirm-button,
+.modal-cancel-button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    font-size: 0.9em; /* smaller text */
+    cursor: pointer;
+}
+
+.modal-confirm-button {
+    background: linear-gradient(135deg, var(--color-gold-primary, #b8860b) 0%, #e5c06b 100%);
+    color: var(--color-black, #111);
+    border-color: var(--color-gold-primary, #b8860b);
+    font-weight: 700;
+}
+
+.modal-cancel-button {
+    background: var(--color-gray-light, #f3f4f6);
+    color: var(--color-black, #111);
+    border-color: var(--color-gray-medium, #d1d5db);
 }
 
 /* Task Info Section */

@@ -15,10 +15,9 @@ function AdminPanelPage() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
-    const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+    // Removed separate role edit modal to avoid conflicting setters
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [newRole, setNewRole] = useState('');
 
     const fetchUsers = useCallback(async (query) => {
         if (!accessToken) return;
@@ -51,22 +50,7 @@ function AdminPanelPage() {
         }
     };
 
-    const handleUpdateRole = async () => {
-        if (!selectedUser || !newRole) return;
-        if (selectedUser.id === currentUser?.id) {
-            showNotification(t('cannot_change_own_role'), "warning");
-            setIsRoleModalOpen(false);
-            return;
-        }
-        try {
-            await authApi.updateUserRole(selectedUser.id, { role: newRole }, accessToken);
-            showNotification(t('role_updated'), 'success');
-            fetchUsers(searchQuery);
-        } catch (err) {
-            showNotification(err.message || 'Failed to update role.', 'error');
-        }
-        setIsRoleModalOpen(false);
-    };
+    // Removed handleUpdateRole; role changes now happen inline via dropdown only
 
     const handleDeleteUser = async () => {
         if (!selectedUser) return;
@@ -115,7 +99,7 @@ function AdminPanelPage() {
                     <table className="user-management-table">
                         <thead>
                             <tr>
-                                <th>{t('id')}</th>
+                                {/* Removed ID column for privacy */}
                                 <th>{t('email')}</th>
                                 <th>{t('first_name')}</th>
                                 <th>{t('surname')}</th>
@@ -127,7 +111,7 @@ function AdminPanelPage() {
                         <tbody>
                             {users.map(user => (
                                 <tr key={user.id} className={user.is_active ? '' : 'inactive-user'}>
-                                    <td>{user.id}</td>
+                                    {/* ID column removed */}
                                     <td>{user.email}</td>
                                     <td>{user.first_name || 'N/A'}</td>
                                     <td>{user.surname || 'N/A'}</td>
@@ -146,7 +130,7 @@ function AdminPanelPage() {
                                     </td>
                                     <td>{user.is_active ? t('active') : t('inactive')}</td>
                                     <td>
-                                        <button onClick={() => { setSelectedUser(user); setNewRole(user.role); setIsRoleModalOpen(true); }} className="action-button edit-role-button">{t('edit_role')}</button>
+                                        {/* Removed separate role edit button to prevent conflicts */}
                                         <button
                                             onClick={() => handleToggleStatus(user)}
                                             className={`action-button toggle-status-button ${user.is_active ? 'deactivate' : 'activate'}`}
@@ -161,29 +145,7 @@ function AdminPanelPage() {
                     </table>
                 </div>
             )}
-            <Modal
-                isOpen={isRoleModalOpen}
-                onClose={() => setIsRoleModalOpen(false)}
-                title={t('edit_role_for', { email: selectedUser?.email })}
-                showConfirmButton={false}
-                message={
-                    selectedUser && (
-                        <div className="modal-form-content">
-                            <label>{t('new_role')}:</label>
-                            <select value={newRole} onChange={(e) => setNewRole(e.target.value)}>
-                                <option value="user">{t('user')}</option>
-                                <option value="admin">{t('admin')}</option>
-                            </select>
-                        </div>
-                    )
-                }
-                footer={
-                    <div>
-                        <button onClick={handleUpdateRole} className="modal-confirm-button">{t('update_role')}</button>
-                        <button onClick={() => setIsRoleModalOpen(false)} className="modal-cancel-button">{t('cancel')}</button>
-                    </div>
-                }
-            />
+            {/* Role edit modal removed */}
             <Modal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setIsDeleteModalOpen(false)}
