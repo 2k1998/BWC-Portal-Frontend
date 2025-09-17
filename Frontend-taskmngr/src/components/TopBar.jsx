@@ -16,7 +16,29 @@ function TopBar() {
         <div className="top-bar">
             <div className="top-bar-left">
                 <Link to="/dashboard" className="top-bar-logo">
-                    <Building2 className="logo-icon" size={24} />
+                    {(() => {
+                        const logoUrl = import.meta.env.VITE_APP_LOGO_URL || '/logo.png';
+                        return (
+                            <img
+                                src={logoUrl}
+                                alt="Company Logo"
+                                className="topbar-logo-img"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    // Fallback to icon + text if image fails
+                                    e.currentTarget.replaceWith((() => {
+                                        const wrapper = document.createElement('span');
+                                        wrapper.style.display = 'inline-flex';
+                                        wrapper.style.alignItems = 'center';
+                                        const icon = document.createElement('span');
+                                        icon.className = 'logo-icon-wrapper';
+                                        wrapper.appendChild(icon);
+                                        return wrapper;
+                                    })());
+                                }}
+                            />
+                        );
+                    })()}
                     <span className="logo-text">BWC Portal</span>
                 </Link>
             </div>

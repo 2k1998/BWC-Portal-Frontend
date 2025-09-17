@@ -70,6 +70,12 @@
     color: #f39c12;
 }
 
+.topbar-logo-img {
+    height: 28px;
+    width: auto;
+    display: block;
+}
+
 @media (max-width: 768px) {
     .logo-text {
         display: none;
