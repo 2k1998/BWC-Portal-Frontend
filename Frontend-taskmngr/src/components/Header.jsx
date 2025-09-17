@@ -87,7 +87,22 @@ function Header() {
             <header className="app-header">
                 <nav>
                     <div className="nav-left">
-                        <Link to="/dashboard" className="app-title">BWC Portal</Link>
+                        <Link to="/dashboard" className="app-title">
+                            {(() => {
+                                const logoUrl = import.meta.env.VITE_APP_LOGO_URL || '/logo.png';
+                                return (
+                                    <img
+                                        src={logoUrl}
+                                        alt="Company Logo"
+                                        style={{ height: '28px' }}
+                                        onError={(e) => {
+                                            e.currentTarget.onerror = null;
+                                            e.currentTarget.replaceWith(document.createTextNode('BWC Portal'));
+                                        }}
+                                    />
+                                );
+                            })()}
+                        </Link>
                         {isAuthenticated && (
                             <div className="main-nav-links">
                                 <NavLink to="/dashboard">{t('dashboard') || 'Dashboard'}</NavLink>
