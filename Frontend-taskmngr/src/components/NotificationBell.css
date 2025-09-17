@@ -274,6 +274,7 @@
     gap: 8px;
     padding: 20px;
     color: var(--color-gray-dark);
+    background: linear-gradient(135deg, rgba(209,173,96,0.08) 0%, rgba(209,173,96,0) 100%);
 }
 
 .empty-icon {

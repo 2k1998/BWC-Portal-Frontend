@@ -45,7 +45,7 @@
 .search-input:focus {
     outline: none;
     border-color: var(--color-gold-primary, #b8860b);
-    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+    box-shadow: 0 0 0 3px rgba(209, 173, 96, 0.1);
 }
 
 .search-btn {
@@ -58,13 +58,13 @@
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+    box-shadow: 0 2px 8px rgba(209, 173, 96, 0.3);
 }
 
 .search-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
-    background: linear-gradient(135deg, var(--color-gold-accent, #daa520) 0%, var(--color-gold-primary, #b8860b) 100%);
+    box-shadow: 0 4px 15px rgba(209, 173, 96, 0.4);
+    background: linear-gradient(135deg, var(--color-gold-accent, #d1ad60) 0%, var(--color-gold-primary, #d1ad60) 100%);
 }
 
 /* Users Grid */
@@ -87,7 +87,7 @@
 .user-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    border-color: var(--color-gold-primary, #b8860b);
+    border-color: var(--color-gold-primary, #d1ad60);
 }
 
 .user-header {
@@ -115,7 +115,7 @@
     height: 50px;
     border-radius: 50%;
     background: var(--color-gray-light, #f8f9fa);
-    border: 2px solid var(--color-gold-primary, #b8860b);
+    border: 2px solid var(--color-gold-primary, #d1ad60);
     object-fit: cover;
 }
 

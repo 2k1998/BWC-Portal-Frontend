@@ -86,7 +86,7 @@ function ApprovalsPage() {
 
     const getStatusColor = (status) => {
         const colors = {
-            'pending': '#ffc107',
+            'pending': '#d1ad60',
             'approved': '#28a745',
             'rejected': '#dc3545',
             'discussion': '#17a2b8',

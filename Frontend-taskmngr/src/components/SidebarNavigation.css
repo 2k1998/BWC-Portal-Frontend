@@ -265,6 +265,16 @@
     border-left: 3px solid var(--color-gold-accent);
 }
 
+.menu-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-gold-accent) 0%, var(--color-gold-primary) 100%);
+}
+
 .menu-item-content {
     display: flex;
     align-items: center;

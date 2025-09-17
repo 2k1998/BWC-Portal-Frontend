@@ -193,6 +193,7 @@
     padding: 40px !important;
     color: #999;
     font-style: italic;
+    background: linear-gradient(135deg, rgba(209,173,96,0.08) 0%, rgba(209,173,96,0) 100%);
 }
 
 .amount {
@@ -269,7 +270,7 @@
 }
 
 .btn-edit {
-    background-color: #ffc107;
+    background-color: #d1ad60;
     color: #333;
 }
 

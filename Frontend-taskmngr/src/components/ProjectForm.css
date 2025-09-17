@@ -267,9 +267,9 @@
 }
 
 .step.active .step-number {
-  background: linear-gradient(135deg, #b8860b 0%, #ffd700 100%);
+  background: linear-gradient(135deg, #d1ad60 0%, #d1ad60 100%);
   color: #1a1a1a;
-  box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+  box-shadow: 0 2px 8px rgba(209, 173, 96, 0.3);
 }
 
 .step-label {
@@ -292,7 +292,7 @@
 }
 
 .step.active + .step-line {
-  background: linear-gradient(90deg, #b8860b 0%, #ffd700 100%);
+  background: linear-gradient(90deg, #d1ad60 0%, #d1ad60 100%);
 }
 
 .modal-footer {

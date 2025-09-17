@@ -40,6 +40,8 @@
     flex-shrink: 0; /* Prevent the title from shrinking */
 }
 
+
+
 .app-title:hover {
     color: var(--color-gold-primary);
 }

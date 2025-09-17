@@ -15,7 +15,8 @@
     align-items: center;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 2px solid var(--color-gold-primary, #b8860b);
+    border-bottom: 2px solid transparent;
+    background: linear-gradient(90deg, rgba(209,173,96,0.15) 0%, rgba(209,173,96,0) 100%);
 }
 
 .events-header h1 {
@@ -25,7 +26,7 @@
 }
 
 /* Styled Add Event Button */
-.add-event-btn {
+.add-event-btn, .add-event-button {
     background: linear-gradient(135deg, var(--color-gold-primary, #b8860b) 0%, var(--color-gold-accent, #daa520) 100%);
     color: var(--color-black, #333);
     border: none;
@@ -35,14 +36,14 @@
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(184, 134, 11, 0.3);
+    box-shadow: 0 2px 8px rgba(209, 173, 96, 0.3);
     text-decoration: none;
     display: inline-block;
 }
 
-.add-event-btn:hover {
+.add-event-btn:hover, .add-event-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+    box-shadow: 0 4px 15px rgba(209, 173, 96, 0.4);
     background: linear-gradient(135deg, var(--color-gold-accent, #daa520) 0%, var(--color-gold-primary, #b8860b) 100%);
 }
 
@@ -66,8 +67,8 @@
 
 .filter-select:focus {
     outline: none;
-    border-color: var(--color-gold-primary, #b8860b);
-    box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+    border-color: var(--color-gold-primary, #d1ad60);
+    box-shadow: 0 0 0 3px rgba(209, 173, 96, 0.1);
 }
 
 /* Events Grid */
@@ -122,22 +123,22 @@
 }
 
 .event-type.meeting {
-    background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+    background: linear-gradient(135deg, var(--color-info-500) 0%, var(--color-info-600) 100%);
     color: white;
 }
 
 .event-type.conference {
-    background: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
+    background: linear-gradient(135deg, var(--color-info-500) 0%, var(--color-info-600) 100%);
     color: white;
 }
 
 .event-type.workshop {
-    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    background: linear-gradient(135deg, var(--color-success-500) 0%, var(--color-success-600) 100%);
     color: white;
 }
 
 .event-type.social {
-    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    background: linear-gradient(135deg, var(--color-warning-500) 0%, var(--color-warning-600) 100%);
     color: white;
 }
 
@@ -194,7 +195,7 @@
 }
 
 /* Event Action Buttons */
-.edit-event-btn, .delete-event-btn {
+.edit-event-btn, .delete-event-btn, .delete-event-button {
     padding: 6px 12px;
     border: none;
     border-radius: 4px;
@@ -209,23 +210,23 @@
 }
 
 .edit-event-btn {
-    background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+    background: linear-gradient(135deg, var(--color-info-500) 0%, var(--color-info-600) 100%);
     color: white;
 }
 
 .edit-event-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(49, 130, 206, 0.3);
+    box-shadow: 0 2px 8px rgba(47, 111, 212, 0.3);
 }
 
-.delete-event-btn {
-    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+.delete-event-btn, .delete-event-button {
+    background: linear-gradient(135deg, var(--color-error-500) 0%, var(--color-error-600) 100%);
     color: white;
 }
 
-.delete-event-btn:hover {
+.delete-event-btn:hover, .delete-event-button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
+    box-shadow: 0 2px 8px rgba(192, 54, 58, 0.3);
 }
 
 /* Event Status Indicators */
@@ -239,11 +240,11 @@
 }
 
 .event-status.upcoming {
-    background: #38a169;
+    background: var(--color-success-500);
 }
 
 .event-status.ongoing {
-    background: #3182ce;
+    background: var(--color-info-500);
 }
 
 .event-status.past {
@@ -293,7 +294,7 @@
     color: var(--color-gray-dark, #666);
     font-size: 1.1em;
     padding: 60px 20px;
-    background: var(--color-gray-light, #f8f9fa);
+    background: linear-gradient(135deg, rgba(209,173,96,0.08) 0%, rgba(209,173,96,0) 100%);
     border-radius: 8px;
     border: 2px dashed var(--color-gray-medium, #ddd);
     grid-column: 1 / -1;

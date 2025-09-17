@@ -1,6 +1,6 @@
 /* Action Buttons */
 .action-btn {
-    padding: 35px 44px;
+    padding: 14px 18px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -15,7 +15,7 @@
 }
 
 .action-btn.income-btn {
-    background: linear-gradient(135deg, #11d684 0%, #0cc265 100%);
+    background: linear-gradient(135deg, var(--color-success-500) 0%, var(--color-success-600) 100%);
 }
 
 .action-btn.income-btn:hover {
@@ -24,7 +24,7 @@
 }
 
 .action-btn.expense-btn {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+    background: linear-gradient(135deg, var(--color-error-500) 0%, var(--color-error-600) 100%);
 }
 
 .action-btn.expense-btn:hover {
@@ -177,11 +177,11 @@
 }
 
 .btn-submit.income {
-    background: linear-gradient(135deg, #11d684 0%, #0cc265 100%);
+    background: linear-gradient(135deg, var(--color-success-500) 0%, var(--color-success-600) 100%);
 }
 
 .btn-submit.expense {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+    background: linear-gradient(135deg, var(--color-error-500) 0%, var(--color-error-600) 100%);
 }
 
 .btn-submit:hover {
@@ -645,7 +645,9 @@
     align-items: center;
     margin-bottom: 24px;
     padding-bottom: 16px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid transparent;
+    background: linear-gradient(90deg, rgba(209,173,96,0.15) 0%, rgba(209,173,96,0) 100%);
+    -webkit-background-clip: padding-box;
 }
 
 .widget-header h2 {
@@ -735,15 +737,15 @@
 }
 
 .summary-card.income {
-    background: linear-gradient(135deg, #11d684 0%, #0cc265 100%);
+    background: linear-gradient(135deg, var(--color-success-500) 0%, var(--color-success-600) 100%);
 }
 
 .summary-card.expense {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+    background: linear-gradient(135deg, var(--color-error-500) 0%, var(--color-error-600) 100%);
 }
 
 .summary-card.profit {
-    background: linear-gradient(135deg, #4da0ff 0%, #3867ff 100%);
+    background: linear-gradient(135deg, var(--color-info-500) 0%, var(--color-info-600) 100%);
 }
 
 .summary-card:hover {
@@ -758,6 +760,7 @@
 
 .card-content {
     flex: 1;
+    text-align: right;
 }
 
 .card-label {
@@ -772,6 +775,7 @@
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 4px;
+    font-variant-numeric: tabular-nums;
 }
 
 .card-value.positive {
@@ -819,7 +823,7 @@
 .category-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-color: #667eea;
+    border-color: var(--color-gold-primary);
 }
 
 .category-icon {
@@ -844,6 +848,7 @@
     font-weight: 600;
     color: #2c3e50;
     font-size: 1rem;
+    font-variant-numeric: tabular-nums;
 }
 
 /* Recent Transactions */
@@ -889,11 +894,11 @@
 }
 
 .transaction-item.income {
-    border-left-color: #4CAF50;
+    border-left-color: var(--color-success-500);
 }
 
 .transaction-item.expense {
-    border-left-color: #ff6b6b;
+    border-left-color: var(--color-error-500);
 }
 
 .transaction-item:hover {
@@ -925,14 +930,15 @@
 .transaction-amount {
     font-weight: 600;
     font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
 }
 
 .transaction-amount.income {
-    color: #4CAF50;
+    color: var(--color-success-500);
 }
 
 .transaction-amount.expense {
-    color: #ff6b6b;
+    color: var(--color-error-500);
 }
 
 /* Monthly Overview */
@@ -1078,7 +1084,7 @@
 }
 
 .status-value.active {
-    color: #ffa500;
+    color: var(--color-gold-primary);
 }
 
 .status-value.available {

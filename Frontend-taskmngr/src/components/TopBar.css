@@ -6,12 +6,12 @@
     right: 0;
     height: 60px;
     background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: none;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    z-index: 1000;
+    z-index: 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -47,7 +47,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #f39c12;
+    color: #d1ad60;
     text-decoration: none;
     font-weight: bold;
     font-size: 24px;
@@ -67,7 +67,7 @@
 .logo-text {
     font-size: 20px;
     font-weight: 700;
-    color: #f39c12;
+    color: #d1ad60;
 }
 
 .topbar-logo-img {
@@ -135,7 +135,7 @@
 
 .top-bar .chat-trigger.active,
 .top-bar .notification-trigger.active {
-    background-color: #f39c12;
+    background-color: #d1ad60;
     color: white;
 }
 

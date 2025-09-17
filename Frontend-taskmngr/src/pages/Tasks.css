@@ -603,7 +603,7 @@
 
 .status-new { background-color: #007bff; }
 .status-received { background-color: #17a2b8; }
-.status-on_process { background-color: #ffc107; color: #333; }
+.status-on_process { background-color: #d1ad60; color: #333; }
 .status-pending { background-color: #fd7e14; }
 .status-completed { background-color: #28a745; }
 .status-loose_end { background-color: #dc3545; }
