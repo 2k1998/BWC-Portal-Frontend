@@ -196,16 +196,25 @@ function ChatPage() {
                 </button>
                 <div className="chat-participant-info">
                     <div className="participant-avatar">
-                        {otherParticipant.profile_picture_url ? (
-                            <img 
-                                src={`${import.meta.env.VITE_API_BASE_URL}${otherParticipant.profile_picture_url}`}
-                                alt={otherParticipant.full_name}
-                            />
-                        ) : (
-                            <div className="avatar-placeholder">
-                                {otherParticipant.full_name.charAt(0).toUpperCase()}
-                            </div>
-                        )}
+                        {(() => {
+                            const url = otherParticipant.profile_picture_url;
+                            const absolute = url?.startsWith('http');
+                            const src = url ? (absolute ? url : `${import.meta.env.VITE_API_BASE_URL}${url}`) : null;
+                            return src ? (
+                                <img 
+                                    src={src}
+                                    alt={otherParticipant.full_name}
+                                    onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(otherParticipant.full_name)}&background=b8860b&color=fff&size=120`;
+                                    }}
+                                />
+                            ) : (
+                                <div className="avatar-placeholder">
+                                    {otherParticipant.full_name.charAt(0).toUpperCase()}
+                                </div>
+                            );
+                        })()}
                     </div>
                     <div className="participant-details">
                         <h2>{otherParticipant.full_name}</h2>

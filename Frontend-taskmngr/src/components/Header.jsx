@@ -178,15 +178,22 @@ function Header() {
                                 <div className="dropdown">
                                     <button className="dropdown-toggle profile-toggle">
                                         <span>{t('hello')}, {currentUser?.first_name || currentUser?.email || 'User'}!</span>
-                                        <img
-                                            src={
-                                                currentUser?.profile_picture_url
-                                                    ? `${API_BASE_URL}${currentUser.profile_picture_url}`
-                                                    : 'https://via.placeholder.com/40x40?text=User'
-                                            }
-                                            alt="Profile"
-                                            className="header-avatar"
-                                        />
+                                        {(() => {
+                                            const has = currentUser?.profile_picture_url;
+                                            const absolute = has?.startsWith('http');
+                                            const src = has ? (absolute ? has : `${API_BASE_URL}${has}`) : null;
+                                            return (
+                                                <img
+                                                    src={src || 'https://via.placeholder.com/40x40?text=User'}
+                                                    alt="Profile"
+                                                    className="header-avatar"
+                                                    onError={(e) => {
+                                                        e.currentTarget.onerror = null;
+                                                        e.currentTarget.src = 'https://via.placeholder.com/40x40?text=User';
+                                                    }}
+                                                />
+                                            );
+                                        })()}
                                     </button>
                                     <div className="dropdown-menu">
                                         <NavLink to="/profile">{t('profile')}</NavLink>

@@ -160,16 +160,24 @@ function UserStatusSidebar({ isCollapsed = false }) {
                     >
                         <div className="user-avatar-container">
                             <div className="user-avatar">
-                                {user.profile_picture_url ? (
-                                    <img
-                                        src={`${API_BASE_URL}${user.profile_picture_url}`}
-                                        alt={user.full_name}
-                                    />
-                                ) : (
-                                    <div className="avatar-placeholder">
-                                        {user.full_name.charAt(0).toUpperCase()}
-                                    </div>
-                                )}
+                                {(() => {
+                                    const absolute = user.profile_picture_url?.startsWith('http');
+                                    const src = absolute ? user.profile_picture_url : (user.profile_picture_url ? `${API_BASE_URL}${user.profile_picture_url}` : null);
+                                    return src ? (
+                                        <img
+                                            src={src}
+                                            alt={user.full_name}
+                                            onError={(e) => {
+                                                e.currentTarget.onerror = null;
+                                                e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=b8860b&color=fff&size=120`;
+                                            }}
+                                        />
+                                    ) : (
+                                        <div className="avatar-placeholder">
+                                            {user.full_name.charAt(0).toUpperCase()}
+                                        </div>
+                                    );
+                                })()}
                             </div>
                             <div 
                                 className="status-indicator"

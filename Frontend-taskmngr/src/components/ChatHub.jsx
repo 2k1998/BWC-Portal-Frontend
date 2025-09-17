@@ -109,16 +109,25 @@ function ChatHub({ isCollapsed = false }) {
                 onClick={() => openConversation(conversation)}
             >
                 <div className="conversation-avatar">
-                    {conversation.other_participant.profile_picture_url ? (
-                        <img 
-                            src={`${import.meta.env.VITE_API_BASE_URL}${conversation.other_participant.profile_picture_url}`}
-                            alt={conversation.other_participant.full_name}
-                        />
-                    ) : (
-                        <div className="avatar-placeholder">
-                            {conversation.other_participant.full_name.charAt(0).toUpperCase()}
-                        </div>
-                    )}
+                    {(() => {
+                        const url = conversation.other_participant.profile_picture_url;
+                        const absolute = url?.startsWith('http');
+                        const src = url ? (absolute ? url : `${import.meta.env.VITE_API_BASE_URL}${url}`) : null;
+                        return src ? (
+                            <img 
+                                src={src}
+                                alt={conversation.other_participant.full_name}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(conversation.other_participant.full_name)}&background=b8860b&color=fff&size=120`;
+                                }}
+                            />
+                        ) : (
+                            <div className="avatar-placeholder">
+                                {conversation.other_participant.full_name.charAt(0).toUpperCase()}
+                            </div>
+                        );
+                    })()}
                     {conversation.unread_count > 0 && (
                         <span className="unread-badge">{conversation.unread_count}</span>
                     )}
@@ -170,16 +179,25 @@ function ChatHub({ isCollapsed = false }) {
                 onClick={() => startConversation(user.id)}
             >
                 <div className="user-avatar">
-                    {user.profile_picture_url ? (
-                        <img 
-                            src={`${import.meta.env.VITE_API_BASE_URL}${user.profile_picture_url}`}
-                            alt={user.full_name}
-                        />
-                    ) : (
-                        <div className="avatar-placeholder">
-                            {user.full_name.charAt(0).toUpperCase()}
-                        </div>
-                    )}
+                    {(() => {
+                        const url = user.profile_picture_url;
+                        const absolute = url?.startsWith('http');
+                        const src = url ? (absolute ? url : `${import.meta.env.VITE_API_BASE_URL}${url}`) : null;
+                        return src ? (
+                            <img 
+                                src={src}
+                                alt={user.full_name}
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=b8860b&color=fff&size=120`;
+                                }}
+                            />
+                        ) : (
+                            <div className="avatar-placeholder">
+                                {user.full_name.charAt(0).toUpperCase()}
+                            </div>
+                        );
+                    })()}
                 </div>
                 
                 <div className="user-content">

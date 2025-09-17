@@ -74,14 +74,23 @@ function SidebarNavigation() {
 
             <div className="sidebar-user">
                 <div className="user-avatar">
-                    {currentUser?.profile_picture_url ? (
-                        <img
-                            src={`${API_BASE_URL}${currentUser.profile_picture_url}`}
-                            alt="Profile"
-                        />
-                    ) : (
-                        <span></span>
-                    )}
+                    {(() => {
+                        const url = currentUser?.profile_picture_url;
+                        const absolute = url?.startsWith('http');
+                        const src = url ? (absolute ? url : `${API_BASE_URL}${url}`) : null;
+                        return src ? (
+                            <img
+                                src={src}
+                                alt="Profile"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(`${currentUser?.first_name ?? ''} ${currentUser?.surname ?? ''}`.trim() || 'User')}&background=b8860b&color=fff&size=120`;
+                                }}
+                            />
+                        ) : (
+                            <span></span>
+                        );
+                    })()}
                 </div>
                 {!isCollapsed && (
                     <div className="user-info">
