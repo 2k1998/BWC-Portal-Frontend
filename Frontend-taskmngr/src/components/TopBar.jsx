@@ -17,7 +17,10 @@ function TopBar() {
             <div className="top-bar-left">
                 <Link to="/dashboard" className="top-bar-logo">
                     {(() => {
-                        const logoUrl = import.meta.env.VITE_APP_LOGO_URL || '/logo.png';
+                        const envLogo = import.meta.env.VITE_APP_LOGO_URL;
+                        const cloudinaryDefault = 'https://res.cloudinary.com/bwcportal/image/upload/v1758100836/M-BRID.LG-CMYK_Logo-Slogan_page-0001_pgcw9a.png';
+                        const fileFallback = '/logo.png';
+                        const logoUrl = (envLogo && envLogo.trim().length > 0) ? envLogo : cloudinaryDefault;
                         return (
                             <img
                                 src={logoUrl}
@@ -25,21 +28,11 @@ function TopBar() {
                                 className="topbar-logo-img"
                                 onError={(e) => {
                                     e.currentTarget.onerror = null;
-                                    // Fallback to icon + text if image fails
-                                    e.currentTarget.replaceWith((() => {
-                                        const wrapper = document.createElement('span');
-                                        wrapper.style.display = 'inline-flex';
-                                        wrapper.style.alignItems = 'center';
-                                        const icon = document.createElement('span');
-                                        icon.className = 'logo-icon-wrapper';
-                                        wrapper.appendChild(icon);
-                                        return wrapper;
-                                    })());
+                                    e.currentTarget.src = fileFallback;
                                 }}
                             />
                         );
                     })()}
-                    <span className="logo-text">BWC Portal</span>
                 </Link>
             </div>
 
