@@ -20,7 +20,6 @@ import {
     X
 } from 'lucide-react';
 import './NotificationBell.css';
-import { createPortal } from 'react-dom';
 
 function NotificationBell() {
     const { accessToken, isAuthenticated } = useAuth();
@@ -162,7 +161,7 @@ function NotificationBell() {
                     {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                 </button>
 
-                {isOpen && createPortal(
+                {isOpen && (
                     <div className="notification-dropdown enhanced-dropdown">
                         <div className="notification-header">
                             <h3>Notifications</h3>
@@ -240,8 +239,8 @@ function NotificationBell() {
                                 <button className="clear-all-button" onClick={handleClearAll}>Clear all</button>
                             )}
                         </div>
-                    </div>, document.body)
-                }
+                    </div>
+                )}
  
                 {/* Assignment Modal */}
                 {showAssignmentModal && (

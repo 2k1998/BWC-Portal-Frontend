@@ -57,16 +57,16 @@
 }
 
 .chat-dropdown {
-    position: fixed; /* Ensure above right sidebars */
-    top: calc(var(--topbar-height, 60px) + 8px);
-    right: 420px; /* Shift left to clear the right sidebar width */
+    position: absolute;
+    top: 100%;
+    right: 0;
     width: 400px;
     max-width: 90vw;
     background: white;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    z-index: 10050;
+    z-index: 1001;
     max-height: 500px;
     display: flex;
     flex-direction: column;

@@ -33,15 +33,15 @@
 }
 
 .notification-dropdown {
-    position: fixed; /* Ensure it escapes stacking contexts */
-    top: calc(var(--topbar-height, 60px) + 8px); /* Below header */
-    right: 320px; /* Shift left to clear the right sidebar width */
+    position: absolute;
+    top: 100%;
+    right: 0;
     width: 350px;
     background-color: var(--color-white);
     border-radius: var(--border-radius-default);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     border: 1px solid var(--color-gray-medium);
-    z-index: 10050; /* Ensure above any sidebars/modals/spinners */
+    z-index: 1100;
     color: var(--color-black);
     padding-top: 10px; /* ADDED: Creates space inside the box */
 }
@@ -364,7 +364,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 10049; /* Slightly below dropdown */
+    z-index: 1099;
     background: transparent;
 }
 
