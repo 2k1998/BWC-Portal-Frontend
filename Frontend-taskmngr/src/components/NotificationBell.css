@@ -33,9 +33,9 @@
 }
 
 .notification-dropdown {
-    position: absolute;
-    top: 100%; /* CHANGED: Removes the gap */
-    right: 0;
+    position: fixed; /* Ensure it escapes stacking contexts */
+    top: calc(var(--topbar-height, 60px) + 8px); /* Below header */
+    right: 20px; /* Align near bell on the right */
     width: 350px;
     background-color: var(--color-white);
     border-radius: var(--border-radius-default);
