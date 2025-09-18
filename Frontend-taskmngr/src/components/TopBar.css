@@ -11,7 +11,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    z-index: 0;
+    z-index: 1001; /* Above right sidebar (998) so dropdowns sit on top */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
