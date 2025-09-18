@@ -20,6 +20,7 @@ import {
     X
 } from 'lucide-react';
 import './NotificationBell.css';
+import { createPortal } from 'react-dom';
 
 function NotificationBell() {
     const { accessToken, isAuthenticated } = useAuth();
@@ -68,40 +69,7 @@ function NotificationBell() {
         return () => clearInterval(interval);
     }, [fetchNotifications]);
 
-    const handleNotificationClick = async (notification, isTaskNotification = false) => {
-        try {
-            if (isTaskNotification) {
-                // Handle task notification click
-                if (!notification.is_read) {
-                    await taskManagementApi.markNotificationRead(notification.id, accessToken);
-                }
-                
-                if (notification.assignment_id) {
-                    // Load assignment details and show modal
-                    const assignment = await taskManagementApi.getAssignmentDetails(
-                        notification.assignment_id, 
-                        accessToken
-                    );
-                    setSelectedAssignment(assignment);
-                    setShowAssignmentModal(true);
-                }
-            } else {
-                // Handle regular notification click
-                if (notification.link) {
-                    navigate(notification.link);
-                }
-                if (!notification.is_read) {
-                    await notificationApi.markAsRead(notification.id, accessToken);
-                }
-            }
-            
-            setIsOpen(false);
-            fetchNotifications(); // Refresh notifications
-        } catch (error) {
-            console.error("Failed to handle notification click:", error);
-            showNotification('Failed to open notification', 'error');
-        }
-    };
+    // removed unused handler (click handling is inline on items)
 
     const handleMarkAllAsRead = async () => {
         try {
@@ -194,7 +162,7 @@ function NotificationBell() {
                     {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                 </button>
 
-                {isOpen && (
+                {isOpen && createPortal(
                     <div className="notification-dropdown enhanced-dropdown">
                         <div className="notification-header">
                             <h3>Notifications</h3>
@@ -204,139 +172,94 @@ function NotificationBell() {
                                 </button>
                             )}
                         </div>
-
-                        {/* Enhanced Tabs */}
+                        
+                        {/* Notification Tabs */}
                         <div className="notification-tabs">
-                            <button
-                                onClick={() => setActiveTab('all')}
+                            <button 
                                 className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('all')}
                             >
-                                All ({allNotifications.length})
-                                {unreadCount > 0 && <span className="tab-badge">{unreadCount}</span>}
+                                All {unreadCount > 0 && <span className="tab-badge">{unreadCount}</span>}
                             </button>
-                            <button
-                                onClick={() => setActiveTab('tasks')}
+                            <button 
                                 className={`tab-btn ${activeTab === 'tasks' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('tasks')}
                             >
-                                Tasks ({taskNotifications.length})
-                                {taskUnreadCount > 0 && <span className="tab-badge">{taskUnreadCount}</span>}
+                                Tasks {taskUnreadCount > 0 && <span className="tab-badge">{taskUnreadCount}</span>}
                             </button>
-                            <button
-                                onClick={() => setActiveTab('general')}
+                            <button 
                                 className={`tab-btn ${activeTab === 'general' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('general')}
                             >
-                                General ({notifications.length})
-                                {generalUnreadCount > 0 && <span className="tab-badge">{generalUnreadCount}</span>}
+                                General {generalUnreadCount > 0 && <span className="tab-badge">{generalUnreadCount}</span>}
                             </button>
+                            
+                            {/* Clear all button */}
+                            {(notifications.length > 0 || taskNotifications.length > 0) && (
+                                <button className="clear-all-button" onClick={handleClearAll}>Clear all</button>
+                            )}
                         </div>
-
+                        
+                        {/* Notification List */}
                         <div className="notification-list">
                             {displayNotifications.length === 0 ? (
-                                <div className="notification-item empty">
-                                    <div className="empty-state">
-                                        <Bell className="empty-icon" size={24} />
-                                        <p>No notifications</p>
-                                    </div>
+                                <div className="empty-state">
+                                    <span className="empty-icon">🔔</span>
+                                    <p>{t('no_notifications') || 'No notifications'}</p>
                                 </div>
                             ) : (
-                                displayNotifications.slice(0, 8).map(notification => (
-                                    <div
-                                        key={`${notification.type}-${notification.id}`}
-                                        className={`notification-item ${notification.is_read ? 'read' : 'unread'} ${notification.type}`}
-                                        onClick={() => handleNotificationClick(notification, notification.type === 'task')}
-                                    >
-                                        <div className="notification-icon">
-                                            {notification.type === 'task' 
-                                                ? getNotificationIcon(notification.notification_type)
-                                                : <Bell size={16} />
+                                displayNotifications.map((notif, index) => (
+                                    <div 
+                                        key={notif.id || index}
+                                        className={`notification-item ${notif.is_read ? '' : 'unread'} ${notif.type === 'task' ? 'task' : 'general'}`}
+                                        onClick={() => {
+                                            if (notif.type === 'task' && notif.assignment_id) {
+                                                setSelectedAssignment(notif);
+                                                setShowAssignmentModal(true);
+                                            } else if (notif.link_url) {
+                                                navigate(notif.link_url);
                                             }
-                                        </div>
+                                        }}
+                                    >
+                                        <div className="notification-icon">{getNotificationIcon(notif.notification_type || notif.type)}</div>
                                         <div className="notification-content">
-                                            <p className="notification-message">
-                                                {notification.title || notification.message}
-                                            </p>
-                                            {notification.type === 'task' && notification.message !== notification.title && (
-                                                <p className="notification-submessage">
-                                                    {notification.message}
-                                                </p>
-                                            )}
-                                            <span className="notification-time">
-                                                {formatNotificationTime(notification.created_at)}
-                                            </span>
+                                            {notif.title && <p className="notification-message">{notif.title}</p>}
+                                            {notif.message && <p className="notification-submessage">{notif.message}</p>}
+                                            <div className="notification-time">{formatNotificationTime(notif.created_at)}</div>
                                         </div>
-                                        {!notification.is_read && (
-                                            <div className="unread-indicator"></div>
-                                        )}
+                                        {!notif.is_read && <div className="unread-indicator" />}
                                     </div>
                                 ))
                             )}
                         </div>
-
-                        {/* Enhanced Footer */}
+                        
+                        {/* Footer */}
                         <div className="notification-footer">
-                            {allNotifications.length > 8 && (
-                                <button 
-                                    onClick={() => {
-                                        navigate('/notifications');
-                                        setIsOpen(false);
-                                    }}
-                                    className="view-all-btn"
-                                >
-                                    View All ({allNotifications.length})
-                                </button>
-                            )}
-                            
-                            {allNotifications.length > 0 && (
-                                <button className="clear-all-button" onClick={handleClearAll}>
-                                    {t('clear_all')}
-                                </button>
+                            <button className="view-all-btn" onClick={() => navigate('/notifications')}>View all</button>
+                            {(notifications.length > 0 || taskNotifications.length > 0) && (
+                                <button className="clear-all-button" onClick={handleClearAll}>Clear all</button>
                             )}
                         </div>
+                    </div>, document.body)
+                }
+ 
+                {/* Assignment Modal */}
+                {showAssignmentModal && (
+                    <div className="modal-overlay">
+                        <div className="modal-content large-modal">
+                            <div className="modal-header">
+                                <h3>Task Assignment</h3>
+                                <button className="modal-close" onClick={() => setShowAssignmentModal(false)}>
+                                    <X size={20} />
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <TaskAssignmentNotification assignment={selectedAssignment} />
+                            </div>
+                        </div>
                     </div>
-                )}
-
-                {/* Click outside to close */}
-                {isOpen && (
-                    <div 
-                        className="notification-overlay" 
-                        onClick={() => setIsOpen(false)}
-                    ></div>
                 )}
             </div>
-
-            {/* Task Assignment Modal */}
-            {showAssignmentModal && selectedAssignment && (
-                <div className="modal-overlay">
-                    <div className="modal-content large-modal">
-                        <div className="modal-header">
-                            <h3>Task Assignment</h3>
-                            <button
-                                onClick={() => {
-                                    setShowAssignmentModal(false);
-                                    setSelectedAssignment(null);
-                                }}
-                                className="modal-close"
-                            >
-                                <X size={20} />
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <TaskAssignmentNotification
-                                assignment={selectedAssignment}
-                                onUpdate={() => {
-                                    setShowAssignmentModal(false);
-                                    setSelectedAssignment(null);
-                                    fetchNotifications();
-                                }}
-                                onClose={() => {
-                                    setShowAssignmentModal(false);
-                                    setSelectedAssignment(null);
-                                }}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
         </>
     );
 }
