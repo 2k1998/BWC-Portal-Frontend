@@ -1,5 +1,6 @@
 // src/components/ChatHub.jsx - Chat hub component for sidebar
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { chatApi } from '../api/apiService';
@@ -221,7 +222,7 @@ function ChatHub({ isCollapsed = false }) {
                 )}
             </button>
 
-            {isOpen && (
+            {isOpen && createPortal(
                 <div className="chat-dropdown">
                     <div className="chat-header">
                         <h3>{t('messages')}</h3>
@@ -256,8 +257,8 @@ function ChatHub({ isCollapsed = false }) {
                             </div>
                         )}
                     </div>
-                </div>
-            )}
+                </div>, document.body)
+            }
         </div>
     );
 }
