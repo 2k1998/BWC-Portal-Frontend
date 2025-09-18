@@ -10,7 +10,7 @@
     display: flex;
     flex-direction: column;
     box-shadow: -2px 0 15px rgba(0, 0, 0, 0.1);
-    z-index: 998;
+    z-index: 500; /* Lower than dropdowns (10050) */
     border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
