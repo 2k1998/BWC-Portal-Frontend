@@ -59,7 +59,7 @@
 .notification-dropdown {
     position: fixed; /* Escape sidebar stacking */
     top: calc(var(--topbar-height, 60px) + 8px);
-    right: 72px; /* Account for bell/button spacing */
+    right: 372px; /* Shift left to clear the right sidebar width */
     width: 400px;
     max-width: 90vw;
     background: white;

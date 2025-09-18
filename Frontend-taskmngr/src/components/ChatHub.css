@@ -59,7 +59,7 @@
 .chat-dropdown {
     position: fixed; /* Ensure above right sidebars */
     top: calc(var(--topbar-height, 60px) + 8px);
-    right: 120px; /* near chat icon */
+    right: 420px; /* Shift left to clear the right sidebar width */
     width: 400px;
     max-width: 90vw;
     background: white;
