@@ -13,7 +13,7 @@ import './Tasks.css';
 function TasksPage() {
   const { accessToken, loading: authLoading } = useAuth();
   const { showNotification } = useNotification();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -154,7 +154,9 @@ function TasksPage() {
             className="create-task-btn"
           >
             <span className="btn-icon">+</span>
-            {showCreateForm ? t('hide_form') : t('create_new_task')}
+            {showCreateForm
+              ? (language === 'el' ? 'Απόκρυψη Φόρμας' : (t('hide_form') || 'Hide Form'))
+              : (language === 'el' ? 'Δημιουργία Νέας Εργασίας' : (t('create_new_task') || 'Create New Task'))}
           </button>
         </div>
       </div>

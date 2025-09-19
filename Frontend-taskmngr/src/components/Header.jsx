@@ -133,12 +133,12 @@ function Header() {
                                         {/* Dropdown for additional admin features */}
                                         <div className="dropdown admin-dropdown">
                                             <button className="dropdown-toggle">
-                                                More ▼
+                                                {t('more') || 'More'} ▼
                                             </button>
                                             <div className="dropdown-menu">
-                                                <NavLink to="/payments"><DollarSign size={16} /> Payments</NavLink>
-                                                <NavLink to="/commissions"><TrendingUp size={16} /> Commissions</NavLink>
-                                                <NavLink to="/car-finances"><Car size={16} /> Car Finance</NavLink>
+                                                <NavLink to="/payments"><DollarSign size={16} /> {t('payments')}</NavLink>
+                                                <NavLink to="/commissions"><TrendingUp size={16} /> {t('commissions')}</NavLink>
+                                                <NavLink to="/car-finances"><Car size={16} /> {t('car_finance')}</NavLink>
                                             </div>
                                         </div>
                                     </>
@@ -155,10 +155,10 @@ function Header() {
                                     <button 
                                         onClick={handleTaskDashboardToggle}
                                         className="task-summary-btn"
-                                        title="Task Management Dashboard"
+                                        title={t('task_management_dashboard') || 'Task Management Dashboard'}
                                     >
                                         <ClipboardList className="task-icon" size={20} />
-                                        <span className="task-label">Tasks</span>
+                                        <span className="task-label">{t('tasks_label') || t('tasks') || 'Tasks'}</span>
                                         {urgentTaskCount > 0 && (
                                             <span className="task-urgent-badge">{urgentTaskCount}</span>
                                         )}
@@ -169,17 +169,17 @@ function Header() {
                                         <div className="task-summary-tooltip">
                                             {taskSummary.pending_assignments > 0 && (
                                                 <div className="summary-line">
-                                                    <Clock size={16} /> {taskSummary.pending_assignments} pending acceptance
+                                                    <Clock size={16} /> {taskSummary.pending_assignments} {t('pending_acceptance') || 'pending acceptance'}
                                                 </div>
                                             )}
                                             {taskSummary.active_discussions > 0 && (
                                                 <div className="summary-line">
-                                                    <MessageCircle size={16} /> {taskSummary.active_discussions} active discussions
+                                                    <MessageCircle size={16} /> {taskSummary.active_discussions} {t('active_discussions_label') || 'active discussions'}
                                                 </div>
                                             )}
                                             {taskSummary.pending_calls > 0 && (
                                                 <div className="summary-line">
-                                                    <Phone size={16} /> {taskSummary.pending_calls} pending calls
+                                                    <Phone size={16} /> {taskSummary.pending_calls} {t('pending_calls') || 'pending calls'}
                                                 </div>
                                             )}
                                         </div>
@@ -286,7 +286,7 @@ function Header() {
                                 onClick={handleTaskDashboardToggle}
                                 className="view-dashboard-btn"
                             >
-                                Open Dashboard →
+                                {t('open_dashboard') || 'Open Dashboard →'}
                             </button>
                         </div>
                     </div>
@@ -298,7 +298,7 @@ function Header() {
                 <div className="modal-overlay dashboard-modal-overlay">
                     <div className="modal-content dashboard-modal-content">
                         <div className="modal-header">
-                            <h3>Task Management Dashboard</h3>
+                            <h3>{t('task_management_dashboard') || 'Task Management Dashboard'}</h3>
                             <button
                                 onClick={() => setShowTaskDashboard(false)}
                                 className="modal-close"

@@ -4,6 +4,24 @@
     max-width: 1400px;
     margin: 30px auto;
     padding: 25px;
+    /* Apply 90% visual scale like dashboard */
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: calc(95% * 1.111111); /* compensate for scale to keep layout width */
+}
+
+@media (max-width: 1200px) {
+  .tasks-container {
+    transform: scale(0.95);
+    width: calc(95% * 1.052632);
+  }
+}
+
+@media (max-width: 768px) {
+  .tasks-container {
+    transform: none;
+    width: 95%;
+  }
 }
 
 /* Tasks Header */

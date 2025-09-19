@@ -4,6 +4,24 @@
     flex-direction: column;
     height: calc(100vh - 60px);
     background: #f8f9fa;
+    /* Apply 90% visual scale like dashboard */
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: calc(100% * 1.111111); /* compensate for scale to keep layout width */
+}
+
+@media (max-width: 1200px) {
+  .chat-page {
+    transform: scale(0.95);
+    width: calc(100% * 1.052632);
+  }
+}
+
+@media (max-width: 768px) {
+  .chat-page {
+    transform: none;
+    width: 100%;
+  }
 }
 
 .chat-header {

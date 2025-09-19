@@ -2,6 +2,24 @@
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    /* Apply 90% visual scale like dashboard */
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: calc(100% * 1.111111); /* compensate for scale to keep layout width */
+}
+
+@media (max-width: 1200px) {
+  .documents-container {
+    transform: scale(0.95);
+    width: calc(100% * 1.052632);
+  }
+}
+
+@media (max-width: 768px) {
+  .documents-container {
+    transform: none;
+    width: 100%;
+  }
 }
 
 .documents-header {

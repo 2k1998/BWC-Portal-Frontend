@@ -7,6 +7,24 @@
     background-color: var(--color-white);
     border-radius: var(--border-radius-default, 8px);
     box-shadow: var(--box-shadow-default, 0 2px 10px rgba(0,0,0,0.1));
+    /* Apply 90% visual scale like dashboard */
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: calc(95% * 1.111111); /* compensate for scale to keep layout width */
+}
+
+@media (max-width: 1200px) {
+  .companies-container {
+    transform: scale(0.95);
+    width: calc(95% * 1.052632);
+  }
+}
+
+@media (max-width: 768px) {
+  .companies-container {
+    transform: none;
+    width: 95%;
+  }
 }
 
 .companies-header {

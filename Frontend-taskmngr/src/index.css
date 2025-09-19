@@ -189,6 +189,19 @@
   --focus-ring-offset: 0 0 0 2px var(--color-white), 0 0 0 4px rgba(59, 130, 246, 0.5);
 }
 
+/* Global UI scale: make everything ~10% smaller on desktop, reset on mobile */
+html {
+  font-size: 90%;
+}
+
+@media (max-width: 1200px) {
+  html { font-size: 95%; }
+}
+
+@media (max-width: 768px) {
+  html { font-size: 100%; }
+}
+
 body {
   margin: 0;
   font-family: var(--font-family-primary);

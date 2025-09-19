@@ -166,9 +166,9 @@ function DashboardPage() {
           <button 
             className="btn btn-primary btn-sm"
             onClick={() => navigate('/tasks')}
-            aria-label="View all tasks"
+            aria-label={(t('view_all_tasks') && t('view_all_tasks') !== 'view_all_tasks') ? t('view_all_tasks') : (language === 'el' ? 'Προβολή Όλων των Εργασιών' : 'View All Tasks')}
           >
-            View All Tasks
+            {(t('view_all_tasks') && t('view_all_tasks') !== 'view_all_tasks') ? t('view_all_tasks') : (language === 'el' ? 'Προβολή Όλων των Εργασιών' : 'View All Tasks')}
           </button>
         </div>
       </header>

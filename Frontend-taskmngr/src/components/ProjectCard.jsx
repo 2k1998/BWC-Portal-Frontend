@@ -1,22 +1,23 @@
 // src/components/ProjectCard.jsx
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { useLanguage } from '../context/LanguageContext';
 import { Edit, Trash2, AlertTriangle } from 'lucide-react';
 
 const PROJECT_TYPES = {
-  new_store: 'New Store',
-  renovation: 'Renovation',
-  maintenance: 'Maintenance',
-  expansion: 'Expansion',
-  other: 'Other'
+  new_store: 'project_type_new_store',
+  renovation: 'project_type_renovation',
+  maintenance: 'project_type_maintenance',
+  expansion: 'project_type_expansion',
+  other: 'project_type_other'
 };
 
 const PROJECT_STATUSES = {
-  planning: 'Planning',
-  in_progress: 'In Progress',
-  completed: 'Completed',
-  on_hold: 'On Hold',
-  cancelled: 'Cancelled'
+  planning: 'status_planning',
+  in_progress: 'status_in_progress',
+  completed: 'status_completed',
+  on_hold: 'status_on_hold',
+  cancelled: 'status_cancelled'
 };
 
 const STATUS_COLORS = {
@@ -28,6 +29,7 @@ const STATUS_COLORS = {
 };
 
 function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
+  const { t } = useLanguage();
   const [showStatusUpdate, setShowStatusUpdate] = useState(false);
   const [statusData, setStatusData] = useState({
     status: project.status,
@@ -63,10 +65,10 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
               className="status-badge"
               style={{ backgroundColor: getStatusColor(project.status) }}
             >
-              {PROJECT_STATUSES[project.status]}
+              {t(PROJECT_STATUSES[project.status])}
             </span>
             <span className="type-badge">
-              {PROJECT_TYPES[project.project_type]}
+              {t(PROJECT_TYPES[project.project_type])}
             </span>
           </div>
         </div>
@@ -94,7 +96,7 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
       {/* Progress Bar */}
       <div className="progress-section">
         <div className="progress-header">
-          <span className="progress-label">Progress</span>
+          <span className="progress-label">{t('progress')}</span>
           <span className="progress-value">{project.progress_percentage}%</span>
         </div>
         <div className="progress-bar">
@@ -116,26 +118,26 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
 
         <div className="project-info-grid">
           <div className="info-item">
-            <label>Company</label>
+            <label>{t('company')}</label>
             <span>{project.company_name}</span>
           </div>
 
           {project.store_location && (
             <div className="info-item">
-              <label>Location</label>
+              <label>{t('location')}</label>
               <span>{project.store_location}</span>
             </div>
           )}
 
           {project.project_manager_name && (
             <div className="info-item">
-              <label>Manager</label>
+              <label>{t('project_manager')}</label>
               <span>{project.project_manager_name}</span>
             </div>
           )}
 
           <div className="info-item">
-            <label>Expected Completion</label>
+            <label>{t('expected_completion')}</label>
             <span className={isOverdue ? 'overdue-date' : ''}>
               {formatDate(project.expected_completion_date)}
               {isOverdue && <AlertTriangle className="overdue-indicator" size={16} />}
@@ -143,14 +145,14 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
           </div>
 
           <div className="info-item">
-            <label>Created</label>
+            <label>{t('created')}</label>
             <span>{formatDate(project.created_at)}</span>
           </div>
         </div>
 
         {project.last_update && (
           <div className="last-update">
-            <label>Latest Update:</label>
+            <label>{t('latest_update')}</label>
             <p>{project.last_update}</p>
           </div>
         )}
@@ -164,7 +166,7 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
               className="btn btn-outline btn-sm"
               onClick={() => setShowStatusUpdate(true)}
             >
-              Update Status
+              {t('update_status')}
             </button>
           ) : (
             <form onSubmit={handleStatusSubmit} className="status-update-form">
@@ -175,8 +177,8 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
                     onChange={(e) => setStatusData(prev => ({ ...prev, status: e.target.value }))}
                     className="form-control"
                   >
-                    {Object.entries(PROJECT_STATUSES).map(([key, label]) => (
-                      <option key={key} value={key}>{label}</option>
+                    {Object.entries(PROJECT_STATUSES).map(([key, labelKey]) => (
+                      <option key={key} value={key}>{t(labelKey)}</option>
                     ))}
                   </select>
                 </div>
@@ -189,7 +191,7 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
                     value={statusData.progress_percentage}
                     onChange={(e) => setStatusData(prev => ({ ...prev, progress_percentage: parseInt(e.target.value) || 0 }))}
                     className="form-control"
-                    placeholder="Progress %"
+                    placeholder={t('progress_percentage')}
                   />
                 </div>
               </div>
@@ -199,21 +201,21 @@ function ProjectCard({ project, canManage, onEdit, onDelete, onStatusUpdate }) {
                   value={statusData.last_update}
                   onChange={(e) => setStatusData(prev => ({ ...prev, last_update: e.target.value }))}
                   className="form-control"
-                  placeholder="Status update notes..."
+                  placeholder={t('status_update_placeholder')}
                   rows="2"
                 />
               </div>
 
               <div className="form-actions">
                 <button type="submit" className="btn btn-primary btn-sm">
-                  Update
+                  {t('update')}
                 </button>
                 <button 
                   type="button" 
                   className="btn btn-outline btn-sm"
                   onClick={() => setShowStatusUpdate(false)}
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
               </div>
             </form>

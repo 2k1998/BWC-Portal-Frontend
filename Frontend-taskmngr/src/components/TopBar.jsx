@@ -10,7 +10,7 @@ import './TopBar.css';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
 
 function TopBar() {
-    const { language, setLanguage } = useLanguage();
+    const { language, setLanguage, t } = useLanguage();
 
     return (
         <div className="top-bar">
@@ -57,11 +57,11 @@ function TopBar() {
                         <button 
                             className="language-toggle"
                             onClick={() => setLanguage(language === 'en' ? 'el' : 'en')}
-                            title="Switch Language"
+                            title={t('select_language')}
                         >
                             <Globe className="language-icon" size={20} />
                             <span className="language-text">
-                                {language === 'en' ? 'EN' : 'ΕΛ'}
+                                {language === 'en' ? t('english_label') || 'EN' : t('greek_label') || 'ΕΛ'}
                             </span>
                         </button>
                     </div>

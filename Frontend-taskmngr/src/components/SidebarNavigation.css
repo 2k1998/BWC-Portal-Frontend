@@ -9,7 +9,8 @@
 /* Main App Layout Adjustment */
 .app-with-sidebar {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;              /* Lock viewport height */
+    overflow: hidden;           /* Prevent body scrolling; main will scroll */
 }
 
 .app-with-sidebar main {
@@ -18,8 +19,9 @@
     margin-top: var(--topbar-height);
     transition: margin-left var(--transition-speed) ease;
     background: var(--color-gray-50);
-    min-height: calc(100vh - var(--topbar-height));
+    height: calc(100vh - var(--topbar-height)); /* Fill remaining height below TopBar */
     padding: 0;
+    overflow-y: auto;           /* Central content scroll */
     overflow-x: auto;
 }
 

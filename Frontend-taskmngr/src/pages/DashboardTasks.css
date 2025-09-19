@@ -1,6 +1,26 @@
 /* src/pages/DashboardTasks.css - Updated to match Contacts page aesthetic */
 
 /* Dashboard Header */
+.dashboard-container {
+  /* Apply 90% scale only to the dashboard page */
+  transform: scale(0.9);
+  transform-origin: top left;
+  width: 111.1111%; /* compensate width so content spans the main area */
+}
+
+@media (max-width: 1200px) {
+  .dashboard-container {
+    transform: scale(0.95);
+    width: 105.2632%;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    transform: none;
+    width: 100%;
+  }
+}
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -42,22 +62,28 @@
 .dashboard-grid-container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
-    margin-top: var(--space-6);
+    gap: 32px; /* More vertical space between rows */
+    margin: var(--space-8) auto 0;
     max-width: 100%;
+    align-items: center; /* Center all grid rows */
 }
 
 /* Dashboard row layout */
 .dashboard-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-6);
+    gap: 100px; /* Much more space between the two columns */
     align-items: start;
+    width: 100%;
+    max-width: 1200px; /* Constrain width for better centering */
+    justify-content: center;
 }
 
 /* Calendar wrapper styling */
 .dashboard-calendar-wrapper {
     width: 100%;
+    max-width: 1200px; /* Match the grid row max-width */
+    margin: 0 auto; /* Center the calendar */
 }
 
 /* Payment widget styling */
@@ -68,15 +94,17 @@
 /* Base styling for the task category cards */
 .task-category-card {
     background-color: var(--color-white);
-    border: 1px solid var(--color-gray-200);
+    border: 1px solid var(--color-gray-200); /* Thicker border for more separation */
     border-radius: var(--radius-xl);
     padding: var(--space-6);
     display: flex;
     flex-direction: column;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Stronger shadow for more separation */
     transition: var(--transition-all);
     min-height: 200px;
     height: 100%;
+    width: 100%; /* Ensure cards take full width of their grid cell */
+    margin: 0px -20px; /* Additional margin for extra separation */
 }
 
 .task-category-card:hover {
@@ -116,16 +144,18 @@
     padding: 0;
     margin: 0;
     text-align: left;
+    display: grid;          /* Create consistent spacing between items */
+    row-gap: 16px;          /* Increased space between tasks */
 }
 
 .task-category-list-item {
     padding: 12px 15px;
-    border-bottom: 1px solid var(--color-gray-light, #e2e8f0);
+    border: 1px solid var(--color-gray-light, #e2e8f0); /* card-like separation */
     transition: all 0.2s ease;
-    border-radius: 6px;
-    margin-bottom: 5px;
+    border-radius: 8px;
     background: white;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 8px; /* Additional margin for extra separation */
 }
 
 .task-category-list-item:hover {

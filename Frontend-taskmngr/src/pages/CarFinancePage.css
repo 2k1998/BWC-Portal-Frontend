@@ -613,6 +613,24 @@
     margin: 0 auto;
     background: #f5f6fa;
     min-height: 100vh;
+    /* Apply 90% visual scale like dashboard */
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: calc(100% * 1.111111); /* compensate for scale to keep layout width */
+}
+
+@media (max-width: 1200px) {
+  .car-finance-page {
+    transform: scale(0.95);
+    width: calc(100% * 1.052632);
+  }
+}
+
+@media (max-width: 768px) {
+  .car-finance-page {
+    transform: none;
+    width: 100%;
+  }
 }
 
 .car-finance-loading {

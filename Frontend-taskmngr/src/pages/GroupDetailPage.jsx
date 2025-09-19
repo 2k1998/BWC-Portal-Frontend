@@ -90,17 +90,22 @@ function GroupDetailPage() {
 
     return (
         <div className="group-detail-container">
-            <button onClick={() => navigate(-1)}>{t('back')}</button>
-            <h1>{t('group')}: {group?.name || `ID: ${groupId}`}</h1>
-            {(() => {
-                const computedHead = group?.head || members.find(m => m.role === 'Head');
-                return computedHead ? (
-                    <div className="group-head-display">
-                        {t('head')}: {computedHead.first_name || ''} {computedHead.surname || ''}
-                        <span className="role-badge">{computedHead.role}</span>
-                    </div>
-                ) : null;
-            })()}
+            <div className="section-card" style={{padding: '16px 20px'}}>
+                <button onClick={() => navigate(-1)} className="btn btn-outline" style={{marginBottom: 10}}>
+                    ← {t('back')}
+                </button>
+                <h1 style={{marginTop: 0}}>{t('group')}: {group?.name || `ID: ${groupId}`}</h1>
+                {(() => {
+                    const computedHead = group?.head || members.find(m => m.role === 'Head');
+                    return computedHead ? (
+                        <div className="group-head-display" style={{marginTop: 10}}>
+                            {t('head')}: {computedHead.first_name || ''} {computedHead.surname || ''}
+                            <span className="role-badge">{computedHead.role}</span>
+                        </div>
+                    ) : null;
+                })()}
+            </div>
+
             <div className="section-card">
                 <h2>{t('members')}</h2>
                 <ul className="member-list">
@@ -115,19 +120,33 @@ function GroupDetailPage() {
                     )}
                 </ul>
             </div>
+
             <div className="section-card">
-                <h2>{t('group_tasks')}</h2>
-                {isAdmin && (
-                    <button onClick={() => setShowTaskForm(!showTaskForm)} className="assign-task-toggle-btn">
-                        {showTaskForm ? t('cancel') : t('assign_new_task_to_group')}
-                    </button>
-                )}
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:12}}>
+                    <h2 style={{marginBottom:0}}>{t('group_tasks')}</h2>
+                    {isAdmin && (
+                        <button onClick={() => setShowTaskForm(!showTaskForm)} className="assign-task-toggle-btn">
+                            {showTaskForm ? t('cancel') : t('assign_new_task_to_group')}
+                        </button>
+                    )}
+                </div>
                 {showTaskForm && (
-                    <TaskForm onSubmit={handleAssignTask} submitButtonText={t('submit')} />
+                    <div style={{marginTop:16}}>
+                        <TaskForm onSubmit={handleAssignTask} submitButtonText={t('submit')} />
+                    </div>
                 )}
-                <div className="task-list">
+                <div className="task-list" style={{marginTop:16}}>
                     {tasks.length === 0 ? (
-                        <p>{t('no_tasks_assigned_to_group')}</p>
+                        <div style={{
+                            padding:'24px',
+                            textAlign:'center',
+                            background:'var(--color-gray-light)',
+                            border:'1px dashed var(--color-gray-medium)',
+                            borderRadius:8,
+                            color:'var(--color-gray-dark)'
+                        }}>
+                            {t('no_tasks_assigned_to_group')}
+                        </div>
                     ) : (
                         tasks.map(task => (
                             <div

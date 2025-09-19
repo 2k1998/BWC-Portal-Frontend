@@ -37,10 +37,15 @@ export const translations = {
     active: 'Active',
     inactive: 'Inactive',
     
+    // Generic extras
+    date: 'Date',
+    type: 'Type',
+
     // Auth Pages
     email: 'Email',
     password: 'Password',
     first_name: 'First Name',
+    last_name: 'Last Name',
     surname: 'Surname',
     birthday: 'Birthday',
     login_button: 'Login',
@@ -64,7 +69,7 @@ export const translations = {
     updating: 'Updating...',
 
     // Dashboard
-    Hello: 'Welcome',
+    hello: 'Hello',
     dashboard_intro: 'This is your dashboard. See upcoming events and tasks below.',
     urgent: 'Urgent',
     important: 'Important',
@@ -133,7 +138,7 @@ export const translations = {
     add_new_contact: 'Add New Contact',
     search_contacts: 'Search contacts...',
     phone_number: 'Phone Number',
-    company: 'Company',
+    company_label: 'Company',
     job_title: 'Job Title',
     add_contact: 'Add Contact',
     update_contact: 'Update Contact',
@@ -303,16 +308,39 @@ export const translations = {
     update_company: 'Update Company',
     
     // Payments
+    payment_management: 'Payment Management',
     new_payment: 'New Payment',
     create_payment: 'Create Payment',
     edit_payment: 'Edit Payment',
     update_payment: 'Update Payment',
     payment: 'Payment',
+    payment_amount: 'Payment Amount',
+    payment_date: 'Payment Date',
+    payment_type: 'Payment Type',
     amount: 'Amount',
     category: 'Category',
+    employee_label: 'Employee',
+    company: 'Company',
+    all_employees: 'All Employees',
+    from_date: 'From Date',
+    to_date: 'To Date',
     notes: 'Notes',
     additional_notes: 'Additional notes',
     none: 'None',
+    currency: 'Currency',
+    paid_date: 'Paid Date',
+    no_payments_found: 'No payments found',
+    mark_as_paid: 'Mark as Paid',
+    office_rent: 'Office Rent',
+    utility_bill: 'Utility Bill',
+    equipment_purchase: 'Equipment Purchase',
+    other_expense: 'Other Expense',
+    salary: 'Salary',
+    commission: 'Commission',
+    bonus: 'Bonus',
+    rent_income: 'Rent Income',
+    service_income: 'Service Income',
+    other_income: 'Other Income',
     
     // Projects
     saving: 'Saving...',
@@ -362,7 +390,7 @@ export const translations = {
     project_details: 'Project Details',
     budget_information: 'Budget Information',
     location_details: 'Location Details',
-    additional_notes: 'Additional Notes',
+    // use generic key 'additional_notes' defined earlier
     timeline: 'Timeline',
     actual_cost_tracking: 'Actual Cost Tracking',
     project_notes: 'Project Notes',
@@ -370,14 +398,10 @@ export const translations = {
     // Form Fields
     project_name_required: 'Project Name',
     project_type_required: 'Project Type',
-    company_required: 'Company',
-    priority: 'Priority',
-    description: 'Description',
     estimated_budget_required: 'Estimated Budget',
     project_manager: 'Project Manager',
     location_name: 'Location Name',
     full_address: 'Full Address',
-    start_date: 'Start Date',
     expected_completion: 'Expected Completion',
     actual_completion_date: 'Actual Completion Date',
     actual_cost: 'Actual Cost',
@@ -414,7 +438,6 @@ export const translations = {
     additional_options_description: 'Timeline, detailed budget tracking, and project status management',
     
     // Form Buttons
-    cancel: 'Cancel',
     create_project_btn: 'Create Project',
     update_project_btn: 'Update Project',
     
@@ -478,7 +501,6 @@ export const translations = {
     failed_to_create_event: 'Failed to create event',
     
     // Commissions
-    commissions: 'Commissions',
     commission_rules: 'Commission Rules',
     base_commission_rate: 'Base Commission Rate',
     
@@ -502,6 +524,7 @@ export const translations = {
     documents: 'Documents',
     reports: 'Reports',
     payments: 'Payments',
+    commissions: 'Commissions',
     car_finance: 'Car Finance'
     ,
     // Documents Page
@@ -539,6 +562,15 @@ export const translations = {
     downloads: 'Downloads',
     
     // Additional missing translations
+    task_management_dashboard: 'Task Management Dashboard',
+    open_dashboard: 'Open Dashboard →',
+    pending_acceptance: 'Pending Acceptance',
+    active_discussions_label: 'Active Discussions',
+    pending_calls: 'Pending Calls',
+    more: 'More',
+    tasks_label: 'Tasks',
+    english_label: 'English',
+    greek_label: 'Ελληνικά',
     select_language: 'Select Your Language',
     select_language_greek: 'Επιλέξτε τη γλώσσα σας',
     english: 'English',
@@ -724,10 +756,15 @@ export const translations = {
     active: 'Ενεργός',
     inactive: 'Ανενεργός',
 
+    // Generic extras - Greek
+    date: 'Ημερομηνία',
+    type: 'Τύπος',
+
     // Auth Pages
     email: 'Email',
     password: 'Κωδικός Πρόσβασης',
     first_name: 'Όνομα',
+    last_name: 'Επώνυμο',
     surname: 'Επώνυμο',
     birthday: 'Ημερομηνία Γέννησης',
     login_button: 'Σύνδεση',
@@ -795,6 +832,16 @@ export const translations = {
     status_pending: 'Pending',
     status_completed: 'Ολοκληρώθηκε',
     status_loose_end: 'Εκκρεμότητα',
+
+    // New Task Form Sections (Greek)
+    basic_information: 'Βασικές Πληροφορίες',
+    assignment: 'Ανάθεση',
+    dates: 'Ημερομηνίες',
+    show_advanced: 'Εμφάνιση Προηγμένων Επιλογών',
+    hide_advanced: 'Απόκρυψη Προηγμένων Επιλογών',
+    enter_task_title: 'Εισαγάγετε τίτλο εργασίας...',
+    enter_task_description: 'Εισαγάγετε περιγραφή εργασίας...',
+    select_user: 'Επιλέξτε χρήστη...',
 
 
     // Companies Pages
@@ -902,7 +949,7 @@ export const translations = {
     no_contacts_in_daily_list: 'Δεν υπάρχουν επαφές στη λίστα καθημερινών κλήσεων.',
     contact_name: 'Όνομα Επαφής',
     phone_number: 'Τηλέφωνο',
-    company: 'Εταιρεία',
+    company_label: 'Εταιρεία',
     job_title: 'Τίτλος Εργασίας',
     calls_per_day: 'Κλήσεις / Ημέρα',
     next_call_at: 'Επόμενη Κλήση',
@@ -964,16 +1011,39 @@ export const translations = {
     update_company: 'Ενημέρωση Εταιρείας',
     
     // Payments
+    payment_management: 'Διαχείριση Πληρωμών',
     new_payment: 'Νέα Πληρωμή',
     create_payment: 'Δημιουργία Πληρωμής',
     edit_payment: 'Επεξεργασία Πληρωμής',
     update_payment: 'Ενημέρωση Πληρωμής',
     payment: 'Πληρωμή',
+    payment_amount: 'Ποσό Πληρωμής',
+    payment_date: 'Ημερομηνία Πληρωμής',
+    payment_type: 'Τύπος Πληρωμής',
     amount: 'Ποσό',
     category: 'Κατηγορία',
+    employee_label: 'Υπάλληλος',
+    company: 'Εταιρεία',
+    all_employees: 'Όλοι οι Υπάλληλοι',
+    from_date: 'Από Ημερομηνία',
+    to_date: 'Έως Ημερομηνία',
     notes: 'Σημειώσεις',
     additional_notes: 'Πρόσθετες σημειώσεις',
     none: 'Κανένα',
+    currency: 'Νόμισμα',
+    paid_date: 'Ημερομηνία Πληρωμής',
+    no_payments_found: 'Δεν βρέθηκαν πληρωμές',
+    mark_as_paid: 'Σήμανση ως Πληρωμένο',
+    office_rent: 'Ενοίκιο Γραφείου',
+    utility_bill: 'Λογαριασμός Κοινής Ωφέλειας',
+    equipment_purchase: 'Αγορά Εξοπλισμού',
+    other_expense: 'Άλλη Δαπάνη',
+    salary: 'Μισθός',
+    commission: 'Προμήθεια',
+    bonus: 'Μπόνους',
+    rent_income: 'Έσοδο Ενοικίου',
+    service_income: 'Έσοδο Υπηρεσίας',
+    other_income: 'Άλλο Έσοδο',
     
     // Projects
     saving: 'Αποθηκεύεται...',
@@ -1020,10 +1090,12 @@ export const translations = {
     // Project Form Translations - Greek
     create_new_project: 'Δημιουργία Νέου Έργου',
     edit_project: 'Επεξεργασία Έργου',
+    basic_info: 'Βασικά Στοιχεία',
+    details: 'Λεπτομέρειες',
     project_details: 'Στοιχεία Έργου',
     budget_information: 'Πληροφορίες Προϋπολογισμού',
     location_details: 'Στοιχεία Τοποθεσίας',
-    additional_notes: 'Πρόσθετες Σημειώσεις',
+    // use generic key 'additional_notes' defined earlier
     timeline: 'Χρονοδιάγραμμα',
     actual_cost_tracking: 'Παρακολούθηση Πραγματικού Κόστους',
     project_notes: 'Σημειώσεις Έργου',
@@ -1031,14 +1103,10 @@ export const translations = {
     // Form Fields - Greek
     project_name_required: 'Όνομα Έργου',
     project_type_required: 'Τύπος Έργου',
-    company_required: 'Εταιρεία',
-    priority: 'Προτεραιότητα',
-    description: 'Περιγραφή',
     estimated_budget_required: 'Εκτιμώμενος Προϋπολογισμός',
     project_manager: 'Διαχειριστής Έργου',
     location_name: 'Όνομα Τοποθεσίας',
     full_address: 'Πλήρης Διεύθυνση',
-    start_date: 'Ημερομηνία Έναρξης',
     expected_completion: 'Αναμενόμενη Ολοκλήρωση',
     actual_completion_date: 'Ημερομηνία Πραγματικής Ολοκλήρωσης',
     actual_cost: 'Πραγματικό Κόστος',
@@ -1075,7 +1143,6 @@ export const translations = {
     additional_options_description: 'Χρονοδιάγραμμα, λεπτομερής παρακολούθηση προϋπολογισμού και διαχείριση κατάστασης έργου',
     
     // Form Buttons - Greek
-    cancel: 'Ακύρωση',
     create_project_btn: 'Δημιουργία Έργου',
     update_project_btn: 'Ενημέρωση Έργου',
     
@@ -1132,14 +1199,13 @@ export const translations = {
     confirm_delete_task_from_group: 'Είστε σίγουροι ότι θέλετε να διαγράψετε την εργασία "{{title}}" από αυτή την ομάδα;',
     task_deleted_success: 'Η εργασία διαγράφηκε επιτυχώς!',
     failed_to_delete_task: 'Αποτυχία διαγραφής εργασίας.',
-    
+    no_tasks_assigned_to_group: 'Η ομάδα δεν έχει κάποια εργασία', 
     // Events additions
     event_required_fields: 'Παρακαλώ συμπληρώστε όλα τα απαιτούμενα πεδία',
     event_created_success: 'Η εκδήλωση δημιουργήθηκε επιτυχώς',
     failed_to_create_event: 'Αποτυχία δημιουργίας εκδήλωσης',
     
     // Commissions
-    commissions: 'Προμήθειες',
     commission_rules: 'Κανόνες Προμήθειας',
     base_commission_rate: 'Βασικό Ποσοστό Προμήθειας',
     
@@ -1158,11 +1224,12 @@ export const translations = {
     
     // Navigation additions
     tasks: 'Εργασίες',
-    projects: 'Projects',
+    projects: 'Έργα',
     contacts: 'Επαφές',
     documents: 'Έγγραφα',
     reports: 'Αναφορές',
     payments: 'Πληρωμές',
+    commissions: 'Προμήθειες',
     car_finance: 'Χρηματοδότηση Αυτοκινήτου',
     
     // Events Page - Greek (additional)
@@ -1197,6 +1264,11 @@ export const translations = {
     select_file: 'Επιλογή Αρχείου',
     drop_file_here: 'Σύρετε και αφήστε ένα αρχείο εδώ ή κάντε κλικ για περιήγηση',
     file_selected: 'Επιλέχθηκε {{filename}}',
+      
+    file_type_not_allowed: 'Ο τύπος αρχείου δεν επιτρέπεται. Επιτρεπόμενοι τύποι: {{types}}',
+    file_size_exceeds: 'Το μέγεθος αρχείου υπερβαίνει το μέγιστο επιτρεπόμενο μέγεθος των {{size}}MB',
+    please_select_file: 'Παρακαλώ επιλέξτε ένα αρχείο για ανέβασμα',
+    please_enter_title: 'Παρακαλώ εισάγετε τίτλο εγγράφου',
     
     // Document Card - Greek
     download: 'Λήψη',
@@ -1205,6 +1277,15 @@ export const translations = {
     downloads: 'Λήψεις',
     
     // Additional missing translations - Greek
+    task_management_dashboard: 'Πίνακας Διαχείρισης Εργασιών',
+    open_dashboard: 'Άνοιγμα Πίνακα →',
+    pending_acceptance: 'Σε Αναμονή Αποδοχής',
+    active_discussions_label: 'Ενεργές Συζητήσεις',
+    pending_calls: 'Εκκρεμείς Κλήσεις',
+    more: 'Περισσότερα',
+    tasks_label: 'Εργασίες',
+    english_label: 'English',
+    greek_label: 'Ελληνικά',
     select_language: 'Επιλέξτε τη γλώσσα σας',
     select_language_greek: 'Επιλέξτε τη γλώσσα σας',
     english: 'English',
