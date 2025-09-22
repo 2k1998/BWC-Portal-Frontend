@@ -13,6 +13,7 @@ export const translations = {
     profile: 'Profile',
     logout: 'Logout',
     login: 'Login',
+    login_success: 'Login successful',
     register: 'Register',
     users: 'Users',
     admin_panel: 'Admin Panel',
@@ -152,6 +153,7 @@ export const translations = {
 
     // Companies Pages
     view_all_companies: 'View All',
+    view_all_tasks: 'View All Tasks',
     add_new_company: 'Add New Company',
     register_new_company: 'Register New Company',
     company_name: 'Company Name',
@@ -735,6 +737,7 @@ export const translations = {
     profile: 'Προφίλ',
     logout: 'Αποσύνδεση',
     login: 'Σύνδεση',
+    login_success: 'Επιτυχής σύνδεση',
     register: 'Εγγραφή',
     users: 'Χρήστες',
     admin_panel: 'Πίνακας Διαχείρισης',
@@ -847,6 +850,7 @@ export const translations = {
 
     // Companies Pages
     view_all_companies: 'Προβολή Όλων',
+    view_all_tasks: 'Προβολή Όλων των Εργασιών',
     add_new_company: 'Προσθήκη Νέας Εταιρείας',
     register_new_company: 'Καταχώρηση Νέας Εταιρείας',
     company_name: 'Όνομα Εταιρείας',
