@@ -41,6 +41,7 @@ import SidebarNavigation from './components/SidebarNavigation';
 import TopBar from './components/TopBar';
 import UserStatusSidebar from './components/UserStatusSidebar';
 import MobileBottomNav from './components/MobileBottomNav';
+import PermissionRoute from './components/PermissionRoute';
 import React from 'react';
 // This component now correctly uses the context because it will be rendered INSIDE AuthProvider
 const PrivateRoute = ({ children }) => {
@@ -99,41 +100,41 @@ function AppContent() {
           <Route path="/forgot-password" element={<PublicOnlyRoute><ForgotPasswordPage /></PublicOnlyRoute>} />
           <Route path="/register" element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
           
-          {/* Protected Routes */}
-          <Route path="/dashboard" element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-          <Route path="/tasks" element={<PrivateRoute><TasksPage /></PrivateRoute>} />
-          <Route path="/projects" element={<PrivateRoute><ProjectsPage /></PrivateRoute>} />
+          {/* Protected Routes with Permission-based Access */}
+          <Route path="/dashboard" element={<PermissionRoute requiredPermission="dashboard"><DashboardPage /></PermissionRoute>} />
+          <Route path="/tasks" element={<PermissionRoute requiredPermission="tasks"><TasksPage /></PermissionRoute>} />
+          <Route path="/projects" element={<PermissionRoute requiredPermission="projects"><ProjectsPage /></PermissionRoute>} />
           
           {/* Add these new routes */}
-          <Route path="/payments" element={<PrivateRoute><PaymentsPage /></PrivateRoute>} />
-          <Route path="/payments/:paymentId" element={<PrivateRoute><PaymentDetailPage /></PrivateRoute>} />
-          <Route path="/commissions" element={<PrivateRoute><CommissionsPage /></PrivateRoute>} />
+          <Route path="/payments" element={<PermissionRoute requiredPermission="payments"><PaymentsPage /></PermissionRoute>} />
+          <Route path="/payments/:paymentId" element={<PermissionRoute requiredPermission="payments"><PaymentDetailPage /></PermissionRoute>} />
+          <Route path="/commissions" element={<PermissionRoute requiredPermission="commissions"><CommissionsPage /></PermissionRoute>} />
           
-          <Route path="/contacts" element={<PrivateRoute><ContactsPage /></PrivateRoute>} />
-          <Route path="/daily-calls" element={<PrivateRoute><DailyCallsPage /></PrivateRoute>} />
-          <Route path="/groups" element={<PrivateRoute><GroupsPage /></PrivateRoute>} />
-          <Route path="/groups/:groupId" element={<PrivateRoute><GroupDetailPage /></PrivateRoute>} />
-          <Route path="/users" element={<PrivateRoute><UsersPage /></PrivateRoute>} />
-          <Route path="/profile" element={<PrivateRoute><ProfilePage /></PrivateRoute>} />
-          <Route path="/admin-panel" element={<PrivateRoute><AdminPanelPage /></PrivateRoute>} />
-          <Route path="/companies" element={<PrivateRoute><CompaniesPage /></PrivateRoute>} />
-          <Route path="/companies/new" element={<PrivateRoute><NewCompanyPage /></PrivateRoute>} />
-          <Route path="/companies/:companyId" element={<PrivateRoute><CompanyDetailPage /></PrivateRoute>} />
-          <Route path="/companies/edit/:companyId" element={<PrivateRoute><EditCompanyPage /></PrivateRoute>} />
-          <Route path="/events" element={<PrivateRoute><EventsPage /></PrivateRoute>} />
-          <Route path="/events/new" element={<PrivateRoute><AddEventPage /></PrivateRoute>} />
-          <Route path="/reports" element={<PrivateRoute><ReportsPage /></PrivateRoute>} />
-          <Route path="/documents" element={<PrivateRoute><DocumentsPage /></PrivateRoute>} />
-          <Route path="/chat/:userId" element={<PrivateRoute><ChatPage /></PrivateRoute>} />
-          <Route path="/approvals" element={<PrivateRoute><ApprovalsPage /></PrivateRoute>} />
+          <Route path="/contacts" element={<PermissionRoute requiredPermission="contacts"><ContactsPage /></PermissionRoute>} />
+          <Route path="/daily-calls" element={<PermissionRoute requiredPermission="daily_calls"><DailyCallsPage /></PermissionRoute>} />
+          <Route path="/groups" element={<PermissionRoute requiredPermission="groups"><GroupsPage /></PermissionRoute>} />
+          <Route path="/groups/:groupId" element={<PermissionRoute requiredPermission="groups"><GroupDetailPage /></PermissionRoute>} />
+          <Route path="/users" element={<PermissionRoute requiredPermission="users"><UsersPage /></PermissionRoute>} />
+          <Route path="/profile" element={<PermissionRoute requiredPermission="profile"><ProfilePage /></PermissionRoute>} />
+          <Route path="/admin-panel" element={<PermissionRoute requiredPermission="admin_panel"><AdminPanelPage /></PermissionRoute>} />
+          <Route path="/companies" element={<PermissionRoute requiredPermission="companies"><CompaniesPage /></PermissionRoute>} />
+          <Route path="/companies/new" element={<PermissionRoute requiredPermission="companies"><NewCompanyPage /></PermissionRoute>} />
+          <Route path="/companies/:companyId" element={<PermissionRoute requiredPermission="companies"><CompanyDetailPage /></PermissionRoute>} />
+          <Route path="/companies/edit/:companyId" element={<PermissionRoute requiredPermission="companies"><EditCompanyPage /></PermissionRoute>} />
+          <Route path="/events" element={<PermissionRoute requiredPermission="events"><EventsPage /></PermissionRoute>} />
+          <Route path="/events/new" element={<PermissionRoute requiredPermission="events"><AddEventPage /></PermissionRoute>} />
+          <Route path="/reports" element={<PermissionRoute requiredPermission="reports"><ReportsPage /></PermissionRoute>} />
+          <Route path="/documents" element={<PermissionRoute requiredPermission="documents"><DocumentsPage /></PermissionRoute>} />
+          <Route path="/chat/:userId" element={<PermissionRoute requiredPermission="dashboard"><ChatPage /></PermissionRoute>} />
+          <Route path="/approvals" element={<PermissionRoute requiredPermission="admin_panel"><ApprovalsPage /></PermissionRoute>} />
           
           {/* New route for Car Finance Page */}
           <Route
             path="/car-finances"
             element={
-              <ProtectedRoute requiredRole="admin">
+              <PermissionRoute requiredPermission="car_finance">
                 <CarFinancePage />
-              </ProtectedRoute>
+              </PermissionRoute>
             }
           />
           

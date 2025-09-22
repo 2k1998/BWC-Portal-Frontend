@@ -26,6 +26,8 @@ export const authApi = {
     deleteUser: (userId, token) => callApi(`/users/${userId}`, 'DELETE', null, token),
     updateUserRole: (userId, roleData, token) => callApi(`/users/${userId}/role`, 'PUT', roleData, token),
     updateUserStatus: (userId, statusData, token) => callApi(`/users/${userId}/status`, 'PUT', statusData, token),
+    updateUserPermissions: (userId, permissions, token) => callApi(`/users/${userId}/permissions`, 'PUT', { permissions }, token),
+    getUserPermissions: (userId, token) => callApi(`/users/${userId}/permissions`, 'GET', null, token),
     requestPasswordReset: (data) => callApi('/auth/request-password-reset', 'POST', data),
     resetPassword: (data) => callApi('/auth/reset-password', 'POST', data),
 };
