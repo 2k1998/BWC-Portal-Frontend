@@ -1,5 +1,5 @@
 /* src/components/Modal.css */
-.modal-overlay {
+.app-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -9,10 +9,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensure it's above everything else */
+    z-index: 2000; /* Ensure it's above everything else; below task modal */
+    opacity: 0;
+    animation: modalOverlayFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.modal-content {
+.app-modal-content {
     background-color: var(--color-white);
     border-radius: var(--border-radius-default);
     box-shadow: var(--box-shadow-default);
@@ -23,6 +25,19 @@
     flex-direction: column;
     gap: 20px;
     position: relative; /* For positioning close button */
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+    animation: modalContentIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes modalOverlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes modalContentIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .modal-header {

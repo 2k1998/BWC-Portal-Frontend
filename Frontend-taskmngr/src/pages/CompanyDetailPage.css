@@ -292,6 +292,9 @@
     max-height: 250px;
     overflow-y: auto;
     z-index: 1000;
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+    animation: dropdownIn 0.18s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .dropdown-option {
@@ -308,6 +311,12 @@
 
 .dropdown-option:hover {
     background-color: var(--color-gray-light);
+    transform: translateX(2px);
+}
+
+@keyframes dropdownIn {
+    from { opacity: 0; transform: translateY(4px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .dropdown-option.disabled {

@@ -75,8 +75,8 @@ function TaskModal({ task, isOpen, onClose, onTaskUpdated }) {
     };
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="task-modal-overlay">
+            <div className="task-modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="modal-header">
                     <h2>{isEditing ? t('edit_task') || 'Edit Task' : task.title}</h2>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>

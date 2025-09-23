@@ -113,16 +113,14 @@ function TasksPage() {
   };
 
   const openTaskModal = async (task) => {
-    setLoading(true);
+    // Open the modal immediately to avoid page-level loading flicker
+    setSelectedTask(task);
+    setShowTaskModal(true);
     try {
       const taskDetails = await taskApi.getTaskById(task.id, accessToken);
       setSelectedTask(taskDetails);
-      setShowTaskModal(true);
     } catch (err) {
       showNotification(err.message || t('failed_to_fetch_task_details') || 'Failed to fetch task details', 'error');
-      setSelectedTask(null);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -139,7 +137,7 @@ function TasksPage() {
   }, [filteredTasks, statusFilter]);
 
   if (authLoading || loading) {
-    return <div className="loading-spinner">{t('loading')}</div>;
+    return <div className="loading-spinner fade-in">{t('loading')}</div>;
   }
 
   const completedTasks = filteredTasks.filter((task) => task.completed);

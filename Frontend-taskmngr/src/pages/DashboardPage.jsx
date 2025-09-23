@@ -143,7 +143,7 @@ function DashboardPage() {
   );
 
   if (authLoading || loadingContent) {
-    return <div className="loading-spinner">{t('loading')}</div>;
+    return <div className="loading-spinner fade-in">{t('loading')}</div>;
   }
 
   return (
