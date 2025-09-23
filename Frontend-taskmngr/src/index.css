@@ -891,3 +891,108 @@ textarea:focus {
     box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2) !important;
     transform: none !important;
 }
+
+/* ========================================
+   GLOBAL HOVER UTILITIES (subtle & consistent)
+   ======================================== */
+
+.hover-raise {
+    transition: var(--transition-transform), var(--transition-shadow);
+}
+
+.hover-raise:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.hover-shadow {
+    transition: var(--transition-shadow);
+}
+
+.hover-shadow:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.card {
+    transition: var(--transition-transform), var(--transition-shadow);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hover-raise,
+    .hover-shadow,
+    .card,
+    .btn,
+    button,
+    a,
+    [role="button"] {
+        transition: none !important;
+    }
+
+    .hover-raise:hover,
+    .card:hover {
+        transform: none !important;
+        box-shadow: var(--shadow-sm) !important;
+    }
+}
+
+/* ========================================
+   GLOBAL DROPDOWN ENHANCEMENTS
+   - smoother open/close and rounder corners
+   ======================================== */
+
+/* Common dropdown containers used across the app */
+.dropdown-menu,
+.notification-dropdown,
+.chat-dropdown,
+.enhanced-dropdown,
+.company-dropdown-menu,
+.searchable-dropdown .dropdown-options {
+    border-radius: var(--radius-xl) !important; /* more round */
+    box-shadow: var(--shadow-lg) !important;
+    transform-origin: top right;
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms !important;
+    overflow: hidden; /* clip item hover backgrounds to rounded corners */
+}
+
+/* Menu items: slightly rounder with clearer hover */
+.dropdown-menu a,
+.dropdown-menu button,
+.company-dropdown-menu .dropdown-item,
+.searchable-dropdown .dropdown-option {
+    border-radius: var(--radius-md);
+    transition: background-color 140ms ease, color 140ms ease;
+}
+
+/* Rounder selects and consistent transitions */
+select,
+.form-select,
+.status-select,
+.role-dropdown,
+.status-dropdown {
+    border-radius: var(--radius-xl) !important;
+    transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease !important;
+}
+
+select:hover,
+.form-select:hover,
+.status-select:hover,
+.role-dropdown:hover,
+.status-dropdown:hover {
+    background-color: var(--color-gray-50);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dropdown-menu,
+    .notification-dropdown,
+    .chat-dropdown,
+    .enhanced-dropdown,
+    .company-dropdown-menu,
+    .searchable-dropdown .dropdown-options {
+        transition: none !important;
+    }
+}
