@@ -4,8 +4,8 @@
 .dashboard-container {
   /* Apply 90% scale only to the dashboard page */
   transform: scale(0.9);
-  transform-origin: top left;
-  width: 111.1111%; /* compensate width so content spans the main area */
+  transform-origin: top center;
+  width: 90%; /* compensate width so content spans the main area */
 }
 
 @media (max-width: 1200px) {
@@ -56,6 +56,9 @@
   display: flex;
   gap: var(--space-3);
   align-items: center;
+  /* Align the actions with the gold underline on the title */
+  align-self: flex-end;
+  padding-bottom: 20px; /* matches h1 underline spacing in CalendarDashboard.css */
 }
 
 /* Main grid container for the entire dashboard layout */
