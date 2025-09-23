@@ -1,7 +1,7 @@
 /* src/pages/Reports.css */
 .reports-container {
     width: 95%;
-    max-width: 1600px;
+    max-width: 1300px;
     margin: 30px auto;
     padding: 25px;
     background-color: var(--color-white);
@@ -9,7 +9,7 @@
     box-shadow: var(--box-shadow-default);
     /* Apply 90% visual scale like dashboard */
     transform: scale(0.9);
-    transform-origin: top left;
+    transform-origin: top center;
     width: calc(95% * 1.111111); /* compensate for scale to keep layout width */
 }
 

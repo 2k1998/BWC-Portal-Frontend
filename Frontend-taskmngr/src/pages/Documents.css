@@ -1,10 +1,10 @@
 .documents-container {
     padding: 2rem;
-    max-width: 1400px;
+    max-width: 1300px;
     margin: 0 auto;
     /* Apply 90% visual scale like dashboard */
     transform: scale(0.9);
-    transform-origin: top left;
+    transform-origin: top center;
     width: calc(100% * 1.111111); /* compensate for scale to keep layout width */
 }
 

@@ -1,8 +1,8 @@
 /* src/pages/Groups.css */
 .groups-container,
 .group-detail-container {
-    width: 100%;
-    max-width: 1500px; /* Increased for a wider layout */
+    width: 90%;
+    max-width: 1300px; /* Increased for a wider layout */
     margin: 30px auto;
     padding: 25px;
     background-color: var(--color-white);
@@ -10,7 +10,7 @@
     box-shadow: var(--box-shadow-default);
     /* Apply 90% visual scale like dashboard */
     transform: scale(0.9);
-    transform-origin: top left;
+    transform-origin: center;
     width: calc(100% * 1.111111); /* compensate for scale to keep layout width */
 }
 

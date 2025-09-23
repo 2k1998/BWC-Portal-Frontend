@@ -1,12 +1,12 @@
 /* src/pages/Tasks.css */
 .tasks-container {
     width: 95%;
-    max-width: 1400px;
-    margin: 30px auto;
+    max-width: 1300px;
+    margin: 20px auto;
     padding: 25px;
     /* Apply 90% visual scale like dashboard */
-    transform: scale(0.9);
-    transform-origin: top left;
+    transform: scale(0.95);
+    transform-origin: top center;
     width: calc(95% * 1.111111); /* compensate for scale to keep layout width */
 }
 

@@ -1,7 +1,7 @@
 /* src/pages/Events.css - Updated to match Contacts page aesthetic */
 .events-container {
     width: 95%;
-    max-width: 1400px;
+    max-width: 1300px;
     margin: 30px auto;
     padding: 25px;
     background-color: var(--color-white);
@@ -9,7 +9,7 @@
     box-shadow: var(--box-shadow-default, 0 2px 10px rgba(0,0,0,0.1));
     /* Apply 90% visual scale like dashboard */
     transform: scale(0.9);
-    transform-origin: top left;
+    transform-origin: top center;
     width: calc(95% * 1.111111); /* compensate for scale to keep layout width */
 }
 
