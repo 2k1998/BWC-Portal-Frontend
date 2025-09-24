@@ -1,4 +1,156 @@
 /* src/pages/Auth.css */
+.auth-landing {
+    position: fixed;
+    inset: 0;
+    background: #000; /* black backdrop */
+    color: #fff;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    z-index: 2000; /* sit above any layout wrappers */
+}
+
+/* Ensure the Liquid Ether canvas stays behind the content */
+.auth-liquid-bg {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+}
+
+.auth-landing-inner {
+    position: relative;
+    z-index: 2; /* above background */
+}
+
+.auth-landing-inner {
+    position: relative;
+    z-index: 3000; /* ensure above canvas */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.auth-landing-inner {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.auth-back-btn {
+    align-self: center;
+    background: transparent;
+    color: #cbd5e1;
+    border: 1px solid #2a2a2a;
+    border-radius: var(--radius-lg);
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-back-btn:hover {
+    color: #fff;
+    background-color: #111;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* No logo in new design */
+.auth-logo {
+    width: clamp(160px, 26vw, 300px);
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    transform: translateY(0);
+    transition: transform 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.auth-landing.open .auth-logo {
+    transform: translateY(-72px) scale(0.94);
+}
+
+.auth-choice {
+    display: flex;
+    gap: 12px;
+}
+
+.auth-choice-btn {
+    padding: 12px 18px;
+    transition: box-shadow 220ms ease, transform 180ms ease;
+}
+
+.auth-choice-btn.btn-primary:hover {
+    box-shadow: 0 0 0 3px rgba(209,173,96,0.35), 0 0 18px rgba(209,173,96,0.45);
+    transform: translateY(-2px);
+}
+
+.auth-choice-btn.btn-secondary:hover {
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.25), 0 0 18px rgba(180, 198, 230, 0.35);
+    transform: translateY(-2px);
+}
+
+.auth-forms {
+    width: 100%;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+}
+
+.auth-landing.open .auth-forms {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 300ms;
+}
+
+.auth-form-card {
+    background: rgba(0,0,0,0.55); /* translucent dark card over transparent bg */
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: 16px 16px 20px;
+}
+
+.auth-form-card h2,
+.auth-form-card label,
+.auth-form-card p,
+.auth-form-card input,
+.auth-form-card button {
+    color: inherit;
+}
+
+.auth-form-card input {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.18);
+    color: #fff;
+}
+
+.auth-form-card input:focus {
+    border-color: var(--color-gold-primary);
+    box-shadow: 0 0 0 2px rgba(209,173,96,0.25);
+}
+
+/* Make submit button smaller and centered inside auth cards */
+.auth-form-card .btn-primary[type="submit"],
+.auth-form-card button[type="submit"].btn-primary {
+    width: auto;
+    min-width: 160px;
+    padding: 10px 16px;
+    display: block;
+    margin: 12px auto 0 auto;
+}
+
+.auth-form-card .btn-primary[type="submit"]:hover,
+.auth-form-card button[type="submit"].btn-primary:hover {
+    box-shadow: 0 0 0 3px rgba(209,173,96,0.35), 0 8px 26px rgba(209,173,96,0.35);
+    transform: translateY(-2px);
+}
 .auth-container {
     max-width: 1500px; /* Increased from 400px */
     margin: 100px auto;
