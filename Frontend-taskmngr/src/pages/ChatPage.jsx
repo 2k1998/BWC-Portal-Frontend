@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { chatApi, approvalApi } from '../api/apiService';
+import { chatApi, approvalApi, documentApi } from '../api/apiService';
 import { useNotification } from '../context/NotificationContext';
 import { formatDistanceToNow } from 'date-fns';
 import './ChatPage.css';
@@ -19,6 +19,8 @@ function ChatPage() {
     const [loading, setLoading] = useState(true);
     const [sending, setSending] = useState(false);
     const [showApprovalForm, setShowApprovalForm] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [totalSelectedBytes, setTotalSelectedBytes] = useState(0);
     const [approvalForm, setApprovalForm] = useState({
         title: '',
         description: '',
@@ -28,10 +30,19 @@ function ChatPage() {
     
     const messagesEndRef = useRef(null);
     const messageInputRef = useRef(null);
+    const fileInputRef = useRef(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
+
+    // Auto-resize message textarea so it never shows scrollbars
+    useEffect(() => {
+        const el = messageInputRef.current;
+        if (!el) return;
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+    }, [newMessage]);
 
     const loadConversation = useCallback(async () => {
         try {
@@ -74,20 +85,64 @@ function ChatPage() {
         return () => clearInterval(interval);
     }, [conversation, messages.length, accessToken]);
 
+    const MAX_TOTAL_BYTES = 15 * 1024 * 1024; // 15MB
+
+    const handleFilesSelected = (fileList) => {
+        const files = Array.from(fileList || []);
+        const totalBytes = files.reduce((sum, f) => sum + f.size, 0);
+        if (totalBytes > MAX_TOTAL_BYTES) {
+            showNotification('Selected files exceed 15MB total. Please choose smaller files.', 'error');
+            return;
+        }
+        setSelectedFiles(files);
+        setTotalSelectedBytes(totalBytes);
+    };
+
+    const openFilePicker = () => {
+        fileInputRef.current?.click();
+    };
+
     const sendMessage = async (e) => {
         e.preventDefault();
-        if (!newMessage.trim() || sending || !conversation) return;
+        if ((!newMessage.trim() && selectedFiles.length === 0) || sending || !conversation) return;
 
         setSending(true);
         try {
+            let composedContent = newMessage.trim();
+            // Upload selected files first (if any) and append their links to the message
+            if (selectedFiles.length > 0) {
+                if (totalSelectedBytes > MAX_TOTAL_BYTES) {
+                    showNotification('Selected files exceed 15MB total. Please choose smaller files.', 'error');
+                    setSending(false);
+                    return;
+                }
+                const uploadedLinks = [];
+                for (const file of selectedFiles) {
+                    const uploadData = new FormData();
+                    uploadData.append('file', file);
+                    uploadData.append('title', file.name);
+                    uploadData.append('description', 'Chat attachment');
+                    uploadData.append('category', 'chat');
+                    uploadData.append('is_public', true);
+                    const doc = await documentApi.upload(uploadData, accessToken);
+                    const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+                    const url = `${baseUrl}${doc.download_url || ''}`;
+                    uploadedLinks.push(`${file.name}: ${url}`);
+                }
+                const linksBlock = uploadedLinks.join('\n');
+                composedContent = composedContent ? `${composedContent}\n${linksBlock}` : linksBlock;
+            }
+
             const messageData = {
-                content: newMessage.trim(),
-                message_type: 'text'
+                content: composedContent,
+                message_type: selectedFiles.length > 0 ? 'file' : 'text'
             };
 
             const sentMessage = await chatApi.sendMessage(conversation.id, messageData, accessToken);
             setMessages(prev => [...prev, sentMessage]);
             setNewMessage('');
+            setSelectedFiles([]);
+            setTotalSelectedBytes(0);
             messageInputRef.current?.focus();
         } catch (error) {
             console.error('Failed to send message:', error);
@@ -223,6 +278,18 @@ function ChatPage() {
                 </div>
                 <div className="chat-actions">
                     <button 
+                        className="attach-btn"
+                        onClick={openFilePicker}
+                        title="Attach files"
+                        disabled={sending}
+                    >
+                        {/* Paperclip icon */}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21.438 11.1L12.6 19.938C10.2 22.338 6.3 22.338 3.9 19.938C1.5 17.538 1.5 13.638 3.9 11.238L12.738 2.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M9.9 14.1L17.4 6.6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                    <button 
                         className="approval-btn"
                         onClick={() => setShowApprovalForm(true)}
                         title="Request Approval"
@@ -247,6 +314,23 @@ function ChatPage() {
 
             <form className="chat-input-form" onSubmit={sendMessage}>
                 <div className="input-container">
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        style={{ display: 'none' }}
+                        multiple
+                        onChange={(e) => handleFilesSelected(e.target.files)}
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.zip,.rar"
+                    />
+                    {selectedFiles.length > 0 && (
+                        <div className="selected-files">
+                            {selectedFiles.map((f, idx) => (
+                                <span key={idx} className="file-chip">{f.name}</span>
+                            ))}
+                            <span className="files-total">{(totalSelectedBytes / (1024*1024)).toFixed(2)} MB</span>
+                            <button type="button" className="clear-files" onClick={() => { setSelectedFiles([]); setTotalSelectedBytes(0); }} disabled={sending}>✕</button>
+                        </div>
+                    )}
                     <textarea
                         ref={messageInputRef}
                         value={newMessage}
@@ -263,10 +347,15 @@ function ChatPage() {
                     />
                     <button 
                         type="submit" 
-                        disabled={!newMessage.trim() || sending}
+                        disabled={(!newMessage.trim() && selectedFiles.length === 0) || sending}
                         className="send-btn"
                     >
-                        {sending ? '⏳' : '📤'}
+                        {sending ? '⏳' : (
+                            // Messenger-like send icon (paper plane)
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" />
+                            </svg>
+                        )}
                     </button>
                 </div>
             </form>

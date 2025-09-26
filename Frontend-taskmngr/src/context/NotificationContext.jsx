@@ -14,6 +14,46 @@ export const useNotification = () => {
     return context;
 };
 
+// Lightweight sound using WebAudio (no asset needed)
+function playNotificationTone() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(880, ctx.currentTime); // A5
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.06, ctx.currentTime + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+        oscillator.connect(gain).connect(ctx.destination);
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + 0.5);
+        // Close context after sound to free resources
+        setTimeout(() => ctx.close(), 700);
+    } catch (e) {
+        // Silently ignore audio issues
+    }
+}
+
+async function maybeShowNativeNotification(message) {
+    try {
+        if (!('Notification' in window)) return;
+        // Request permission lazily
+        let permission = Notification.permission;
+        if (permission === 'default') {
+            permission = await Notification.requestPermission();
+        }
+        if (permission === 'granted') {
+            const icon = '/brand-logo.png'; // fall back to project logo in public/
+            new Notification('BWC Portal', { body: message, icon });
+        }
+    } catch (e) {
+        // Ignore
+    }
+}
+
 // Provider component
 export const NotificationProvider = ({ children }) => {
     const [notifications, setNotifications] = useState([]);
@@ -26,6 +66,10 @@ export const NotificationProvider = ({ children }) => {
         const id = uuidv4(); // Generate a unique ID for each notification
         const newNotification = { id, message, type };
         setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+
+        // Side effects: sound + native notification
+        playNotificationTone();
+        maybeShowNativeNotification(message);
 
         if (duration > 0) {
             setTimeout(() => {

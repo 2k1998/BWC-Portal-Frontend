@@ -1,19 +1,19 @@
 /* Chat Page Styles */
 .chat-page {
-    display: flex;
+    display: flex   ;
     flex-direction: column;
-    height: calc(100vh - 60px);
+    height: calc(110vh - 60px);
     background: #f8f9fa;
     /* Apply 90% visual scale like dashboard */
     transform: scale(0.9);
-    transform-origin: top left;
-    width: calc(100% * 1.111111); /* compensate for scale to keep layout width */
+    transform-origin: top center;
+    width: calc(90% * 1.111111); /* compensate for scale to keep layout width */
 }
 
 @media (max-width: 1200px) {
   .chat-page {
     transform: scale(0.95);
-    width: calc(100% * 1.052632);
+    width: calc(90% * 1.052632);
   }
 }
 
@@ -115,7 +115,7 @@
 
 .chat-messages {
     flex: 1;
-    overflow-y: auto;
+    overflow-y: visible; /* remove inner scroll */
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -231,11 +231,11 @@
 .input-container {
     display: flex;
     align-items: flex-end;
-    gap: 12px;
+    gap: 10px;
     background: #f8f9fa;
-    border-radius: 24px;
-    padding: 8px;
-    border: 1px solid #e0e0e0;
+    border-radius: 18px; /* smaller visual border */
+    padding: 15px; /* slimmer */
+    border: 5px solid #e0e0e0;
     transition: border-color 0.2s;
 }
 
@@ -252,10 +252,16 @@
     resize: none;
     font-size: 15px;
     line-height: 1.4;
-    padding: 8px 12px;
+    padding: 6px 10px; /* slimmer */
     min-height: 20px;
-    max-height: 120px;
+    max-height: 200px; /* allow more lines before page scroll */
     font-family: inherit;
+    overflow: hidden; /* hide scrollbar */
+}
+
+/* Hide scrollbars for WebKit */
+.input-container textarea::-webkit-scrollbar {
+    display: none;
 }
 
 .send-btn {
@@ -263,8 +269,8 @@
     color: white;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 38px; /* slightly smaller */
+    height: 38px; /* slightly smaller */
     cursor: pointer;
     transition: all 0.2s;
     display: flex;
@@ -282,6 +288,43 @@
     background: #ccc;
     cursor: not-allowed;
     transform: none;
+}
+
+/* Attachment UI */
+.attach-btn {
+    background: #f1f3f5;
+    border: 1px solid #e0e0e0;
+    color: #555;
+    border-radius: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.selected-files {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.file-chip {
+    background: #e9ecef;
+    color: #495057;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.files-total {
+    color: #666;
+    font-size: 12px;
+}
+
+.clear-files {
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
 }
 
 .chat-loading, .chat-error {
