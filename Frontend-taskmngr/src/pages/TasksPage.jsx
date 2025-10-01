@@ -146,11 +146,8 @@ function TasksPage() {
   };
 
   const canTransferTask = (task) => {
-    return (
-      currentUser?.role === 'admin' ||
-      task.owner_id === currentUser?.id ||
-      task.created_by_id === currentUser?.id
-    );
+    // Only the current owner can transfer the task
+    return task.owner_id === currentUser?.id;
   };
 
   const filteredTasksByStatus = React.useMemo(() => {
