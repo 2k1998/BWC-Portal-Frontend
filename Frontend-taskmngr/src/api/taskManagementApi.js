@@ -13,6 +13,12 @@ export const taskManagementApi = {
         callApi('/task-management/assign', 'POST', assignmentData, accessToken),
 
     /**
+     * Transfer a task to another user (simplified assignment)
+     */
+    transferTask: (transferData, accessToken) => 
+        callApi('/task-management/transfer', 'POST', transferData, accessToken),
+
+    /**
      * Get pending assignments for current user
      */
     getPendingAssignments: (accessToken) => 

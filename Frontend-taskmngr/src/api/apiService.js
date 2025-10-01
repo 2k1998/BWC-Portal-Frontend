@@ -60,6 +60,9 @@ export const taskApi = {
     getTasks: (token) => callApi('/tasks/', 'GET', null, token),
     getTaskById: (taskId, token) => callApi(`/tasks/${taskId}`, 'GET', null, token),
     deleteTask: (taskId, token) => callApi(`/tasks/${taskId}`, 'DELETE', null, token),
+    
+    // NEW: Task transfer functionality
+    transferTask: (transferData, token) => callApi('/task-management/transfer', 'POST', transferData, token),
 };
 
 // Group API
@@ -125,11 +128,21 @@ export const calendarApi = {
     getCalendarEvents: (token) => callApi('/calendar/events', 'GET', null, token),
 };
 
+// Google Calendar API
+export const googleCalendarApi = {
+    getStatus: (token) => callApi('/google-calendar/status', 'GET', null, token),
+    getAuthUrl: (token) => callApi('/google-calendar/auth-url', 'GET', null, token),
+    disconnect: (token) => callApi('/google-calendar/disconnect', 'POST', null, token),
+    sync: (token) => callApi('/google-calendar/sync', 'POST', null, token),
+};
+
 // Reports API
 export const reportsApi = {
     getTasksPerCompany: (token) => callApi('/reports/tasks-per-company', 'GET', null, token),
     getRentalCarStatus: (token) => callApi('/reports/rental-car-status', 'GET', null, token),
     getTasksCompletedTimeline: (token) => callApi('/reports/tasks-completed-timeline', 'GET', null, token),
+    getUserTaskStatistics: (token) => callApi('/reports/user-task-statistics', 'GET', null, token),
+    debugTasks: (token) => callApi('/reports/debug-tasks', 'GET', null, token),
 };
 
 // Notification API
@@ -532,4 +545,5 @@ export default {
     documentApi,
     chatApi,
     approvalApi,
+    googleCalendarApi,
 }

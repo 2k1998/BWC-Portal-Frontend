@@ -27,6 +27,7 @@ import ReportsPage from './pages/ReportsPage';
 import ContactsPage from './pages/ContactsPage';
 import DailyCallsPage from './pages/DailyCallsPage';
 import ProjectsPage from './pages/ProjectsPage'; // <-- Add this import
+import CalendarSyncPage from './pages/CalendarSyncPage';
 import { CallNotificationProvider } from './context/CallNotificationContext';
 import { RealtimeProvider } from './context/RealtimeContext';
 import CallNotificationModal from './components/CallNotificationModal';
@@ -125,6 +126,7 @@ function AppContent() {
           <Route path="/events/new" element={<PermissionRoute requiredPermission="events"><AddEventPage /></PermissionRoute>} />
           <Route path="/reports" element={<PermissionRoute requiredPermission="reports"><ReportsPage /></PermissionRoute>} />
           <Route path="/documents" element={<PermissionRoute requiredPermission="documents"><DocumentsPage /></PermissionRoute>} />
+          <Route path="/calendar-sync" element={<PermissionRoute requiredPermission="dashboard"><CalendarSyncPage /></PermissionRoute>} />
           <Route path="/chat/:userId" element={<PermissionRoute requiredPermission="dashboard"><ChatPage /></PermissionRoute>} />
           <Route path="/approvals" element={<PermissionRoute requiredPermission="admin_panel"><ApprovalsPage /></PermissionRoute>} />
           

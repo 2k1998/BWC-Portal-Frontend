@@ -8,10 +8,11 @@ import { useNotification } from '../context/NotificationContext';
 import TaskForm from '../components/TaskForm';
 import TaskStatusUpdate from '../components/TaskStatusUpdate';
 import TaskModal from '../components/TaskModal';
+import TaskTransferModal from '../components/TaskTransferModal';
 import './Tasks.css';
 
 function TasksPage() {
-  const { accessToken, loading: authLoading } = useAuth();
+  const { accessToken, loading: authLoading, currentUser } = useAuth();
   const { showNotification } = useNotification();
   const { language, t } = useLanguage();
   const location = useLocation();
@@ -25,6 +26,8 @@ function TasksPage() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [showTransferModal, setShowTransferModal] = useState(false);
+  const [taskToTransfer, setTaskToTransfer] = useState(null);
 
   const fetchTasks = useCallback(async () => {
     if (!accessToken) return;
@@ -129,6 +132,25 @@ function TasksPage() {
     if (selectedTask) {
       openTaskModal(selectedTask);
     }
+  };
+
+  const handleTransferTask = (task) => {
+    setTaskToTransfer(task);
+    setShowTransferModal(true);
+  };
+
+  const handleTransferSuccess = () => {
+    fetchTasks();
+    setShowTransferModal(false);
+    setTaskToTransfer(null);
+  };
+
+  const canTransferTask = (task) => {
+    return (
+      currentUser?.role === 'admin' ||
+      task.owner_id === currentUser?.id ||
+      task.created_by_id === currentUser?.id
+    );
   };
 
   const filteredTasksByStatus = React.useMemo(() => {
@@ -279,6 +301,26 @@ function TasksPage() {
                       {t('status')}: {t(`status_${String(task.status).toLowerCase().replace(/\s+/g, '_')}`) || task.status}
                     </span>
                   </div>
+                  
+                  {/* Owner and Creator Information */}
+                  <div className="task-ownership-info">
+                    {task.owner && (
+                      <div className="ownership-item">
+                        <span className="ownership-label">{t('owner') || 'Owner'}:</span>
+                        <span className="ownership-value owner">
+                          {task.owner.full_name || `${task.owner.first_name} ${task.owner.surname}`.trim() || task.owner.email}
+                        </span>
+                      </div>
+                    )}
+                    {task.created_by && task.created_by.id !== task.owner?.id && (
+                      <div className="ownership-item">
+                        <span className="ownership-label">{t('created_by') || 'Created by'}:</span>
+                        <span className="ownership-value creator">
+                          {task.created_by.full_name || `${task.created_by.first_name} ${task.created_by.surname}`.trim() || task.created_by.email}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <div className="task-actions">
                     <button
                       onClick={(e) => {
@@ -289,6 +331,17 @@ function TasksPage() {
                     >
                       {t('mark_complete')}
                     </button>
+                    {canTransferTask(task) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleTransferTask(task);
+                        }}
+                        className="action-button transfer-button"
+                      >
+                        {t('transfer_task') || 'Transfer'}
+                      </button>
+                    )}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -357,6 +410,18 @@ function TasksPage() {
           isOpen={showTaskModal}
           onClose={() => setShowTaskModal(false)}
           onTaskUpdated={handleTaskUpdated}
+        />
+      )}
+
+      {showTransferModal && taskToTransfer && (
+        <TaskTransferModal
+          task={taskToTransfer}
+          isOpen={showTransferModal}
+          onClose={() => {
+            setShowTransferModal(false);
+            setTaskToTransfer(null);
+          }}
+          onTransferSuccess={handleTransferSuccess}
         />
       )}
     </div>

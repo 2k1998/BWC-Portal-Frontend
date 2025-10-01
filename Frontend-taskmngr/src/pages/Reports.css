@@ -27,6 +27,54 @@
   }
 }
 
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--color-gold-primary);
+}
+
+.reports-header h1 {
+    color: var(--color-black);
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.reports-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.refresh-button {
+    padding: 8px 16px;
+    background: var(--color-gold-primary);
+    color: var(--color-white);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.refresh-button:hover:not(:disabled) {
+    background: #b8860b;
+}
+
+.refresh-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.last-updated {
+    font-size: 0.9em;
+    color: #6b7280;
+    font-style: italic;
+}
+
 .reports-container h1 {
     text-align: center;
     margin-bottom: 30px;

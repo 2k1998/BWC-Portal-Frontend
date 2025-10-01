@@ -170,6 +170,14 @@ function DashboardPage() {
           >
             {(t('view_all_tasks') && t('view_all_tasks') !== 'view_all_tasks') ? t('view_all_tasks') : (language === 'el' ? 'Προβολή Όλων των Εργασιών' : 'View All Tasks')}
           </button>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => navigate('/calendar-sync')}
+            aria-label={language === 'el' ? 'Συγχρονισμός με Google Calendar' : 'Sync with Google Calendar'}
+            style={{ marginLeft: 8 }}
+          >
+            {language === 'el' ? 'Συγχρονισμός Google Calendar' : 'Sync Google Calendar'}
+          </button>
         </div>
       </header>
 

@@ -470,6 +470,67 @@
 }
 /* --- END NEW --- */
 
+/* Task Ownership Information */
+.task-ownership-info {
+    margin: 12px 0;
+    padding: 8px 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    border-left: 3px solid #e2e8f0;
+    font-size: 0.9em;
+}
+
+.ownership-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.ownership-item:last-child {
+    margin-bottom: 0;
+}
+
+.ownership-label {
+    font-weight: 500;
+    color: #64748b;
+    margin-right: 8px;
+    min-width: 80px;
+}
+
+.ownership-value {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.85em;
+}
+
+.ownership-value.owner {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.ownership-value.creator {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+/* Responsive ownership info */
+@media (max-width: 640px) {
+    .ownership-item {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 6px;
+    }
+    
+    .ownership-label {
+        min-width: auto;
+        margin-right: 0;
+        margin-bottom: 2px;
+    }
+}
+
 .task-actions {
     display: flex;
     flex-wrap: wrap;
@@ -515,6 +576,16 @@
 
 .edit-button:hover {
     background-color: #e0a800; /* Fallback for darken(var(--color-warning), 10%) */
+    transform: translateY(-2px);
+}
+
+.transfer-button {
+    background-color: #6366f1; /* Indigo color for transfer */
+    color: var(--color-white);
+}
+
+.transfer-button:hover {
+    background-color: #5856eb; /* Darker indigo on hover */
     transform: translateY(-2px);
 }
 

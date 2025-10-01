@@ -291,7 +291,6 @@
     border-radius: var(--radius-xl);
     max-height: 250px;
     overflow-y: auto;
-    overflow: hidden;
     z-index: 1000;
     opacity: 0;
     transform: translateY(8px) scale(0.98);
