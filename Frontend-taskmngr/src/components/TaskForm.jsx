@@ -49,12 +49,19 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
                 .finally(() => setLoadingCompanies(false));
 
             setLoadingUsers(true);
+            // Debug: Test the API call directly
+            console.log('TaskForm: Testing listBasicUsers API call...');
+            console.log('TaskForm: Access token exists:', !!accessToken);
+            console.log('TaskForm: Current user:', currentUser);
+            
             // Fetch users and groups to prioritize team members
             Promise.all([
                 authApi.listBasicUsers(accessToken),
                 groupApi.getGroups(accessToken).catch(() => [])
             ])
             .then(([allUsers, groups]) => {
+                console.log('TaskForm: Fetched users:', allUsers);
+                console.log('TaskForm: Current user role:', currentUser?.role);
                 // Determine groups the current user is a member of (non-admin gets only own groups)
                 const myGroupIds = new Set(
                     (groups || [])
@@ -82,6 +89,10 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
                 if (currentUser && !isQuickMode) {
                     setSelectedUserId(currentUser.id.toString());
                 }
+            })
+            .catch(error => {
+                console.error('TaskForm: Error fetching users:', error);
+                setUsers([]);
             })
             .finally(() => setLoadingUsers(false));
 
