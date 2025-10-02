@@ -51,7 +51,7 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
             setLoadingUsers(true);
             // Fetch users and groups to prioritize team members
             Promise.all([
-                authApi.listAllUsers(accessToken),
+                authApi.listBasicUsers(accessToken),
                 groupApi.getGroups(accessToken).catch(() => [])
             ])
             .then(([allUsers, groups]) => {

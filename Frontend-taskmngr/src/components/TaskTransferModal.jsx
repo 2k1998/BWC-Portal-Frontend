@@ -27,7 +27,7 @@ function TaskTransferModal({ task, isOpen, onClose, onTransferSuccess }) {
     const fetchUsers = async () => {
         try {
             setLoadingUsers(true);
-            const allUsers = await authApi.listAllUsers(accessToken);
+            const allUsers = await authApi.listBasicUsers(accessToken);
             // Filter out the current user and task owner
             const filteredUsers = allUsers.filter(user => 
                 user.id !== currentUser?.id && 
