@@ -6,10 +6,11 @@ import { useNotification } from '../context/NotificationContext';
 import { useLanguage } from '../context/LanguageContext';
 import PermissionManager from '../components/PermissionManager';
 import { Settings, User, Shield, Eye } from 'lucide-react';
+import { updateUserPermissionsWithRefresh } from '../utils/permissionUtils';
 import './Users.css';
 
 function UsersPage() {
-    const { accessToken, currentUser, loading: authLoading } = useAuth();
+    const { accessToken, currentUser, loading: authLoading, refreshCurrentUser } = useAuth();
     const { showNotification } = useNotification();
     const { language, t } = useLanguage();
     const [users, setUsers] = useState([]);
@@ -89,23 +90,20 @@ function UsersPage() {
     };
 
     const handleSavePermissions = async (userId, permissions) => {
-        try {
-            await authApi.updateUserPermissions(userId, permissions, accessToken);
-            showNotification(t('permissions_updated_successfully') || 'Permissions updated successfully', 'success');
-            
-            // Update the user in the local state
-            setUsers(prevUsers => 
-                prevUsers.map(user => 
-                    user.id === userId 
-                        ? { ...user, permissions } 
-                        : user
-                )
-            );
-            
+        const success = await updateUserPermissionsWithRefresh(
+            userId, 
+            permissions, 
+            accessToken, 
+            currentUser, 
+            refreshCurrentUser, 
+            showNotification, 
+            () => fetchUsers(searchQuery), 
+            t
+        );
+        
+        if (success) {
             setShowPermissionManager(false);
             setSelectedUser(null);
-        } catch (error) {
-            showNotification(error.message || t('failed_to_update_permissions') || 'Failed to update permissions', 'error');
         }
     };
 

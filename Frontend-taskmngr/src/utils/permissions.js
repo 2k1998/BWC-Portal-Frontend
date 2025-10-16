@@ -45,7 +45,15 @@ export const hasPermission = (user, pageKey) => {
   
   // If user has custom permissions, use those
   if (user.permissions && user.permissions.hasOwnProperty(pageKey)) {
-    return user.permissions[pageKey];
+    const permission = user.permissions[pageKey];
+    // Handle both boolean and string permission values
+    if (typeof permission === 'boolean') {
+      return permission;
+    } else if (typeof permission === 'string') {
+      // Convert string permissions to boolean (view or edit = true, none = false)
+      return permission === 'view' || permission === 'edit';
+    }
+    return false;
   }
   
   // Otherwise, use role defaults
@@ -64,10 +72,20 @@ export const getUserPermissions = (user) => {
   const roleDefaults = ROLE_DEFAULTS[user.role] || ROLE_DEFAULTS.member;
   
   // Merge role defaults with custom permissions
-  return {
+  const mergedPermissions = {
     ...roleDefaults,
     ...(user.permissions || {})
   };
+  
+  // Convert string permissions to boolean values
+  Object.keys(mergedPermissions).forEach(key => {
+    const permission = mergedPermissions[key];
+    if (typeof permission === 'string') {
+      mergedPermissions[key] = permission === 'view' || permission === 'edit';
+    }
+  });
+  
+  return mergedPermissions;
 };
 
 /**
