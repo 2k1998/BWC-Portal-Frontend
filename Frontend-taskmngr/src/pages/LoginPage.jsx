@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { authApi } from '../api/apiService';
 import '../pages/Auth.css';
@@ -113,6 +113,11 @@ export default function LoginPage() {
                 <div className="form-group">
                   <label htmlFor="login-password">Password</label>
                   <input id="login-password" type="password" required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+                </div>
+                <div className="forgot-password-link" style={{ textAlign: 'right', marginBottom: '1rem' }}>
+                  <Link to="/forgot-password" style={{ color: '#b8860b', textDecoration: 'none', fontSize: '0.9rem' }}>
+                    Forgot your password?
+                  </Link>
                 </div>
                 <button type="submit" className="btn btn-primary" disabled={submitting}>{submitting ? 'Please wait…' : 'Continue'}</button>
               </form>
