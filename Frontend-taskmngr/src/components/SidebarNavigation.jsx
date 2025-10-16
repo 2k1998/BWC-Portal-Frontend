@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { hasPermission } from '../utils/permissions';
 import { 
     BarChart3, 
     ClipboardList, 
@@ -33,10 +34,22 @@ function SidebarNavigation() {
     const navigate = useNavigate();
     const [isCollapsed, setIsCollapsed] = useState(false);
 
-    const userRole = currentUser?.role;
-    const isAdmin = userRole === "admin";
-    const canSeeContacts = ['Pillar', 'Manager', 'Head', 'admin'].includes(userRole);
-    const canManageProjects = ['admin', 'Manager', 'Head'].includes(userRole);
+    // Use permission checking instead of hardcoded role checks
+    const canSeeDashboard = hasPermission(currentUser, 'dashboard');
+    const canSeeTasks = hasPermission(currentUser, 'tasks');
+    const canSeeProjects = hasPermission(currentUser, 'projects');
+    const canSeeCompanies = hasPermission(currentUser, 'companies');
+    const canSeeContacts = hasPermission(currentUser, 'contacts');
+    const canSeeDailyCalls = hasPermission(currentUser, 'daily_calls');
+    const canSeeGroups = hasPermission(currentUser, 'groups');
+    const canSeeEvents = hasPermission(currentUser, 'events');
+    const canSeeDocuments = hasPermission(currentUser, 'documents');
+    const canSeeUsers = hasPermission(currentUser, 'users');
+    const canSeeReports = hasPermission(currentUser, 'reports');
+    const canSeeAdminPanel = hasPermission(currentUser, 'admin_panel');
+    const canSeePayments = hasPermission(currentUser, 'payments');
+    const canSeeCommissions = hasPermission(currentUser, 'commissions');
+    const canSeeCarFinance = hasPermission(currentUser, 'car_finance');
     
     const handleLogout = () => {
         logout();
@@ -106,25 +119,29 @@ function SidebarNavigation() {
             {/* Chat Hub and Notification Bell removed - will be placed elsewhere */}
 
             <nav className="sidebar-nav" role="navigation" aria-label="Main navigation">
-                <NavLink 
-                    to="/dashboard" 
-                    className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
-                    aria-label="Go to Dashboard"
-                >
-                    <div className="menu-item-content">
-                        <BarChart3 className="menu-icon" aria-hidden="true" size={20} />
-                        {!isCollapsed && <span className="menu-label">{t('dashboard')}</span>}
-                    </div>
-                </NavLink>
+                {canSeeDashboard && (
+                    <NavLink 
+                        to="/dashboard" 
+                        className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}
+                        aria-label="Go to Dashboard"
+                    >
+                        <div className="menu-item-content">
+                            <BarChart3 className="menu-icon" aria-hidden="true" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('dashboard')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                <NavLink to="/tasks" className={({ isActive }) => `menu-item  ${isActive ? 'active' : ''}`}>
-                    <div className="menu-item-content">
-                        <ClipboardList className="menu-icon" size={20} />
-                        {!isCollapsed && <span className="menu-label">{t('tasks')}</span>}
-                    </div>
-                </NavLink>
+                {canSeeTasks && (
+                    <NavLink to="/tasks" className={({ isActive }) => `menu-item  ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <ClipboardList className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('tasks')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                {canManageProjects && (
+                {canSeeProjects && (
                     <NavLink to="/projects" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
                         <div className="menu-item-content">
                             <Briefcase className="menu-icon" size={20} />
@@ -133,96 +150,112 @@ function SidebarNavigation() {
                     </NavLink>
                 )}
 
-                <NavLink to="/companies" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                    <div className="menu-item-content">
-                        <Building2 className="menu-icon" size={20} />
-                        {!isCollapsed && <span className="menu-label">{t('companies')}</span>}
-                    </div>
-                </NavLink>
-
-                {canSeeContacts && (
-                    <React.Fragment>
-                        <NavLink to="/contacts" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <Users className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('contacts')}</span>}
-                            </div>
-                        </NavLink>
-
-                        <NavLink to="/daily-calls" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <Phone className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('daily_calls')}</span>}
-                            </div>
-                        </NavLink>
-                    </React.Fragment>
+                {canSeeCompanies && (
+                    <NavLink to="/companies" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Building2 className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('companies')}</span>}
+                        </div>
+                    </NavLink>
                 )}
 
-                <NavLink to="/groups" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                    <div className="menu-item-content">
-                        <Handshake className="menu-icon" size={20} />
-                        {!isCollapsed && <span className="menu-label">{t('groups')}</span>}
-                    </div>
-                </NavLink>
+                {canSeeContacts && (
+                    <NavLink to="/contacts" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Users className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('contacts')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                <NavLink to="/events" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                    <div className="menu-item-content">
-                        <Calendar className="menu-icon" size={20} />
-                        {!isCollapsed && <span className="menu-label">{t('events')}</span>}
-                    </div>
-                </NavLink>
+                {canSeeDailyCalls && (
+                    <NavLink to="/daily-calls" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Phone className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('daily_calls')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                <NavLink to="/documents" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                    <div className="menu-item-content">
-                        <FileText className="menu-icon" size={20} />
-                        {!isCollapsed && <span className="menu-label">{t('documents')}</span>}
-                    </div>
-                </NavLink>
+                {canSeeGroups && (
+                    <NavLink to="/groups" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Handshake className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('groups')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                {isAdmin && (
-                    <React.Fragment>
-                        <NavLink to="/users" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <UserCog className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('users')}</span>}
-                            </div>
-                        </NavLink>
+                {canSeeEvents && (
+                    <NavLink to="/events" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Calendar className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('events')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                        <NavLink to="/reports" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <TrendingUp className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('reports')}</span>}
-                            </div>
-                        </NavLink>
+                {canSeeDocuments && (
+                    <NavLink to="/documents" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <FileText className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('documents')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                        <NavLink to="/admin-panel" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <Settings className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('admin_panel')}</span>}
-                            </div>
-                        </NavLink>
+                {canSeeUsers && (
+                    <NavLink to="/users" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <UserCog className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('users')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                        <NavLink to="/payments" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <DollarSign className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('payments')}</span>}
-                            </div>
-                        </NavLink>
+                {canSeeReports && (
+                    <NavLink to="/reports" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <TrendingUp className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('reports')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                        <NavLink to="/commissions" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <Banknote className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('commissions')}</span>}
-                            </div>
-                        </NavLink>
+                {canSeeAdminPanel && (
+                    <NavLink to="/admin-panel" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Settings className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('admin_panel')}</span>}
+                        </div>
+                    </NavLink>
+                )}
 
-                        <NavLink to="/car-finances" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
-                            <div className="menu-item-content">
-                                <Car className="menu-icon" size={20} />
-                                {!isCollapsed && <span className="menu-label">{t('car_finance')}</span>}
-                            </div>
-                        </NavLink>
-                    </React.Fragment>
+                {canSeePayments && (
+                    <NavLink to="/payments" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <DollarSign className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('payments')}</span>}
+                        </div>
+                    </NavLink>
+                )}
+
+                {canSeeCommissions && (
+                    <NavLink to="/commissions" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Banknote className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('commissions')}</span>}
+                        </div>
+                    </NavLink>
+                )}
+
+                {canSeeCarFinance && (
+                    <NavLink to="/car-finances" className={({ isActive }) => `menu-item ${isActive ? 'active' : ''}`}>
+                        <div className="menu-item-content">
+                            <Car className="menu-icon" size={20} />
+                            {!isCollapsed && <span className="menu-label">{t('car_finance')}</span>}
+                        </div>
+                    </NavLink>
                 )}
             </nav>
 
