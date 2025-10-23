@@ -3,12 +3,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
-import { taskApi } from '../api/apiService';
+import { taskApi, companyApi } from '../api/apiService';
 import { useNotification } from '../context/NotificationContext';
 import TaskForm from '../components/TaskForm';
 import TaskStatusUpdate from '../components/TaskStatusUpdate';
 import TaskModal from '../components/TaskModal';
 import TaskTransferModal from '../components/TaskTransferModal';
+
 import './Tasks.css';
 
 function TasksPage() {
@@ -28,6 +29,7 @@ function TasksPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [taskToTransfer, setTaskToTransfer] = useState(null);
+  const [companies, setCompanies] = useState([]);
 
   const fetchTasks = useCallback(async () => {
     if (!accessToken) return;
@@ -47,6 +49,14 @@ function TasksPage() {
       fetchTasks();
     }
   }, [accessToken, authLoading, fetchTasks]);
+  useEffect(() => {
+    if (!accessToken) return;
+    companyApi
+      .getAll(accessToken)
+      .then((fetchedCompanies) => setCompanies(Array.isArray(fetchedCompanies) ? fetchedCompanies : []))
+      .catch(() => setCompanies([]))
+  }, [accessToken]);
+
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -355,6 +365,8 @@ function TasksPage() {
         </div>
       </div>
 
+      <RepeatableTasks tasks={filteredTasks} onOpenTask={openTaskModal} />
+
       <div className="completed-tasks-section">
         <h2>
           {t('completed_tasks')} ({completedTasks.length})
@@ -403,10 +415,12 @@ function TasksPage() {
 
       {showTaskModal && selectedTask && (
         <TaskModal
-          task={selectedTask}
           isOpen={showTaskModal}
+          task={selectedTask}
           onClose={() => setShowTaskModal(false)}
-          onTaskUpdated={handleTaskUpdated}
+          accessToken={accessToken}
+          companies={companies}
+          onUpdated={handleTaskUpdated}
         />
       )}
 

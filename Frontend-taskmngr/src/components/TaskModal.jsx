@@ -1,252 +1,248 @@
-// src/components/TaskModal.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { taskApi, companyApi } from '../api/apiService';
 import { useLanguage } from '../context/LanguageContext';
-import { useAuth } from '../context/AuthContext';
-import { taskApi } from '../api/apiService';
-import TaskStatusUpdate from './TaskStatusUpdate';
-import './TaskModal.css';
 
-function TaskModal({ task, isOpen, onClose, onTaskUpdated }) {
-    const { t } = useLanguage();
-    const { accessToken, currentUser } = useAuth();
+/**
+ * Props
+ * - isOpen: boolean
+ * - onClose: () => void
+ * - task: the task object to view/edit
+ * - accessToken: auth token for API
+ * - onUpdated?: () => void   // optional callback after successful save
+ */
+const TaskModal = ({ isOpen, onClose, task, accessToken, onUpdated }) => {
+  const { t } = useLanguage();
 
-    const canEdit = !!currentUser && task?.created_by_id === currentUser.id;
+  // Guard
+  if (!isOpen || !task) return null;
 
-    const [isEditing, setIsEditing] = useState(false);
-    const [editValues, setEditValues] = useState({
-        title: task?.title || '',
-        description: task?.description || '',
-        start_date: task?.start_date || '',
-        deadline: task?.deadline || '',
-        deadline_all_day: !!task?.deadline_all_day,
-        urgency: !!task?.urgency,
-        important: !!task?.important,
+  const initialTask = useMemo(() => task, [task]);
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [editValues, setEditValues] = useState({
+    title: initialTask?.title || '',
+    description: initialTask?.description || '',
+    start_date: initialTask?.start_date || '',
+    deadline: initialTask?.deadline || '',
+    deadline_all_day: !!initialTask?.deadline_all_day,
+    urgency: !!initialTask?.urgency,
+    important: !!initialTask?.important,
+    // 👇 Preselect existing company (supports task.company_id or task.company.id)
+    company_id: initialTask?.company_id ?? initialTask?.company?.id ?? '',
+  });
+
+  // Keep form in sync if the task prop changes while modal is open
+  useEffect(() => {
+    setEditValues({
+      title: initialTask?.title || '',
+      description: initialTask?.description || '',
+      start_date: initialTask?.start_date || '',
+      deadline: initialTask?.deadline || '',
+      deadline_all_day: !!initialTask?.deadline_all_day,
+      urgency: !!initialTask?.urgency,
+      important: !!initialTask?.important,
+      company_id: initialTask?.company_id ?? initialTask?.company?.id ?? '',
     });
+  }, [initialTask]);
 
-    if (!isOpen || !task) return null;
+  // 👇 Companies list for the selector
+  const [companies, setCompanies] = useState([]);
+  const [loadingCompanies, setLoadingCompanies] = useState(false);
 
-    const handleStatusUpdated = () => {
-        // Refresh the task data
-        if (onTaskUpdated) {
-            onTaskUpdated();
-        }
+  useEffect(() => {
+    if (!isOpen) return;
+    setLoadingCompanies(true);
+    companyApi
+      .getAll(accessToken)
+      .then((list) => setCompanies(Array.isArray(list) ? list : []))
+      .finally(() => setLoadingCompanies(false));
+  }, [isOpen, accessToken]);
+
+  const handleEditChange = (name, value) => {
+    setEditValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSaveEdits = async () => {
+    const payload = {
+      title: editValues.title,
+      description: editValues.description,
+      start_date: editValues.start_date,
+      deadline: editValues.deadline,
+      deadline_all_day: editValues.deadline_all_day,
+      urgency: editValues.urgency,
+      important: editValues.important,
+      // 👇 include company change
+      company_id: editValues.company_id || null,
     };
 
-    const formatDateTime = (dateString) => {
-        if (!dateString) return 'Not set';
-        return new Date(dateString).toLocaleString();
-    };
+    await taskApi.updateTask(initialTask.id, payload, accessToken);
+    setIsEditing(false);
+    onUpdated && onUpdated();
+    onClose(); // close after successful save
+  };
 
-    const getPriorityBadge = () => {
-        if (task.deadline_all_day) {
-            return <span className="badge all-day-badge">{t('all_day_deadline')}</span>;
-        } else if (task.urgency && task.important) {
-            return <span className="badge urgent-and-important">{t('urgent_and_important')}</span>;
-        } else if (task.urgency) {
-            return <span className="badge urgent-only">{t('urgent_only')}</span>;
-        } else if (task.important) {
-            return <span className="badge important-only">{t('important_only')}</span>;
-        } else {
-            return <span className="badge normal">{t('normal')}</span>;
-        }
-    };
-
-    const handleEditChange = (field, value) => {
-        setEditValues((prev) => ({ ...prev, [field]: value }));
-    };
-
-    const handleSaveEdits = async () => {
-        try {
-            const payload = {
-                title: editValues.title,
-                description: editValues.description,
-                start_date: editValues.start_date,
-                deadline: editValues.deadline,
-                deadline_all_day: editValues.deadline_all_day,
-                urgency: editValues.urgency,
-                important: editValues.important,
-            };
-            await taskApi.updateTask(task.id, payload, accessToken);
-            setIsEditing(false);
-            if (onTaskUpdated) onTaskUpdated();
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    return (
-        <div className="task-modal-overlay">
-            <div className="task-modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2>{isEditing ? t('edit_task') || 'Edit Task' : task.title}</h2>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                        {canEdit && (
-                            <button
-                                onClick={() => setIsEditing((v) => !v)}
-                                className="close-button"
-                                style={{ position: 'static' }}
-                                title={isEditing ? (t('cancel') || 'Cancel') : (t('edit') || 'Edit')}
-                            >
-                                {isEditing ? (t('cancel') || 'Cancel') : (t('edit') || 'Edit')}
-                            </button>
-                        )}
-                        <button onClick={onClose} className="close-button">&times;</button>
-                    </div>
-                </div>
-                
-                <div className="modal-body">
-                    {isEditing ? (
-                        <div className="task-edit-form">
-                            <div className="info-grid">
-                                <div className="info-item">
-                                    <label><strong>{t('title') || 'Title'}</strong></label>
-                                    <input
-                                        type="text"
-                                        value={editValues.title}
-                                        onChange={(e) => handleEditChange('title', e.target.value)}
-                                    />
-                                </div>
-                                <div className="info-item">
-                                    <label><strong>{t('description') || 'Description'}</strong></label>
-                                    <textarea
-                                        value={editValues.description}
-                                        onChange={(e) => handleEditChange('description', e.target.value)}
-                                    />
-                                </div>
-                                <div className="info-item">
-                                    <label><strong>{t('start_date') || 'Start Date'}</strong></label>
-                                    <input
-                                        type="datetime-local"
-                                        value={editValues.start_date ? new Date(editValues.start_date).toISOString().slice(0,16) : ''}
-                                        onChange={(e) => handleEditChange('start_date', e.target.value ? new Date(e.target.value).toISOString() : null)}
-                                    />
-                                </div>
-                                <div className="info-item">
-                                    <label><strong>{t('deadline') || 'Deadline'}</strong></label>
-                                    <input
-                                        type="datetime-local"
-                                        value={editValues.deadline ? new Date(editValues.deadline).toISOString().slice(0,16) : ''}
-                                        onChange={(e) => handleEditChange('deadline', e.target.value ? new Date(e.target.value).toISOString() : null)}
-                                        disabled={editValues.deadline_all_day}
-                                    />
-                                </div>
-                                <div className="info-item">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={editValues.deadline_all_day}
-                                            onChange={(e) => handleEditChange('deadline_all_day', e.target.checked)}
-                                        />{' '}
-                                        {t('all_day_deadline')}
-                                    </label>
-                                </div>
-                                <div className="info-item">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={editValues.urgency}
-                                            onChange={(e) => handleEditChange('urgency', e.target.checked)}
-                                        />{' '}
-                                        {t('urgent')}
-                                    </label>
-                                </div>
-                                <div className="info-item">
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={editValues.important}
-                                            onChange={(e) => handleEditChange('important', e.target.checked)}
-                                        />{' '}
-                                        {t('important')}
-                                    </label>
-                                </div>
-                            </div>
-                            <div style={{ marginTop: 12, display: 'flex', gap: 8 }}>
-                                <button className="modal-confirm-button" onClick={handleSaveEdits}>{t('save') || 'Save'}</button>
-                                <button className="modal-cancel-button" onClick={() => setIsEditing(false)}>{t('cancel') || 'Cancel'}</button>
-                            </div>
-                        </div>
-                    ) : (
-                    <>
-                    {/* Task Basic Info */}
-                    <div className="task-info-section">
-                        <h3>{t('task_details')}</h3>
-                        
-                        <div className="info-grid">
-                            <div className="info-item">
-                                <strong>Description:</strong>
-                                <p>{task.description || 'No description provided'}</p>
-                            </div>
-                            
-                            <div className="info-item">
-                                <strong>Start Date:</strong>
-                                <p>{formatDateTime(task.start_date)}</p>
-                            </div>
-                            
-                            <div className="info-item">
-                                <strong>Deadline:</strong>
-                                <p>{formatDateTime(task.deadline)}</p>
-                            </div>
-                            
-                            <div className="info-item">
-                                <strong>Priority:</strong>
-                                <div>{getPriorityBadge()}</div>
-                            </div>
-                            
-                            {task.owner && (
-                                <div className="info-item">
-                                    <strong>Assigned To:</strong>
-                                    <p>{task.owner.full_name || `${task.owner.first_name} ${task.owner.surname}`.trim() || task.owner.email}</p>
-                                </div>
-                            )}
-                            
-                            {task.created_by && (
-                                <div className="info-item">
-                                    <strong>Created By:</strong>
-                                    <p>{task.created_by.full_name || `${task.created_by.first_name} ${task.created_by.surname}`.trim() || task.created_by.email}</p>
-                                </div>
-                            )}
-                            
-                            {task.company && (
-                                <div className="info-item">
-                                    <strong>Company:</strong>
-                                    <p>{task.company.name}</p>
-                                </div>
-                            )}
-                            
-                            {task.group && (
-                                <div className="info-item">
-                                    <strong>Group:</strong>
-                                    <p>{task.group.name}</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    
-                    {/* Task Status Section */}
-                    <div className="task-status-section">
-                        <h3>{t('task_status')}</h3>
-                        <TaskStatusUpdate 
-                            task={task} 
-                            onStatusUpdated={handleStatusUpdated}
-                        />
-                    </div>
-                    
-                    {/* Task Timestamps */}
-                    <div className="task-timestamps">
-                        <div className="timestamp-item">
-                            <strong>Created:</strong> {formatDateTime(task.created_at)}
-                        </div>
-                        <div className="timestamp-item">
-                            <strong>Last Updated:</strong> {formatDateTime(task.updated_at)}
-                        </div>
-                    </div>
-                    </>
-                    )}
-                </div>
-            </div>
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content max-w-4xl" onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
+        <div className="modal-header flex items-center justify-between">
+          <h2 className="text-lg font-semibold">
+            {isEditing ? (t('edit_task') || 'edit_task') : (t('task') || 'task')}
+          </h2>
+          <button className="btn-outline" onClick={onClose}>
+            {t('cancel') || 'Άκυρο'}
+          </button>
         </div>
-    );
-}
+
+        {/* Body */}
+        {!isEditing ? (
+          // ===== VIEW MODE =====
+          <div className="task-view space-y-4">
+            <div className="info-item">
+              <label className="block text-xs font-semibold uppercase">{t('title') || 'Τίτλος'}</label>
+              <div>{initialTask.title}</div>
+            </div>
+            <div className="info-item">
+              <label className="block text-xs font-semibold uppercase">{t('description') || 'Περιγραφή'}</label>
+              <div className="whitespace-pre-wrap">{initialTask.description}</div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="info-item">
+                <label className="block text-xs font-semibold uppercase">{t('start_date') || 'Ημερομηνία έναρξης'}</label>
+                <div>{initialTask.start_date || '—'}</div>
+              </div>
+              <div className="info-item">
+                <label className="block text-xs font-semibold uppercase">{t('deadline') || 'Προθεσμία'}</label>
+                <div>{initialTask.deadline || '—'}</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="info-item">
+                <label className="block text-xs font-semibold uppercase">{t('important') || 'Σημαντικό'}</label>
+                <div>{initialTask.important ? t('yes') || 'Ναι' : t('no') || 'Όχι'}</div>
+              </div>
+              <div className="info-item">
+                <label className="block text-xs font-semibold uppercase">{t('urgent') || 'Επείγον'}</label>
+                <div>{initialTask.urgency ? t('yes') || 'Ναι' : t('no') || 'Όχι'}</div>
+              </div>
+            </div>
+
+            <div className="info-item">
+              <label className="block text-xs font-semibold uppercase">{t('company') || 'Εταιρεία'}</label>
+              <div>{initialTask?.company?.name || '—'}</div>
+            </div>
+
+            <div className="form-actions mt-6 flex gap-3">
+              <button className="btn-primary" onClick={() => setIsEditing(true)}>
+                {t('edit') || 'Επεξεργασία'}
+              </button>
+              <button className="btn-cancel" onClick={onClose}>
+                {t('close') || 'Κλείσιμο'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          // ===== EDIT MODE =====
+          <div className="task-edit-form space-y-4">
+            <div className="info-item">
+              <label className="block text-xs font-semibold uppercase">{t('title') || 'Τίτλος'}</label>
+              <input
+                type="text"
+                value={editValues.title}
+                onChange={(e) => handleEditChange('title', e.target.value)}
+              />
+            </div>
+
+            <div className="info-item">
+              <label className="block text-xs font-semibold uppercase">{t('description') || 'Περιγραφή'}</label>
+              <textarea
+                rows={4}
+                value={editValues.description}
+                onChange={(e) => handleEditChange('description', e.target.value)}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="info-item">
+                <label className="block text-xs font-semibold uppercase">{t('start_date') || 'Ημερομηνία έναρξης'}</label>
+                <input
+                  type="datetime-local"
+                  value={editValues.start_date || ''}
+                  onChange={(e) => handleEditChange('start_date', e.target.value)}
+                />
+              </div>
+              <div className="info-item">
+                <label className="block text-xs font-semibold uppercase">{t('deadline') || 'Προθεσμία'}</label>
+                <input
+                  type="datetime-local"
+                  value={editValues.deadline || ''}
+                  onChange={(e) => handleEditChange('deadline', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <label className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={!!editValues.deadline_all_day}
+                  onChange={(e) => handleEditChange('deadline_all_day', e.target.checked)}
+                />
+                <span>{t('all_day_deadline') || 'Ολοήμερη προθεσμία'}</span>
+              </label>
+
+              <label className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={!!editValues.important}
+                  onChange={(e) => handleEditChange('important', e.target.checked)}
+                />
+                <span>{t('important') || 'Σημαντικό'}</span>
+              </label>
+
+              <label className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={!!editValues.urgency}
+                  onChange={(e) => handleEditChange('urgency', e.target.checked)}
+                />
+                <span>{t('urgent') || 'Επείγον'}</span>
+              </label>
+            </div>
+
+            {/* 👇 NEW: Editable company selector in edit mode */}
+            <div className="info-item">
+              <label className="block text-xs font-semibold uppercase">{t('company') || 'Εταιρεία'}</label>
+              <select
+                value={editValues.company_id}
+                onChange={(e) => handleEditChange('company_id', e.target.value)}
+                disabled={loadingCompanies}
+              >
+                <option value="">{t('select_company') || 'Επιλέξτε εταιρεία'}</option>
+                {companies.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-actions mt-6 flex gap-3">
+              <button className="btn-primary" onClick={handleSaveEdits}>
+                {t('save') || 'Αποθήκευση'}
+              </button>
+              <button className="btn-cancel" onClick={() => setIsEditing(false)}>
+                {t('cancel') || 'Άκυρο'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default TaskModal;
