@@ -44,25 +44,38 @@ export const companyApi = {
 
 // Task API
 export const taskApi = {
-    // NEW: Update task status
-    updateTaskStatus: (taskId, statusData, token) =>
-        callApi(`/tasks/${taskId}/status`, 'PUT', statusData, token),
+  // status helpers (keep)
+  updateTaskStatus: (taskId, statusData, token) =>
+    callApi(`/tasks/${taskId}/status`, 'PUT', statusData, token),
 
-    // NEW: Get task status history
-    getTaskStatusHistory: (taskId, token) =>
-        callApi(`/tasks/${taskId}/status-history`, 'GET', null, token),
+  getTaskStatusHistory: (taskId, token) =>
+    callApi(`/tasks/${taskId}/status-history`, 'GET', null, token),
 
-    // Enhanced: Update the existing updateTask method to handle the new status fields
-    updateTask: (taskId, taskData, token) =>
-        callApi(`/tasks/${taskId}`, 'PUT', taskData, token),
+  updateTask: (taskId, taskData, token) =>
+    callApi(`/tasks/${taskId}`, 'PUT', taskData, token),
 
-    createTask: (taskData, token) => callApi('/tasks/', 'POST', taskData, token),
-    getTasks: (token) => callApi('/tasks/', 'GET', null, token),
-    getTaskById: (taskId, token) => callApi(`/tasks/${taskId}`, 'GET', null, token),
-    deleteTask: (taskId, token) => callApi(`/tasks/${taskId}`, 'DELETE', null, token),
-    
-    // NEW: Task transfer functionality
-    transferTask: (transferData, token) => callApi('/task-management/transfer', 'POST', transferData, token),
+  createTask: (taskData, token) => callApi('/tasks/', 'POST', taskData, token),
+
+  // NEW: list with filters
+  getTasks: (token, filters = {}) => {
+    const params = new URLSearchParams();
+    if (filters.importance) params.set('importance', filters.importance);
+    if (filters.user_name) params.set('user_name', filters.user_name);
+    if (filters.user_id) params.set('user_id', String(filters.user_id));
+    if (filters.company_id) params.set('company_id', String(filters.company_id));
+    const qs = params.toString();
+    const url = qs ? `/tasks/?${qs}` : '/tasks/';
+    return callApi(url, 'GET', null, token);
+  },
+
+  getTaskById: (taskId, token) =>
+    callApi(`/tasks/${taskId}`, 'GET', null, token),
+
+  deleteTask: (taskId, token) =>
+    callApi(`/tasks/${taskId}`, 'DELETE', null, token),
+
+  transferTask: (transferData, token) =>
+    callApi('/task-management/transfer', 'POST', transferData, token),
 };
 
 // Group API
