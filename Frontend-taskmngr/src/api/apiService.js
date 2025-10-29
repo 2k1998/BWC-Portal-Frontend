@@ -1,6 +1,9 @@
 // src/api/apiService.js - Complete and Fixed Version
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com';
+//const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'; //'https://bwc-portal-backend-w1qr.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://bwc-portal-backend-w1qr.onrender.com'; 
+
+
 // Helper function to make API calls
 // Authentication API
 export const authApi = {
@@ -65,6 +68,14 @@ export const taskApi = {
     if (filters.company_id) params.set('company_id', String(filters.company_id));
     const qs = params.toString();
     const url = qs ? `/tasks/?${qs}` : '/tasks/';
+    return callApi(url, 'GET', null, token);
+  },
+
+  getCompletedTasks: (token, params = {}) => {
+    const query = new URLSearchParams();
+    if (params.days) query.set('days', String(params.days));
+    const qs = query.toString();
+    const url = qs ? `/tasks/completed-tasks/list?${qs}` : '/tasks/completed-tasks/list';
     return callApi(url, 'GET', null, token);
   },
 

@@ -1,5 +1,5 @@
 // src/pages/TasksPage.jsx
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -20,7 +20,9 @@ function TasksPage() {
   const navigate = useNavigate();
 
   const [allTasks, setAllTasks] = useState([]);
-  const [filteredTasks, setFilteredTasks] = useState([]);
+  const [completedTasks, setCompletedTasks] = useState([]);
+  const [filteredActiveTasks, setFilteredActiveTasks] = useState([]);
+  const [filteredCompletedTasks, setFilteredCompletedTasks] = useState([]);
   const [activeFilter, setActiveFilter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -36,20 +38,32 @@ function TasksPage() {
     if (!accessToken) return;
     setLoading(true);
     try {
-      const fetchedTasks = await taskApi.getTasks(accessToken);
+      const fetchedTasks = await taskApi.getTasks(accessToken, serverFilters);
       setAllTasks(Array.isArray(fetchedTasks) ? fetchedTasks : fetchedTasks?.results || []);
     } catch (err) {
       showNotification(err.message || t('failed_to_fetch_tasks') || 'Failed to fetch tasks', 'error');
     } finally {
       setLoading(false);
     }
+  }, [accessToken, serverFilters, showNotification, t]);
+
+  const fetchCompletedTasks = useCallback(async () => {
+    if (!accessToken) return;
+    try {
+      const fetched = await taskApi.getCompletedTasks(accessToken, { days: 30 });
+      setCompletedTasks(Array.isArray(fetched) ? fetched : fetched?.results || []);
+    } catch (err) {
+      console.error(err);
+      showNotification(err.message || t('failed_to_fetch_tasks') || 'Failed to fetch tasks', 'error');
+    }
   }, [accessToken, showNotification, t]);
 
   useEffect(() => {
     if (!authLoading && accessToken) {
       fetchTasks();
+      fetchCompletedTasks();
     }
-  }, [accessToken, authLoading, fetchTasks]);
+  }, [accessToken, authLoading, fetchTasks, fetchCompletedTasks]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -59,75 +73,100 @@ function TasksPage() {
       .catch(() => setCompanies([]));
   }, [accessToken]);
 
-  // 🔎 client-side filtering for user/company/importance
-  useEffect(() => {
-    let tasksToFilter = [...allTasks];
-
-    if (serverFilters.importance) {
-      if (serverFilters.importance === 'urgent') {
-        tasksToFilter = tasksToFilter.filter((t) => t.urgency && !t.important);
-      } else if (serverFilters.importance === 'important') {
-        tasksToFilter = tasksToFilter.filter((t) => !t.urgency && t.important);
-      } else if (serverFilters.importance === 'urgent_important') {
-        tasksToFilter = tasksToFilter.filter((t) => t.urgency && t.important);
-      } else if (serverFilters.importance === 'none') {
-        tasksToFilter = tasksToFilter.filter((t) => !t.urgency && !t.important);
-      }
-    }
-
-    if (serverFilters.company_id) {
-      tasksToFilter = tasksToFilter.filter(
-        (t) => String(t.company_id) === String(serverFilters.company_id)
-      );
-    }
-
-    if (serverFilters.user_id) {
-      tasksToFilter = tasksToFilter.filter(
-        (t) =>
-          String(t.owner_id) === String(serverFilters.user_id) ||
-          String(t.owner?.id) === String(serverFilters.user_id)
-      );
-    }
-
-    if (serverFilters.user_name) {
-      const name = serverFilters.user_name.toLowerCase();
-      tasksToFilter = tasksToFilter.filter((t) =>
-        (t.owner?.username || t.owner?.full_name || '')
-          .toLowerCase()
-          .includes(name)
-      );
-    }
-
-    setFilteredTasks(tasksToFilter);
-  }, [serverFilters, allTasks]);
-
-  // 🔁 urgency quick filters
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const filter = params.get('filter');
     setActiveFilter(filter);
-
-    if (!filter) return;
-
-    setFilteredTasks((prev) => {
-      return prev.filter((task) => {
-        switch (filter) {
-          case 'urgentImportant':
-            return task.urgency && task.important && !task.deadline_all_day;
-          case 'urgentOnly':
-            return task.urgency && !task.important && !task.deadline_all_day;
-          case 'importantOnly':
-            return !task.urgency && task.important && !task.deadline_all_day;
-          case 'normal':
-            return !task.urgency && !task.important && !task.deadline_all_day;
-          case 'allDayDeadline':
-            return task.deadline_all_day;
-          default:
-            return true;
-        }
-      });
-    });
   }, [location.search]);
+
+  const applyServerFilters = useCallback(
+    (tasks) => {
+      if (!serverFilters || Object.keys(serverFilters).length === 0) return tasks;
+
+      return tasks.filter((task) => {
+        if (serverFilters.company_id && String(task.company_id) !== String(serverFilters.company_id)) {
+          return false;
+        }
+        if (serverFilters.user_id && String(task.owner_id) !== String(serverFilters.user_id)) {
+          return false;
+        }
+        if (serverFilters.user_name) {
+          const ownerName = (
+            task.owner?.full_name ||
+            `${task.owner?.first_name || ''} ${task.owner?.surname || ''}`.trim() ||
+            task.owner?.username ||
+            ''
+          ).toLowerCase();
+          if (!ownerName.includes(serverFilters.user_name.toLowerCase())) {
+            return false;
+          }
+        }
+
+        if (serverFilters.importance) {
+          switch (serverFilters.importance) {
+            case 'urgent':
+              if (!(task.urgency && !task.important)) return false;
+              break;
+            case 'important':
+              if (!(!task.urgency && task.important)) return false;
+              break;
+            case 'urgent_important':
+              if (!(task.urgency && task.important)) return false;
+              break;
+            case 'none':
+              if (task.urgency || task.important) return false;
+              break;
+            default:
+              break;
+          }
+        }
+
+        return true;
+      });
+    },
+    [serverFilters]
+  );
+
+  const applyQuickFilter = useCallback((tasks) => {
+    if (!activeFilter) return tasks;
+
+    return tasks.filter((task) => {
+      switch (activeFilter) {
+        case 'urgentImportant':
+          return task.urgency && task.important && !task.deadline_all_day;
+        case 'urgentOnly':
+          return task.urgency && !task.important && !task.deadline_all_day;
+        case 'importantOnly':
+          return !task.urgency && task.important && !task.deadline_all_day;
+        case 'normal':
+          return !task.urgency && !task.important && !task.deadline_all_day;
+        case 'allDayDeadline':
+          return task.deadline_all_day;
+        default:
+          return true;
+      }
+    });
+  }, [activeFilter]);
+
+  const applyStatusFilter = useCallback(
+    (tasks) => {
+      if (statusFilter === 'all') return tasks;
+      return tasks.filter((task) => String(task.status).toLowerCase() === statusFilter);
+    },
+    [statusFilter]
+  );
+
+  useEffect(() => {
+    const activeBase = applyServerFilters(allTasks.filter((task) => !task.completed));
+    const quickFiltered = applyQuickFilter(activeBase);
+    setFilteredActiveTasks(applyStatusFilter(quickFiltered));
+  }, [allTasks, applyServerFilters, applyQuickFilter, applyStatusFilter]);
+
+  useEffect(() => {
+    const completedBase = applyServerFilters(completedTasks);
+    const quickFiltered = applyQuickFilter(completedBase);
+    setFilteredCompletedTasks(applyStatusFilter(quickFiltered));
+  }, [completedTasks, applyServerFilters, applyQuickFilter, applyStatusFilter]);
 
   const handleCreateTask = async (taskData) => {
     try {
@@ -150,6 +189,7 @@ function TasksPage() {
         'success'
       );
       fetchTasks();
+      fetchCompletedTasks();
     } catch (err) {
       showNotification(err.message || t('failed_to_update_task_status') || 'Failed to update task status', 'error');
     }
@@ -161,6 +201,7 @@ function TasksPage() {
         await taskApi.deleteTask(taskId, accessToken);
         showNotification(t('task_deleted_success') || 'Task deleted successfully', 'success');
         fetchTasks();
+        fetchCompletedTasks();
       } catch (err) {
         showNotification(err.message || t('failed_to_delete_task') || 'Failed to delete task', 'error');
       }
@@ -180,6 +221,7 @@ function TasksPage() {
 
   const handleTaskUpdated = () => {
     fetchTasks();
+    fetchCompletedTasks();
     if (selectedTask) {
       openTaskModal(selectedTask);
     }
@@ -192,22 +234,16 @@ function TasksPage() {
 
   const handleTransferSuccess = () => {
     fetchTasks();
+    fetchCompletedTasks();
     setShowTransferModal(false);
     setTaskToTransfer(null);
   };
 
   const canTransferTask = (task) => task.owner_id === currentUser?.id;
 
-  const filteredTasksByStatus = useMemo(() => {
-    if (statusFilter === 'all') return filteredTasks;
-    return filteredTasks.filter((task) => String(task.status).toLowerCase() === statusFilter);
-  }, [filteredTasks, statusFilter]);
-
   if (authLoading || loading) {
     return <div className="loading-spinner fade-in">{t('loading')}</div>;
   }
-
-  const completedTasks = filteredTasks.filter((task) => task.completed);
 
   return (
     <div className="tasks-container">
@@ -227,6 +263,16 @@ function TasksPage() {
           </button>
         </div>
       </div>
+
+      {showCreateForm && (
+        <div className="create-task-panel">
+          <TaskForm
+            onSubmit={handleCreateTask}
+            submitButtonText={t('create_task') || 'Create Task'}
+            onCancel={() => setShowCreateForm(false)}
+          />
+        </div>
+      )}
 
       {/* Status filter and quick filters remain unchanged */}
       <div className="filter-section">
@@ -284,15 +330,13 @@ function TasksPage() {
       {/* Active tasks */}
       <div className="active-tasks-section">
         <h2>
-          {t('active_tasks')} ({filteredTasksByStatus.filter((task) => !task.completed).length})
+          {t('active_tasks')} ({filteredActiveTasks.length})
         </h2>
         <div className="task-list">
-          {filteredTasksByStatus.filter((task) => !task.completed).length === 0 ? (
+          {filteredActiveTasks.length === 0 ? (
             <p>{t('no_active_tasks')}</p>
           ) : (
-            filteredTasksByStatus
-              .filter((task) => !task.completed)
-              .map((task) => (
+            filteredActiveTasks.map((task) => (
                 <div
                   key={task.id}
                   className={`task-item${task.urgency && task.important ? ' urgent-important-highlight' : ''}`}
@@ -392,13 +436,13 @@ function TasksPage() {
       {/* Completed tasks */}
       <div className="completed-tasks-section">
         <h2>
-          {t('completed_tasks')} ({completedTasks.length})
+          {t('completed_tasks')} ({filteredCompletedTasks.length})
         </h2>
         <div className="task-list">
-          {completedTasks.length === 0 ? (
+          {filteredCompletedTasks.length === 0 ? (
             <p>{t('no_completed_tasks') || t('no_completed_tasks_yet') || 'No completed tasks yet.'}</p>
           ) : (
-            completedTasks.map((task) => (
+            filteredCompletedTasks.map((task) => (
               <div key={task.id} className="task-item completed">
                 <h3>{task.title}</h3>
                 <p>{task.description}</p>

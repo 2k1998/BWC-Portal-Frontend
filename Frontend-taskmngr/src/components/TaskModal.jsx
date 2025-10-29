@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { taskApi, companyApi } from '../api/apiService';
 import { useLanguage } from '../context/LanguageContext';
+import TaskStatusUpdate from './TaskStatusUpdate';  // ⬅️ status manager inside modal
 
 /**
  * Props
@@ -135,6 +136,11 @@ const TaskModal = ({ isOpen, onClose, task, accessToken, onUpdated }) => {
               <div>{initialTask?.company?.name || '—'}</div>
             </div>
 
+            {/* ⬇️ Status manager inside the View tab */}
+            <div className="mt-6">
+              <TaskStatusUpdate task={initialTask} onStatusUpdated={onUpdated} />
+            </div>
+
             <div className="form-actions mt-6 flex gap-3">
               <button className="btn-primary" onClick={() => setIsEditing(true)}>
                 {t('edit') || 'Επεξεργασία'}
@@ -213,7 +219,7 @@ const TaskModal = ({ isOpen, onClose, task, accessToken, onUpdated }) => {
               </label>
             </div>
 
-            {/* 👇 NEW: Editable company selector in edit mode */}
+            {/* 👇 Editable company selector in edit mode */}
             <div className="info-item">
               <label className="block text-xs font-semibold uppercase">{t('company') || 'Εταιρεία'}</label>
               <select
