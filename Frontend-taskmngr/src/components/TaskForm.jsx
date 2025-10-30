@@ -22,10 +22,6 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
     const [companies, setCompanies] = useState([]);
     const [loadingCompanies, setLoadingCompanies] = useState(true);
 
-    const [isRecurring, setIsRecurring] = useState(false);
-    const [recurrence, setRecurrence] = useState('');
-
-
     const [users, setUsers] = useState([]);
     const [priorityMemberIds, setPriorityMemberIds] = useState(new Set());
     const [selectedUserId, setSelectedUserId] = useState('');
@@ -110,14 +106,16 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
     const handleSubmit = (e) => {
         e.preventDefault();
         const taskData = {
-            title, description, start_date: startDate?.toISOString(),
-            deadline: deadline?.toISOString(), deadline_all_day: isAllDay,
-            urgency: isUrgent, important: isImportant, company_id: parseInt(selectedCompanyId),
+            title,
+            description,
+            start_date: startDate?.toISOString(),
+            deadline: deadline?.toISOString(),
+            deadline_all_day: isAllDay,
+            urgency: isUrgent,
+            important: isImportant,
+            company_id: parseInt(selectedCompanyId),
             owner_id: selectedUserId ? parseInt(selectedUserId) : null,
             department: selectedDepartment || null,
-            //new recurring fields
-            is_recurring: !isRecurring,
-            recurence: isRecurring ? (recurrence || null ) : null, 
         };
         onSubmit(taskData);
     };
@@ -258,41 +256,6 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
                                 </div>
                             </div>
                         </div>
-
-
-                        {/* Repeatable Section */}
-                        <div className="form-section">
-                        <h4 className="section-title">{t('repeatable') || 'Επαναλαμβανόμενο'}</h4>
-                        <div className="form-row">
-                            <label className="inline-flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                checked={isRecurring}
-                                onChange={(e) => {
-                                const checked = e.target.checked;
-                                setIsRecurring(checked);
-                                if (checked && !recurrence) setRecurrence('monthly'); // sensible default
-                                if (!checked) setRecurrence('');
-                                }}
-                            />
-                            <span>{t('repeatable_task') || 'Να επαναλαμβάνεται'}</span>
-                            </label>
-
-                            <select
-                            disabled={!isRecurring}
-                            value={recurrence}
-                            onChange={(e) => setRecurrence(e.target.value)}
-                            className="ml-4"
-                            >
-                            <option value="">{t('select_frequency') || 'Συχνότητα'}</option>
-                            <option value="daily">{t('daily') || 'Καθημερινά'}</option>
-                            <option value="weekly">{t('weekly') || 'Εβδομαδιαία'}</option>
-                            <option value="monthly">{t('monthly') || 'Μηνιαία'}</option>
-                            <option value="yearly">{t('yearly') || 'Ετήσια'}</option>
-                            </select>
-                        </div>
-                        </div>
- 
 
 
                         {/* Dates Section */}
