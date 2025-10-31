@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { companyApi, authApi, groupApi } from '../api/apiService';
 import { Zap, Star } from 'lucide-react';
 import './TaskForm.css';
+import DepartmentSelect from './DepartmentSelect';
 
 function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false }) {
     const { accessToken, currentUser } = useAuth();
@@ -25,6 +26,9 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
     const [users, setUsers] = useState([]);
     const [priorityMemberIds, setPriorityMemberIds] = useState(new Set());
     const [selectedUserId, setSelectedUserId] = useState('');
+    const [selectedAssigneeIds, setSelectedAssigneeIds] = useState([]);
+    const [groups, setGroups] = useState([]);
+    const [selectedGroupId, setSelectedGroupId] = useState('');
     const [loadingUsers, setLoadingUsers] = useState(true);
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [showAdvanced, setShowAdvanced] = useState(false);
@@ -32,15 +36,6 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
     const isAdmin = currentUser?.role === "admin";
     
     // Department options
-    const departmentOptions = [
-        { value: "Energy", labelKey: "energy" },
-        { value: "Insurance", labelKey: "insurance" },
-        { value: "Self Development Academy", labelKey: "self_development_academy" },
-        { value: "Real Estate", labelKey: "real_estate" },
-        { value: "Investments", labelKey: "investments" },
-        { value: "Marketing/Social Media", labelKey: "marketing_social_media" },
-    ];
-
     useEffect(() => {
         if (accessToken) {
             setLoadingCompanies(true);
@@ -59,18 +54,20 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
                 authApi.listBasicUsers(accessToken),
                 groupApi.getGroups(accessToken).catch(() => [])
             ])
-            .then(([allUsers, groups]) => {
+            .then(([allUsers, groupList]) => {
                 console.log('TaskForm: Fetched users:', allUsers);
                 console.log('TaskForm: Current user role:', currentUser?.role);
+                const normalizedGroups = Array.isArray(groupList) ? groupList : [];
+                setGroups(normalizedGroups);
                 // Determine groups the current user is a member of (non-admin gets only own groups)
                 const myGroupIds = new Set(
-                    (groups || [])
+                    normalizedGroups
                         .filter(g => Array.isArray(g.members) ? g.members.some(m => m.id === currentUser?.id) : true)
                         .map(g => g.id)
                 );
                 // Collect member ids from these groups
                 const memberIds = new Set();
-                (groups || []).forEach(g => {
+                normalizedGroups.forEach(g => {
                     if (myGroupIds.has(g.id) && Array.isArray(g.members)) {
                         g.members.forEach(m => memberIds.add(m.id));
                     }
@@ -105,6 +102,17 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const ownerIdParsed = selectedUserId ? parseInt(selectedUserId, 10) : null;
+        const assigneeIdsParsed = Array.from(new Set([
+            ...selectedAssigneeIds
+                .map((value) => {
+                    const parsed = parseInt(value, 10);
+                    return Number.isNaN(parsed) ? null : parsed;
+                })
+                .filter((value) => value !== null),
+            ownerIdParsed,
+        ].filter((value) => value !== null)));
+
         const taskData = {
             title,
             description,
@@ -114,8 +122,10 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
             urgency: isUrgent,
             important: isImportant,
             company_id: parseInt(selectedCompanyId),
-            owner_id: selectedUserId ? parseInt(selectedUserId) : null,
+            owner_id: ownerIdParsed,
             department: selectedDepartment || null,
+            group_id: selectedGroupId ? parseInt(selectedGroupId, 10) : null,
+            assignee_ids: assigneeIdsParsed,
         };
         onSubmit(taskData);
     };
@@ -199,6 +209,49 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
                             </select>
                         </div>
                     </div>
+                    <div className="form-row">
+                        <div className="form-group full-width">
+                            <label>{t('assign_to_team') || 'Assign to Team'}:</label>
+                            <select
+                                value={selectedGroupId}
+                                onChange={(e) => setSelectedGroupId(e.target.value)}
+                                className="form-select"
+                            >
+                                <option value="">{t('select_team_optional') || 'Select a team (optional)'}</option>
+                                {groups.map((group) => (
+                                    <option key={group.id} value={String(group.id)}>
+                                        {group.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                    <div className="form-row">
+                        <div className="form-group full-width">
+                            <label>{t('additional_assignees') || 'Additional Assignees'}:</label>
+                            <select
+                                multiple
+                                value={selectedAssigneeIds}
+                                onChange={(e) =>
+                                    setSelectedAssigneeIds(
+                                        Array.from(e.target.selectedOptions).map((opt) => opt.value)
+                                    )
+                                }
+                                disabled={loadingUsers}
+                                className="form-select"
+                                size={Math.min(Math.max(users.length, 3), 8)}
+                            >
+                                {users.map((user) => (
+                                    <option key={user.id} value={String(user.id)}>
+                                        {user.full_name || `${user.first_name} ${user.surname}`.trim() || user.email}
+                                    </option>
+                                ))}
+                            </select>
+                            <small className="form-helper-text">
+                                {t('multiple_assignees_hint') || 'Hold Ctrl/Command to select multiple users.'}
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Advanced Options */}
@@ -210,16 +263,12 @@ function TaskForm({ onSubmit, submitButtonText, onCancel, isQuickMode = false })
                             <div className="form-row">
                                 <div className="form-group full-width">
                                     <label>{t('department')}:</label>
-                                    <select 
-                                        value={selectedDepartment} 
-                                        onChange={e => setSelectedDepartment(e.target.value)}
+                                    <DepartmentSelect
+                                        value={selectedDepartment}
+                                        onChange={setSelectedDepartment}
+                                        placeholder={t('select_a_department')}
                                         className="form-select"
-                                    >
-                                        <option value="">{t('select_a_department')}</option>
-                                        {departmentOptions.map(opt => (
-                                            <option key={opt.value} value={opt.value}>{t(opt.labelKey)}</option>
-                                        ))}
-                                    </select>
+                                    />
                                 </div>
                             </div>
                         </div>

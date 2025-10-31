@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { authApi } from '../api/apiService';
 import { useNotification } from '../context/NotificationContext';
 import Modal from '../components/Modal';
+import { fetchDepartments, createDepartment } from '../services/departments';
 import './AdminPanel.css';
 
 function AdminPanelPage() {
@@ -18,6 +19,9 @@ function AdminPanelPage() {
     // Removed separate role edit modal to avoid conflicting setters
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [departments, setDepartments] = useState([]);
+    const [newDepartment, setNewDepartment] = useState('');
+    const [departmentSubmitting, setDepartmentSubmitting] = useState(false);
 
     const fetchUsers = useCallback(async (query) => {
         if (!accessToken) return;
@@ -26,7 +30,7 @@ function AdminPanelPage() {
             const fetchedUsers = await authApi.listAllUsers(accessToken, query);
             setUsers(fetchedUsers);
         } catch (err) {
-            showNotification(err.message || 'Failed to fetch users.', 'error');
+            showNotification(err.message || t('failed_to_fetch_users'), 'error');
         } finally {
             setLoading(false);
         }
@@ -36,17 +40,30 @@ function AdminPanelPage() {
         fetchUsers(searchQuery);
     }, [fetchUsers, searchQuery]);
     
+    const loadDepartments = useCallback(async () => {
+        try {
+            const list = await fetchDepartments();
+            setDepartments(list);
+        } catch (err) {
+            console.warn('Failed to load departments', err);
+        }
+    }, []);
+
+    useEffect(() => {
+        loadDepartments();
+    }, [loadDepartments]);
+
     const handleToggleStatus = async (user) => {
         if (user.id === currentUser?.id) {
-            showNotification("You cannot change your own status.", "warning");
+            showNotification(t('cannot_change_status_self'), 'warning');
             return;
         }
         try {
             await authApi.updateUserStatus(user.id, { is_active: !user.is_active }, accessToken);
-            showNotification(`User status updated for ${user.email}`, 'success');
+            showNotification(t('user_status_updated', { email: user.email }), 'success');
             fetchUsers(searchQuery);
         } catch (err) {
-            showNotification(err.message || 'Failed to update user status.', 'error');
+            showNotification(err.message || t('failed_to_update_user_status'), 'error');
         }
     };
 
@@ -64,7 +81,7 @@ function AdminPanelPage() {
             showNotification(t('user_deleted'), 'success');
             fetchUsers(searchQuery);
         } catch (err) {
-            showNotification(err.message || 'Failed to delete user.', 'error');
+            showNotification(err.message || t('failed_to_delete_user'), 'error');
         }
         setIsDeleteModalOpen(false);
     };
@@ -79,13 +96,63 @@ function AdminPanelPage() {
             showNotification(t('role_updated'), 'success');
             fetchUsers(searchQuery);
         } catch (err) {
-            showNotification(err.message || 'Failed to update role.', 'error');
+            showNotification(err.message || t('failed_to_update_role'), 'error');
+        }
+    };
+
+    const handleCreateDepartment = async (event) => {
+        event.preventDefault();
+        const trimmed = newDepartment.trim();
+        if (!trimmed) {
+            showNotification(t('department_name_required') || 'Department name is required.', 'warning');
+            return;
+        }
+        if (!accessToken) {
+            showNotification(t('auth_required') || 'Authentication required.', 'error');
+            return;
+        }
+
+        setDepartmentSubmitting(true);
+        try {
+            await createDepartment(trimmed, accessToken);
+            showNotification(t('department_created'), 'success');
+            setNewDepartment('');
+            loadDepartments();
+        } catch (err) {
+            showNotification(err.message || t('failed_to_create_department'), 'error');
+        } finally {
+            setDepartmentSubmitting(false);
         }
     };
 
     return (
         <div className="admin-panel-container">
             <h1>{t('user_management')}</h1>
+            <section className="department-management-card">
+                <h2>{t('department_management') || 'Department Management'}</h2>
+                <form className="department-form" onSubmit={handleCreateDepartment}>
+                    <input
+                        type="text"
+                        value={newDepartment}
+                        onChange={(e) => setNewDepartment(e.target.value)}
+                        placeholder={t('enter_department_name') || 'Enter department name'}
+                    />
+                    <button type="submit" disabled={departmentSubmitting}>
+                        {departmentSubmitting ? (t('saving') || 'Saving...') : (t('add_department') || 'Add Department')}
+                    </button>
+                </form>
+                <div className="department-list-wrapper">
+                    {departments.length === 0 ? (
+                        <p className="department-empty">{t('no_departments_found') || 'No departments found yet.'}</p>
+                    ) : (
+                        <ul className="department-list">
+                            {departments.map((dept) => (
+                                <li key={dept.id || dept.name}>{dept.name}</li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            </section>
             <div className="search-bar">
                 <input
                     type="text"
