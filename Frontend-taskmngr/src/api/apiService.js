@@ -75,7 +75,7 @@ export const taskApi = {
     const query = new URLSearchParams();
     if (params.days) query.set('days', String(params.days));
     const qs = query.toString();
-    const url = qs ? `/tasks/completed-tasks/list?${qs}` : '/tasks/completed-tasks/list';
+    const url = qs ? `/tasks/completed-tasks/list/?${qs}` : '/tasks/completed-tasks/list/';
     return callApi(url, 'GET', null, token);
   },
 
@@ -83,7 +83,7 @@ export const taskApi = {
     const query = new URLSearchParams();
     if (params.days) query.set('days', String(params.days));
     const qs = query.toString();
-    const url = qs ? `/tasks/deleted-tasks/list?${qs}` : '/tasks/deleted-tasks/list';
+    const url = qs ? `/tasks/deleted-tasks/list/?${qs}` : '/tasks/deleted-tasks/list/';
     return callApi(url, 'GET', null, token);
   },
 
@@ -94,7 +94,7 @@ export const taskApi = {
     callApi(`/tasks/${taskId}`, 'DELETE', null, token),
 
   deleteTaskPermanently: (taskId, token) =>
-    callApi(`/tasks/${taskId}/permanent`, 'DELETE', null, token),
+    callApi(`/tasks/${taskId}/permanent/`, 'DELETE', null, token),
 
   transferTask: (transferData, token) =>
     callApi('/task-management/transfer', 'POST', transferData, token),
