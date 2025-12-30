@@ -21,8 +21,10 @@ function TasksPage() {
 
   const [allTasks, setAllTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
+  const [deletedTasks, setDeletedTasks] = useState([]);
   const [filteredActiveTasks, setFilteredActiveTasks] = useState([]);
   const [filteredCompletedTasks, setFilteredCompletedTasks] = useState([]);
+  const [filteredDeletedTasks, setFilteredDeletedTasks] = useState([]);
   const [activeFilter, setActiveFilter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
@@ -58,12 +60,24 @@ function TasksPage() {
     }
   }, [accessToken, showNotification, t]);
 
+  const fetchDeletedTasks = useCallback(async () => {
+    if (!accessToken) return;
+    try {
+      const fetched = await taskApi.getDeletedTasks(accessToken);
+      setDeletedTasks(Array.isArray(fetched) ? fetched : fetched?.results || []);
+    } catch (err) {
+      console.error(err);
+      showNotification(err.message || t('failed_to_fetch_tasks') || 'Failed to fetch tasks', 'error');
+    }
+  }, [accessToken, showNotification, t]);
+
   useEffect(() => {
     if (!authLoading && accessToken) {
       fetchTasks();
       fetchCompletedTasks();
+      fetchDeletedTasks();
     }
-  }, [accessToken, authLoading, fetchTasks, fetchCompletedTasks]);
+  }, [accessToken, authLoading, fetchTasks, fetchCompletedTasks, fetchDeletedTasks]);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -168,6 +182,12 @@ function TasksPage() {
     setFilteredCompletedTasks(applyStatusFilter(quickFiltered));
   }, [completedTasks, applyServerFilters, applyQuickFilter, applyStatusFilter]);
 
+  useEffect(() => {
+    const deletedBase = applyServerFilters(deletedTasks);
+    const quickFiltered = applyQuickFilter(deletedBase);
+    setFilteredDeletedTasks(applyStatusFilter(quickFiltered));
+  }, [deletedTasks, applyServerFilters, applyQuickFilter, applyStatusFilter]);
+
   const handleCreateTask = async (taskData) => {
     try {
       await taskApi.createTask(taskData, accessToken);
@@ -190,6 +210,7 @@ function TasksPage() {
       );
       fetchTasks();
       fetchCompletedTasks();
+      fetchDeletedTasks();
     } catch (err) {
       showNotification(err.message || t('failed_to_update_task_status') || 'Failed to update task status', 'error');
     }
@@ -202,6 +223,19 @@ function TasksPage() {
         showNotification(t('task_deleted_success') || 'Task deleted successfully', 'success');
         fetchTasks();
         fetchCompletedTasks();
+        fetchDeletedTasks();
+      } catch (err) {
+        showNotification(err.message || t('failed_to_delete_task') || 'Failed to delete task', 'error');
+      }
+    }
+  };
+
+  const handlePermanentDeleteTask = async (taskId) => {
+    if (window.confirm(t('confirm_delete_task_permanently') || 'This will permanently remove the task. Continue?')) {
+      try {
+        await taskApi.deleteTaskPermanently(taskId, accessToken);
+        showNotification(t('task_deleted_success') || 'Task deleted successfully', 'success');
+        fetchDeletedTasks();
       } catch (err) {
         showNotification(err.message || t('failed_to_delete_task') || 'Failed to delete task', 'error');
       }
@@ -235,6 +269,7 @@ function TasksPage() {
   const handleTransferSuccess = () => {
     fetchTasks();
     fetchCompletedTasks();
+    fetchDeletedTasks();
     setShowTransferModal(false);
     setTaskToTransfer(null);
   };
@@ -424,7 +459,7 @@ function TasksPage() {
                       }}
                       className="action-button delete-button"
                     >
-                      {t('delete')}
+                      {t('delete_to_deleted') || t('delete')}
                     </button>
                   </div>
                 </div>
@@ -468,7 +503,46 @@ function TasksPage() {
                     }}
                     className="action-button delete-button"
                   >
-                    {t('delete')}
+                    {t('delete_to_deleted') || t('delete')}
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+
+      <div className="deleted-tasks-section">
+        <div className="deleted-tasks-header">
+          <h2>
+            {t('deleted_tasks') || 'Deleted Tasks'} ({filteredDeletedTasks.length})
+          </h2>
+          <p className="deleted-tasks-note">
+            {t('deleted_tasks_retention') || 'Deleted tasks are kept for 90 days before automatic removal.'}
+          </p>
+        </div>
+        <div className="task-list">
+          {filteredDeletedTasks.length === 0 ? (
+            <p>{t('no_deleted_tasks') || 'No deleted tasks.'}</p>
+          ) : (
+            filteredDeletedTasks.map((task) => (
+              <div key={task.id} className="task-item deleted">
+                <h3>{task.title}</h3>
+                <p>{task.description}</p>
+                {task.deleted_at && (
+                  <p>
+                    {t('deleted_on') || 'Deleted on'}: {new Date(task.deleted_at).toLocaleString()}
+                  </p>
+                )}
+                <div className="task-actions">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePermanentDeleteTask(task.id);
+                    }}
+                    className="action-button delete-button permanent-delete-button"
+                  >
+                    {t('delete_task_permanently') || 'Delete Permanently'}
                   </button>
                 </div>
               </div>

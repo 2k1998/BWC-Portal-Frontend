@@ -304,18 +304,32 @@
 
 /* Sections for Active and Completed Tasks */
 .active-tasks-section,
-.completed-tasks-section {
+.completed-tasks-section,
+.deleted-tasks-section {
     margin-top: 30px;
 }
 
 .active-tasks-section h2,
-.completed-tasks-section h2 {
+.completed-tasks-section h2,
+.deleted-tasks-section h2 {
     text-align: center;
     color: var(--color-black);
     margin-bottom: 20px;
     font-size: 1.6em;
     border-bottom: 2px solid var(--color-gray-medium); /* Separator */
     padding-bottom: 10px;
+}
+
+.deleted-tasks-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.deleted-tasks-note {
+    margin: 8px auto 0;
+    color: var(--color-gray-dark);
+    font-size: 0.95em;
+    max-width: 620px;
 }
 
 .task-list {
@@ -373,6 +387,19 @@
     border-color: var(--color-success); /* Green border for completed */
     opacity: 0.8;
     /* text-decoration: line-through; Optional, can be distracting */
+}
+
+.task-item.deleted {
+    background-color: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.task-item.deleted h3 {
+    color: #991b1b;
+}
+
+.task-item.deleted p {
+    color: #7f1d1d;
 }
 
 .task-item.completed h3,
@@ -597,6 +624,14 @@
 .delete-button:hover {
     background-color: #c82333; /* Fallback for darken(var(--color-error), 10%) */
     transform: translateY(-2px);
+}
+
+.permanent-delete-button {
+    background-color: #7f1d1d;
+}
+
+.permanent-delete-button:hover {
+    background-color: #991b1b;
 }
 
 /* --- NEW: Filter Info Bar Styles --- */
