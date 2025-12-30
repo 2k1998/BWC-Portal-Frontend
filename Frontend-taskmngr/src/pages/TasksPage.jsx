@@ -231,6 +231,10 @@ function TasksPage() {
   };
 
   const handlePermanentDeleteTask = async (taskId) => {
+    if (!taskId) {
+      showNotification('Missing task id for permanent delete', 'error');
+      return;
+    }
     if (window.confirm(t('confirm_delete_task_permanently') || 'This will permanently remove the task. Continue?')) {
       try {
         await taskApi.deleteTaskPermanently(taskId, accessToken);
@@ -525,28 +529,31 @@ function TasksPage() {
           {filteredDeletedTasks.length === 0 ? (
             <p>{t('no_deleted_tasks') || 'No deleted tasks.'}</p>
           ) : (
-            filteredDeletedTasks.map((task) => (
-              <div key={task.id} className="task-item deleted">
-                <h3>{task.title}</h3>
-                <p>{task.description}</p>
-                {task.deleted_at && (
+            filteredDeletedTasks.map((deletedTask) => {
+              const permanentId = deletedTask.task_id ?? deletedTask.original_task_id ?? deletedTask.id;
+              return (
+                <div key={deletedTask.id ?? permanentId} className="task-item deleted">
+                  <h3>{deletedTask.title}</h3>
+                  <p>{deletedTask.description}</p>
+                  {deletedTask.deleted_at && (
                   <p>
-                    {t('deleted_on') || 'Deleted on'}: {new Date(task.deleted_at).toLocaleString()}
+                    {t('deleted_on') || 'Deleted on'}: {new Date(deletedTask.deleted_at).toLocaleString()}
                   </p>
-                )}
-                <div className="task-actions">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handlePermanentDeleteTask(task.id);
-                    }}
-                    className="action-button delete-button permanent-delete-button"
-                  >
-                    {t('delete_task_permanently') || 'Delete Permanently'}
-                  </button>
+                  )}
+                  <div className="task-actions">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePermanentDeleteTask(permanentId);
+                      }}
+                      className="action-button delete-button permanent-delete-button"
+                    >
+                      {t('delete_task_permanently') || 'Delete Permanently'}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
