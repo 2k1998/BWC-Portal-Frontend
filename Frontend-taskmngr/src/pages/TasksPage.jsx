@@ -530,7 +530,11 @@ function TasksPage() {
             <p>{t('no_deleted_tasks') || 'No deleted tasks.'}</p>
           ) : (
             filteredDeletedTasks.map((deletedTask) => {
-              const permanentId = deletedTask.task_id ?? deletedTask.original_task_id ?? deletedTask.id;
+              const permanentId =
+                deletedTask.deleted_task_id ??
+                deletedTask.task_id ??
+                deletedTask.original_task_id ??
+                deletedTask.id;
               return (
                 <div key={deletedTask.id ?? permanentId} className="task-item deleted">
                   <h3>{deletedTask.title}</h3>
