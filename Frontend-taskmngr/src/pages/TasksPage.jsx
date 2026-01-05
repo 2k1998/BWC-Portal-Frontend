@@ -246,6 +246,22 @@ function TasksPage() {
     }
   };
 
+  const handlePermanentCompletedTaskDelete = async (taskId) => {
+    if (!taskId) {
+      showNotification(t('missing_task_id') || 'Missing task id for permanent delete', 'error');
+      return;
+    }
+    if (window.confirm(t('confirm_delete_completed_task_permanently') || 'This will permanently remove the completed task. Continue?')) {
+      try {
+        await taskApi.deleteCompletedTaskPermanently(taskId, accessToken);
+        showNotification(t('task_deleted_success') || 'Task deleted successfully', 'success');
+        fetchCompletedTasks();
+      } catch (err) {
+        showNotification(err.message || t('failed_to_delete_task') || 'Failed to delete task', 'error');
+      }
+    }
+  };
+
   const openTaskModal = async (task) => {
     setSelectedTask(task);
     setShowTaskModal(true);
@@ -474,20 +490,32 @@ function TasksPage() {
 
       {/* Completed tasks */}
       <div className="completed-tasks-section">
-        <h2>
-          {t('completed_tasks')} ({filteredCompletedTasks.length})
-        </h2>
+        <div className="completed-tasks-header">
+          <h2>
+            {t('completed_tasks')} ({filteredCompletedTasks.length})
+          </h2>
+          <p className="completed-tasks-note">
+            {t('completed_tasks_retention') || t('completed_tasks_last_30_days') || 'Completed tasks are kept for the last 30 days.'}
+          </p>
+        </div>
         <div className="task-list">
           {filteredCompletedTasks.length === 0 ? (
             <p>{t('no_completed_tasks') || t('no_completed_tasks_yet') || 'No completed tasks yet.'}</p>
           ) : (
-            filteredCompletedTasks.map((task) => (
-              <div key={task.id} className="task-item completed">
+            filteredCompletedTasks.map((task) => {
+              const permanentId = task.completed_task_id ?? task.task_id ?? task.original_task_id ?? task.id;
+              return (
+                <div key={task.id ?? permanentId} className="task-item completed">
                 <h3>{task.title}</h3>
                 <p>{task.description}</p>
                 {task.deadline && (
                   <p>
                     {t('deadline')}: {new Date(task.deadline).toLocaleString()}
+                  </p>
+                )}
+                {task.completed_at && (
+                  <p>
+                    {t('completed_on') || 'Completed on'}: {new Date(task.completed_at).toLocaleString()}
                   </p>
                 )}
                 <div className="task-actions">
@@ -509,9 +537,19 @@ function TasksPage() {
                   >
                     {t('delete_to_deleted') || t('delete')}
                   </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePermanentCompletedTaskDelete(permanentId);
+                    }}
+                    className="action-button delete-button permanent-delete-button"
+                  >
+                    {t('delete_task_permanently') || 'Delete Permanently'}
+                  </button>
                 </div>
               </div>
-            ))
+              );
+            })
           )}
         </div>
       </div>
