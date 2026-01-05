@@ -96,6 +96,9 @@ export const taskApi = {
   deleteTaskPermanently: (taskId, token) =>
     callApi(`/tasks/${taskId}/permanent/`, 'DELETE', null, token),
 
+  deleteCompletedTaskPermanently: (taskId, token) =>
+    callApi(`/tasks/completed-tasks/${taskId}/permanent/`, 'DELETE', null, token),
+
   transferTask: (transferData, token) =>
     callApi('/task-management/transfer', 'POST', transferData, token),
 };

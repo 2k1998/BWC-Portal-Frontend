@@ -325,7 +325,19 @@
     margin-bottom: 16px;
 }
 
+.completed-tasks-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
 .deleted-tasks-note {
+    margin: 8px auto 0;
+    color: var(--color-gray-dark);
+    font-size: 0.95em;
+    max-width: 620px;
+}
+
+.completed-tasks-note {
     margin: 8px auto 0;
     color: var(--color-gray-dark);
     font-size: 0.95em;
