@@ -150,6 +150,7 @@ export const carApi = {
     createCar: (companyId, carData, token) => callApi(`/cars/${companyId}`, 'POST', carData, token),
     getCarsForCompany: (companyId, token) => callApi(`/cars/company/${companyId}`, 'GET', null, token),
     updateCar: (carId, carData, token) => callApi(`/cars/${carId}`, 'PUT', carData, token),
+    updateCarMaintenance: (carId, maintenanceData, token) => callApi(`/cars/${carId}/maintenance`, 'PUT', maintenanceData, token),
     deleteCar: (carId, token) => callApi(`/cars/${carId}`, 'DELETE', null, token),
 };
 

@@ -9,6 +9,7 @@ import { useNotification } from "../context/NotificationContext";
 import DatePicker from 'react-datepicker';
 import RentalReturnModal from '../components/RentalReturnModal';
 import EditCarModal from '../components/EditCarModal';
+import CarMaintenanceModal from '../components/CarMaintenanceModal';
 import { format } from 'date-fns';
 import "./CompanyDetailPage.css";
 
@@ -106,6 +107,8 @@ function CompanyDetailPage() {
     const [selectedRental, setSelectedRental] = useState(null);
     const [isEditCarModalOpen, setIsEditCarModalOpen] = useState(false);
     const [selectedCar, setSelectedCar] = useState(null);
+    const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
+    const [selectedMaintenanceCar, setSelectedMaintenanceCar] = useState(null);
 
     const isAdmin = currentUser?.role === "admin";
 
@@ -232,6 +235,23 @@ function CompanyDetailPage() {
         }
     };
 
+    const openMaintenanceModal = (car) => {
+        setSelectedMaintenanceCar(car);
+        setIsMaintenanceModalOpen(true);
+    };
+
+    const handleUpdateCarMaintenance = async (maintenanceData) => {
+        try {
+            await carApi.updateCarMaintenance(selectedMaintenanceCar.id, maintenanceData, accessToken);
+            showNotification('Car maintenance updated successfully!', 'success');
+            setIsMaintenanceModalOpen(false);
+            setSelectedMaintenanceCar(null);
+            fetchCompanyData();
+        } catch (err) {
+            showNotification(err.message || 'Failed to update maintenance data.', 'error');
+        }
+    };
+
     const handleDeleteCar = async (carId, carName) => {
         if (!window.confirm(`Are you sure you want to delete the car: ${carName}?`)) return;
         try {
@@ -276,11 +296,18 @@ function CompanyDetailPage() {
     }
 
     const gasOptions = ["Empty", "1/4", "1/2", "3/4", "Full"];
+    const formatCarDate = (dateValue) => (dateValue ? format(new Date(dateValue), 'P') : t('not_set'));
 
     return (
         <div className="company-detail-container">
             <EditCarModal isOpen={isEditCarModalOpen} onClose={() => setIsEditCarModalOpen(false)} onConfirm={handleUpdateCar} car={selectedCar} />
             <RentalReturnModal isOpen={isReturnModalOpen} onClose={() => setIsReturnModalOpen(false)} onConfirm={handleFinalizeReturn} rental={selectedRental} />
+            <CarMaintenanceModal
+                isOpen={isMaintenanceModalOpen}
+                onClose={() => setIsMaintenanceModalOpen(false)}
+                onConfirm={handleUpdateCarMaintenance}
+                car={selectedMaintenanceCar}
+            />
             
             <div className="company-header">
                 <button onClick={() => navigate(-1)} className="back-button">← {t('back')}</button>
@@ -325,13 +352,24 @@ function CompanyDetailPage() {
                                                 <span><strong>{car.manufacturer} {car.model}</strong></span>
                                                 <span>{t('license_plate')}: {car.license_plate}</span>
                                                 <span>{t('vin')}: {car.vin}</span>
-                                            </div>
-                                            {isAdmin && (
-                                                <div className="car-item-actions">
-                                                    <button className="edit-button-small" onClick={() => openEditCarModal(car)}>{t('edit')}</button>
-                                                    <button className="delete-button-small" onClick={() => handleDeleteCar(car.id, `${car.manufacturer} ${car.model}`)}>{t('delete')}</button>
+                                                <div className="car-maintenance-info">
+                                                    <span className="car-maintenance-title"><strong>{t('maintenance')}</strong></span>
+                                                    <span>{t('kteo_last_date')}: {formatCarDate(car.kteo_last_date)}</span>
+                                                    <span>{t('kteo_next_date')}: {formatCarDate(car.kteo_next_date)}</span>
+                                                    <span>{t('service_last_date')}: {formatCarDate(car.service_last_date)}</span>
+                                                    <span>{t('service_next_date')}: {formatCarDate(car.service_next_date)}</span>
+                                                    <span>{t('tires_last_change_date')}: {formatCarDate(car.tires_last_change_date)}</span>
                                                 </div>
-                                            )}
+                                            </div>
+                                            <div className="car-item-actions">
+                                                <button className="maintenance-button-small" onClick={() => openMaintenanceModal(car)}>{t('maintenance_file')}</button>
+                                                {isAdmin && (
+                                                    <>
+                                                        <button className="edit-button-small" onClick={() => openEditCarModal(car)}>{t('edit')}</button>
+                                                        <button className="delete-button-small" onClick={() => handleDeleteCar(car.id, `${car.manufacturer} ${car.model}`)}>{t('delete')}</button>
+                                                    </>
+                                                )}
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>
