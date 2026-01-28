@@ -161,7 +161,7 @@ const normalizeCarPayload = (carData = {}) => {
         if (value instanceof Date) {
             payload[field] = value.toISOString().split('T')[0];
         }
-        if (payload[field] === '' || payload[field] === undefined) {
+        if (payload[field] === '' || payload[field] === undefined || payload[field] === null) {
             delete payload[field];
         }
     });
