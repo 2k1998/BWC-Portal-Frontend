@@ -9,17 +9,8 @@ import { useNotification } from "../context/NotificationContext";
 import DatePicker from 'react-datepicker';
 import RentalReturnModal from '../components/RentalReturnModal';
 import EditCarModal from '../components/EditCarModal';
-import CarMaintenanceModal from '../components/CarMaintenanceModal';
 import { format } from 'date-fns';
 import "./CompanyDetailPage.css";
-
-const hasFleetManagement = (company) => {
-    if (company?.features?.includes('fleet')) {
-        return true;
-    }
-    const normalizedName = company?.name?.trim().toLowerCase();
-    return normalizedName === 'best solution cars' || normalizedName === 'best solutions cars';
-};
 
 // --- Custom Searchable Dropdown Component with Logos ---
 const CustomCarDropdown = ({ options, value, onChange, placeholder, disabled, showLogo = false }) => {
@@ -91,9 +82,6 @@ function CompanyDetailPage() {
     const [cars, setCars] = useState([]);
     const [rentals, setRentals] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [companyError, setCompanyError] = useState(null);
-    const [carsError, setCarsError] = useState(null);
-    const [rentalsError, setRentalsError] = useState(null);
 
     // Form states for adding a new car
     const [manufacturer, setManufacturer] = useState('');
@@ -118,16 +106,8 @@ function CompanyDetailPage() {
     const [selectedRental, setSelectedRental] = useState(null);
     const [isEditCarModalOpen, setIsEditCarModalOpen] = useState(false);
     const [selectedCar, setSelectedCar] = useState(null);
-    const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
-    const [selectedMaintenanceCar, setSelectedMaintenanceCar] = useState(null);
 
     const isAdmin = currentUser?.role === "admin";
-
-    const logErrorPayload = (label, error) => {
-        if (error?.response?.data) {
-            console.error(`${label} error response payload:`, error.response.data);
-        }
-    };
 
     const fetchCompanyData = useCallback(async () => {
         if (!accessToken || !companyId) {
@@ -135,7 +115,6 @@ function CompanyDetailPage() {
             return;
         }
         setLoading(true);
-        setCompanyError(null);
         console.log('Fetching company data for ID:', companyId, 'Type:', typeof companyId);
         try {
             console.log('Making API calls...');
@@ -164,41 +143,25 @@ function CompanyDetailPage() {
             setCompany(fetchedCompany);
             setCompanyTasks(fetchedTasks);
 
-            if (hasFleetManagement(fetchedCompany)) {
-                const resolvedCompanyId = fetchedCompany?.id ?? parseInt(companyId);
-                console.log('Using companyId for fleet requests:', resolvedCompanyId);
-                console.log('Fetching cars and rentals for fleet management...');
-                setCarsError(null);
-                setRentalsError(null);
-                try {
-                    const [fetchedCars, fetchedRentals] = await Promise.all([
-                        carApi.getCarsForCompany(resolvedCompanyId, accessToken),
-                        rentalApi.getRentalsForCompany(resolvedCompanyId, accessToken)
-                    ]);
-                    console.log('Fetched cars:', fetchedCars);
-                    console.log('Fetched rentals:', fetchedRentals);
-                    setCars(fetchedCars);
-                    setRentals(fetchedRentals);
-                } catch (fleetError) {
-                    console.error('Error fetching fleet data:', fleetError);
-                    logErrorPayload('Fleet fetch', fleetError);
-                    setCarsError(fleetError);
-                    setRentalsError(fleetError);
-                }
-            } else {
-                setCars([]);
-                setRentals([]);
+            if (fetchedCompany.name === 'Best Solution Cars') {
+                console.log('Fetching cars and rentals for Best Solution Cars...');
+                const [fetchedCars, fetchedRentals] = await Promise.all([
+                    carApi.getCarsForCompany(parseInt(companyId), accessToken),
+                    rentalApi.getRentalsForCompany(parseInt(companyId), accessToken)
+                ]);
+                console.log('Fetched cars:', fetchedCars);
+                console.log('Fetched rentals:', fetchedRentals);
+                setCars(fetchedCars);
+                setRentals(fetchedRentals);
             }
         } catch (err) {
             console.error('Error fetching company data:', err);
-            logErrorPayload('Company fetch', err);
             console.error('Error details:', {
                 message: err.message,
                 status: err.status,
                 companyId: companyId,
                 parsedCompanyId: parseInt(companyId)
             });
-            setCompanyError(err);
             showNotification(err.message || 'Failed to fetch company details.', 'error');
             // Don't set company to null here, let it remain in loading state or show the error
         } finally {
@@ -222,19 +185,11 @@ function CompanyDetailPage() {
 
     const handleAddCar = async (e) => {
         e.preventDefault();
-        const carDataObj = {
-            manufacturer,
-            model,
-            license_plate: licensePlate,
-            vin,
-        };
+        const carDataObj = { manufacturer, model, license_plate: licensePlate, vin };
         try {
             await carApi.createCar(company.id, carDataObj, accessToken);
             showNotification('Car added successfully!', 'success');
-            setManufacturer('');
-            setModel('');
-            setLicensePlate('');
-            setVin('');
+            setManufacturer(''); setModel(''); setLicensePlate(''); setVin('');
             fetchCompanyData();
         } catch (err) {
             showNotification(err.message || 'Failed to add car.', 'error');
@@ -277,23 +232,6 @@ function CompanyDetailPage() {
         }
     };
 
-    const openMaintenanceModal = (car) => {
-        setSelectedMaintenanceCar(car);
-        setIsMaintenanceModalOpen(true);
-    };
-
-    const handleUpdateCarMaintenance = async (maintenanceData) => {
-        try {
-            await carApi.updateCar(selectedMaintenanceCar.id, maintenanceData, accessToken);
-            showNotification('Car maintenance updated successfully!', 'success');
-            setIsMaintenanceModalOpen(false);
-            setSelectedMaintenanceCar(null);
-            fetchCompanyData();
-        } catch (err) {
-            showNotification(err.message || 'Failed to update maintenance data.', 'error');
-        }
-    };
-
     const handleDeleteCar = async (carId, carName) => {
         if (!window.confirm(`Are you sure you want to delete the car: ${carName}?`)) return;
         try {
@@ -329,16 +267,7 @@ function CompanyDetailPage() {
             <div className="error-message">
                 <h2>{t('company_not_found')}</h2>
                 <p>Company ID: {companyId}</p>
-                {companyError ? (
-                    <>
-                        <p>We&apos;re having trouble reaching the server right now. This isn&apos;t a permissions issue—please try again.</p>
-                        <button onClick={fetchCompanyData} className="back-button">
-                            Retry
-                        </button>
-                    </>
-                ) : (
-                    <p>Check the browser console for more details.</p>
-                )}
+                <p>Check the browser console for more details.</p>
                 <button onClick={() => navigate('/companies')} className="back-button">
                     ← Back to Companies
                 </button>
@@ -352,19 +281,13 @@ function CompanyDetailPage() {
         <div className="company-detail-container">
             <EditCarModal isOpen={isEditCarModalOpen} onClose={() => setIsEditCarModalOpen(false)} onConfirm={handleUpdateCar} car={selectedCar} />
             <RentalReturnModal isOpen={isReturnModalOpen} onClose={() => setIsReturnModalOpen(false)} onConfirm={handleFinalizeReturn} rental={selectedRental} />
-            <CarMaintenanceModal
-                isOpen={isMaintenanceModalOpen}
-                onClose={() => setIsMaintenanceModalOpen(false)}
-                onConfirm={handleUpdateCarMaintenance}
-                car={selectedMaintenanceCar}
-            />
             
             <div className="company-header">
                 <button onClick={() => navigate(-1)} className="back-button">← {t('back')}</button>
                 <h1>{company.name}</h1>
             </div>
 
-            {hasFleetManagement(company) && (
+            {company.name === 'Best Solution Cars' && (
                 <>
                     <div className="section-card">
                         <h2>{t('car_management')}</h2>
@@ -394,11 +317,7 @@ function CompanyDetailPage() {
                         </form>
                         <div className="car-list-wrapper">
                             <h3>{t('available_cars')} ({cars.length})</h3>
-                            {carsError ? (
-                                <p className="error-message">Failed to load cars. Please retry.</p>
-                            ) : cars.length === 0 ? (
-                                <p>{t('no_cars_added')}</p>
-                            ) : (
+                            {cars.length === 0 ? <p>{t('no_cars_added')}</p> : (
                                 <ul className="car-list">
                                     {cars.map(car => (
                                         <li key={car.id} className="car-item">
@@ -407,15 +326,12 @@ function CompanyDetailPage() {
                                                 <span>{t('license_plate')}: {car.license_plate}</span>
                                                 <span>{t('vin')}: {car.vin}</span>
                                             </div>
-                                            <div className="car-item-actions">
-                                                <button className="maintenance-button-small" onClick={() => openMaintenanceModal(car)}>{t('maintenance_file')}</button>
-                                                {isAdmin && (
-                                                    <>
-                                                        <button className="edit-button-small" onClick={() => openEditCarModal(car)}>{t('edit')}</button>
-                                                        <button className="delete-button-small" onClick={() => handleDeleteCar(car.id, `${car.manufacturer} ${car.model}`)}>{t('delete')}</button>
-                                                    </>
-                                                )}
-                                            </div>
+                                            {isAdmin && (
+                                                <div className="car-item-actions">
+                                                    <button className="edit-button-small" onClick={() => openEditCarModal(car)}>{t('edit')}</button>
+                                                    <button className="delete-button-small" onClick={() => handleDeleteCar(car.id, `${car.manufacturer} ${car.model}`)}>{t('delete')}</button>
+                                                </div>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>

@@ -146,34 +146,10 @@ export const eventApi = {
 };
 
 // Car API
-const carMaintenanceFields = [
-    'kteo_last_date',
-    'kteo_next_date',
-    'service_last_date',
-    'service_next_date',
-    'tires_last_change_date',
-];
-
-const normalizeCarPayload = (carData = {}) => {
-    const payload = { ...carData };
-    carMaintenanceFields.forEach((field) => {
-        const value = payload[field];
-        if (value instanceof Date) {
-            payload[field] = value.toISOString().split('T')[0];
-        }
-        if (payload[field] === '' || payload[field] === undefined || payload[field] === null) {
-            delete payload[field];
-        }
-    });
-    return payload;
-};
-
 export const carApi = {
-    createCar: (companyId, carData, token) =>
-        callApi(`/cars/${companyId}`, 'POST', normalizeCarPayload(carData), token),
+    createCar: (companyId, carData, token) => callApi(`/cars/${companyId}`, 'POST', carData, token),
     getCarsForCompany: (companyId, token) => callApi(`/cars/company/${companyId}`, 'GET', null, token),
-    updateCar: (carId, carData, token) =>
-        callApi(`/cars/${carId}`, 'PUT', normalizeCarPayload(carData), token),
+    updateCar: (carId, carData, token) => callApi(`/cars/${carId}`, 'PUT', carData, token),
     deleteCar: (carId, token) => callApi(`/cars/${carId}`, 'DELETE', null, token),
 };
 
