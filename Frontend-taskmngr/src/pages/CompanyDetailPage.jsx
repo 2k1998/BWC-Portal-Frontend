@@ -85,6 +85,8 @@ function CompanyDetailPage() {
     const [cars, setCars] = useState([]);
     const [rentals, setRentals] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [carsError, setCarsError] = useState(null);
+    const [rentalsError, setRentalsError] = useState(null);
 
     // Form states for adding a new car
     const [manufacturer, setManufacturer] = useState('');
@@ -118,6 +120,10 @@ function CompanyDetailPage() {
     const [selectedMaintenanceCar, setSelectedMaintenanceCar] = useState(null);
 
     const isAdmin = currentUser?.role === "admin";
+
+    const logErrorPayload = (label, error) => {
+        console.error(`${label} error response payload:`, error?.response?.data ?? error);
+    };
 
     const fetchCompanyData = useCallback(async () => {
         if (!accessToken || !companyId) {
@@ -169,6 +175,7 @@ function CompanyDetailPage() {
             }
         } catch (err) {
             console.error('Error fetching company data:', err);
+            logErrorPayload('Company fetch', err);
             console.error('Error details:', {
                 message: err.message,
                 status: err.status,
@@ -408,7 +415,11 @@ function CompanyDetailPage() {
                         </form>
                         <div className="car-list-wrapper">
                             <h3>{t('available_cars')} ({cars.length})</h3>
-                            {cars.length === 0 ? <p>{t('no_cars_added')}</p> : (
+                            {carsError ? (
+                                <p className="error-message">Failed to load cars. Please retry.</p>
+                            ) : cars.length === 0 ? (
+                                <p>{t('no_cars_added')}</p>
+                            ) : (
                                 <ul className="car-list">
                                     {cars.map(car => (
                                         <li key={car.id} className="car-item">
