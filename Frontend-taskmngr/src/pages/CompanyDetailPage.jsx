@@ -13,7 +13,13 @@ import CarMaintenanceModal from '../components/CarMaintenanceModal';
 import { format } from 'date-fns';
 import "./CompanyDetailPage.css";
 
-const hasFleetManagement = (company) => Boolean(company?.features?.includes('fleet'));
+const hasFleetManagement = (company) => {
+    if (company?.features?.includes('fleet')) {
+        return true;
+    }
+    const normalizedName = company?.name?.trim().toLowerCase();
+    return normalizedName === 'best solution cars' || normalizedName === 'best solutions cars';
+};
 
 // --- Custom Searchable Dropdown Component with Logos ---
 const CustomCarDropdown = ({ options, value, onChange, placeholder, disabled, showLogo = false }) => {
@@ -156,14 +162,23 @@ function CompanyDetailPage() {
 
             if (hasFleetManagement(fetchedCompany)) {
                 console.log('Fetching cars and rentals for fleet management...');
-                const [fetchedCars, fetchedRentals] = await Promise.all([
-                    carApi.getCarsForCompany(parseInt(companyId), accessToken),
-                    rentalApi.getRentalsForCompany(parseInt(companyId), accessToken)
-                ]);
-                console.log('Fetched cars:', fetchedCars);
-                console.log('Fetched rentals:', fetchedRentals);
-                setCars(fetchedCars);
-                setRentals(fetchedRentals);
+                setCarsError(null);
+                setRentalsError(null);
+                try {
+                    const [fetchedCars, fetchedRentals] = await Promise.all([
+                        carApi.getCarsForCompany(parseInt(companyId), accessToken),
+                        rentalApi.getRentalsForCompany(parseInt(companyId), accessToken)
+                    ]);
+                    console.log('Fetched cars:', fetchedCars);
+                    console.log('Fetched rentals:', fetchedRentals);
+                    setCars(fetchedCars);
+                    setRentals(fetchedRentals);
+                } catch (fleetError) {
+                    console.error('Error fetching fleet data:', fleetError);
+                    logErrorPayload('Fleet fetch', fleetError);
+                    setCarsError(fleetError);
+                    setRentalsError(fleetError);
+                }
             } else {
                 setCars([]);
                 setRentals([]);
@@ -316,7 +331,6 @@ function CompanyDetailPage() {
     }
 
     const gasOptions = ["Empty", "1/4", "1/2", "3/4", "Full"];
-    const formatCarDate = (dateValue) => (dateValue ? format(new Date(dateValue), 'P') : t('not_set'));
 
     return (
         <div className="company-detail-container">
@@ -376,14 +390,6 @@ function CompanyDetailPage() {
                                                 <span><strong>{car.manufacturer} {car.model}</strong></span>
                                                 <span>{t('license_plate')}: {car.license_plate}</span>
                                                 <span>{t('vin')}: {car.vin}</span>
-                                                <div className="car-maintenance-info">
-                                                    <span className="car-maintenance-title"><strong>{t('maintenance')}</strong></span>
-                                                    <span>{t('kteo_last_date')}: {formatCarDate(car.kteo_last_date)}</span>
-                                                    <span>{t('kteo_next_date')}: {formatCarDate(car.kteo_next_date)}</span>
-                                                    <span>{t('service_last_date')}: {formatCarDate(car.service_last_date)}</span>
-                                                    <span>{t('service_next_date')}: {formatCarDate(car.service_next_date)}</span>
-                                                    <span>{t('tires_last_change_date')}: {formatCarDate(car.tires_last_change_date)}</span>
-                                                </div>
                                             </div>
                                             <div className="car-item-actions">
                                                 <button className="maintenance-button-small" onClick={() => openMaintenanceModal(car)}>{t('maintenance_file')}</button>
