@@ -120,11 +120,6 @@ function CompanyDetailPage() {
     const [model, setModel] = useState('');
     const [licensePlate, setLicensePlate] = useState('');
     const [vin, setVin] = useState('');
-    const [kteoLastDate, setKteoLastDate] = useState('');
-    const [kteoNextDate, setKteoNextDate] = useState('');
-    const [serviceLastDate, setServiceLastDate] = useState('');
-    const [serviceNextDate, setServiceNextDate] = useState('');
-    const [tiresLastChangeDate, setTiresLastChangeDate] = useState('');
     
     // State for car data dropdowns
     const [modelsForMake, setModelsForMake] = useState([]);
@@ -229,11 +224,6 @@ function CompanyDetailPage() {
             model,
             license_plate: licensePlate,
             vin,
-            kteo_last_date: kteoLastDate || undefined,
-            kteo_next_date: kteoNextDate || undefined,
-            service_last_date: serviceLastDate || undefined,
-            service_next_date: serviceNextDate || undefined,
-            tires_last_change_date: tiresLastChangeDate || undefined,
         };
         try {
             await carApi.createCar(company.id, carDataObj, accessToken);
@@ -242,11 +232,6 @@ function CompanyDetailPage() {
             setModel('');
             setLicensePlate('');
             setVin('');
-            setKteoLastDate('');
-            setKteoNextDate('');
-            setServiceLastDate('');
-            setServiceNextDate('');
-            setTiresLastChangeDate('');
             fetchCompanyData();
         } catch (err) {
             showNotification(err.message || 'Failed to add car.', 'error');
@@ -296,7 +281,7 @@ function CompanyDetailPage() {
 
     const handleUpdateCarMaintenance = async (maintenanceData) => {
         try {
-            await carApi.updateCarMaintenance(selectedMaintenanceCar.id, maintenanceData, accessToken);
+            await carApi.updateCar(selectedMaintenanceCar.id, maintenanceData, accessToken);
             showNotification('Car maintenance updated successfully!', 'success');
             setIsMaintenanceModalOpen(false);
             setSelectedMaintenanceCar(null);
@@ -393,42 +378,6 @@ function CompanyDetailPage() {
                             <div className="form-row">
                                 <input type="text" placeholder={t('license_plate')} value={licensePlate} onChange={e => setLicensePlate(e.target.value)} required />
                                 <input type="text" placeholder={t('vin')} value={vin} onChange={e => setVin(e.target.value)} required />
-                            </div>
-                            <div className="form-row">
-                                <input
-                                    type="date"
-                                    placeholder={t('kteo_last_date')}
-                                    value={kteoLastDate}
-                                    onChange={e => setKteoLastDate(e.target.value)}
-                                />
-                                <input
-                                    type="date"
-                                    placeholder={t('kteo_next_date')}
-                                    value={kteoNextDate}
-                                    onChange={e => setKteoNextDate(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-row">
-                                <input
-                                    type="date"
-                                    placeholder={t('service_last_date')}
-                                    value={serviceLastDate}
-                                    onChange={e => setServiceLastDate(e.target.value)}
-                                />
-                                <input
-                                    type="date"
-                                    placeholder={t('service_next_date')}
-                                    value={serviceNextDate}
-                                    onChange={e => setServiceNextDate(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-row">
-                                <input
-                                    type="date"
-                                    placeholder={t('tires_last_change_date')}
-                                    value={tiresLastChangeDate}
-                                    onChange={e => setTiresLastChangeDate(e.target.value)}
-                                />
                             </div>
                             <button type="submit">{t('add_car')}</button>
                         </form>
