@@ -13,36 +13,7 @@ import CarMaintenanceModal from '../components/CarMaintenanceModal';
 import { format } from 'date-fns';
 import "./CompanyDetailPage.css";
 
-// Normalize company identifiers (case/whitespace/locale safe) for resilient matching.
-const normalizeCompanyIdentifier = (value = '') =>
-    value
-        .toString()
-        .normalize('NFKD')
-        .replace(/[\s_-]+/g, ' ')
-        .trim()
-        .toLocaleLowerCase();
-
-const BEST_SOLUTION_COMPANY_KEYS = new Set([
-    'best solution cars',
-    'best solutions cars',
-]);
-
-const BEST_SOLUTION_COMPANY_SLUGS = new Set([
-    'best-solution-cars',
-    'best-solutions-cars',
-]);
-
-const isBestSolutionCompany = (company) => {
-    if (!company) return false;
-
-    if (company.slug) {
-        const normalizedSlug = normalizeCompanyIdentifier(company.slug).replace(/\s+/g, '-');
-        return BEST_SOLUTION_COMPANY_SLUGS.has(normalizedSlug);
-    }
-
-    const normalizedName = normalizeCompanyIdentifier(company.name);
-    return BEST_SOLUTION_COMPANY_KEYS.has(normalizedName);
-};
+const hasFleetManagement = (company) => Boolean(company?.features?.includes('fleet'));
 
 // --- Custom Searchable Dropdown Component with Logos ---
 const CustomCarDropdown = ({ options, value, onChange, placeholder, disabled, showLogo = false }) => {
@@ -182,8 +153,8 @@ function CompanyDetailPage() {
             setCompany(fetchedCompany);
             setCompanyTasks(fetchedTasks);
 
-            if (isBestSolutionCompany(fetchedCompany)) {
-                console.log('Fetching cars and rentals for Best Solution Cars...');
+            if (hasFleetManagement(fetchedCompany)) {
+                console.log('Fetching cars and rentals for fleet management...');
                 const [fetchedCars, fetchedRentals] = await Promise.all([
                     carApi.getCarsForCompany(parseInt(companyId), accessToken),
                     rentalApi.getRentalsForCompany(parseInt(companyId), accessToken)
@@ -192,6 +163,9 @@ function CompanyDetailPage() {
                 console.log('Fetched rentals:', fetchedRentals);
                 setCars(fetchedCars);
                 setRentals(fetchedRentals);
+            } else {
+                setCars([]);
+                setRentals([]);
             }
         } catch (err) {
             console.error('Error fetching company data:', err);
@@ -368,7 +342,7 @@ function CompanyDetailPage() {
                 <h1>{company.name}</h1>
             </div>
 
-            {isBestSolutionCompany(company) && (
+            {hasFleetManagement(company) && (
                 <>
                     <div className="section-card">
                         <h2>{t('car_management')}</h2>
