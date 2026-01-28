@@ -91,6 +91,7 @@ function CompanyDetailPage() {
     const [cars, setCars] = useState([]);
     const [rentals, setRentals] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [companyError, setCompanyError] = useState(null);
     const [carsError, setCarsError] = useState(null);
     const [rentalsError, setRentalsError] = useState(null);
 
@@ -123,7 +124,9 @@ function CompanyDetailPage() {
     const isAdmin = currentUser?.role === "admin";
 
     const logErrorPayload = (label, error) => {
-        console.error(`${label} error response payload:`, error?.response?.data ?? error);
+        if (error?.response?.data) {
+            console.error(`${label} error response payload:`, error.response.data);
+        }
     };
 
     const fetchCompanyData = useCallback(async () => {
@@ -132,6 +135,7 @@ function CompanyDetailPage() {
             return;
         }
         setLoading(true);
+        setCompanyError(null);
         console.log('Fetching company data for ID:', companyId, 'Type:', typeof companyId);
         try {
             console.log('Making API calls...');
@@ -192,6 +196,7 @@ function CompanyDetailPage() {
                 companyId: companyId,
                 parsedCompanyId: parseInt(companyId)
             });
+            setCompanyError(err);
             showNotification(err.message || 'Failed to fetch company details.', 'error');
             // Don't set company to null here, let it remain in loading state or show the error
         } finally {
@@ -322,7 +327,16 @@ function CompanyDetailPage() {
             <div className="error-message">
                 <h2>{t('company_not_found')}</h2>
                 <p>Company ID: {companyId}</p>
-                <p>Check the browser console for more details.</p>
+                {companyError ? (
+                    <>
+                        <p>We&apos;re having trouble reaching the server right now. This isn&apos;t a permissions issue—please try again.</p>
+                        <button onClick={fetchCompanyData} className="back-button">
+                            Retry
+                        </button>
+                    </>
+                ) : (
+                    <p>Check the browser console for more details.</p>
+                )}
                 <button onClick={() => navigate('/companies')} className="back-button">
                     ← Back to Companies
                 </button>
