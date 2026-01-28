@@ -114,6 +114,8 @@ function CompanyDetailPage() {
     const [cars, setCars] = useState([]);
     const [rentals, setRentals] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [carsError, setCarsError] = useState(null);
+    const [rentalsError, setRentalsError] = useState(null);
 
     // Form states for adding a new car
     const [manufacturer, setManufacturer] = useState('');
@@ -147,6 +149,10 @@ function CompanyDetailPage() {
     const [selectedMaintenanceCar, setSelectedMaintenanceCar] = useState(null);
 
     const isAdmin = currentUser?.role === "admin";
+
+    const logErrorPayload = (label, error) => {
+        console.error(`${label} error response payload:`, error?.response?.data ?? error);
+    };
 
     const fetchCompanyData = useCallback(async () => {
         if (!accessToken || !companyId) {
@@ -184,17 +190,49 @@ function CompanyDetailPage() {
 
             if (isBestSolutionCompany(fetchedCompany)) {
                 console.log('Fetching cars and rentals for Best Solution Cars...');
-                const [fetchedCars, fetchedRentals] = await Promise.all([
-                    carApi.getCarsForCompany(parseInt(companyId), accessToken),
-                    rentalApi.getRentalsForCompany(parseInt(companyId), accessToken)
-                ]);
-                console.log('Fetched cars:', fetchedCars);
-                console.log('Fetched rentals:', fetchedRentals);
-                setCars(fetchedCars);
-                setRentals(fetchedRentals);
+                setCarsError(null);
+                setRentalsError(null);
+                try {
+                    const [carsResult, rentalsResult] = await Promise.all([
+                        carApi
+                            .getCarsForCompany(parseInt(companyId), accessToken)
+                            .then((data) => ({ status: 'fulfilled', data }))
+                            .catch((error) => ({ status: 'rejected', error })),
+                        rentalApi
+                            .getRentalsForCompany(parseInt(companyId), accessToken)
+                            .then((data) => ({ status: 'fulfilled', data }))
+                            .catch((error) => ({ status: 'rejected', error }))
+                    ]);
+
+                    if (carsResult.status === 'fulfilled') {
+                        console.log('Fetched cars:', carsResult.data);
+                        setCars(carsResult.data);
+                    } else {
+                        console.warn('Failed to fetch cars:', carsResult.error?.message);
+                        logErrorPayload('Cars fetch', carsResult.error);
+                        setCars([]);
+                        setCarsError(carsResult.error);
+                    }
+
+                    if (rentalsResult.status === 'fulfilled') {
+                        console.log('Fetched rentals:', rentalsResult.data);
+                        setRentals(rentalsResult.data);
+                    } else {
+                        console.warn('Failed to fetch rentals:', rentalsResult.error?.message);
+                        logErrorPayload('Rentals fetch', rentalsResult.error);
+                        setRentals([]);
+                        setRentalsError(rentalsResult.error);
+                    }
+                } catch (error) {
+                    console.error('Unexpected error fetching cars or rentals:', error);
+                    logErrorPayload('Cars/Rentals fetch', error);
+                    setCarsError(error);
+                    setRentalsError(error);
+                }
             }
         } catch (err) {
             console.error('Error fetching company data:', err);
+            logErrorPayload('Company fetch', err);
             console.error('Error details:', {
                 message: err.message,
                 status: err.status,
@@ -434,7 +472,11 @@ function CompanyDetailPage() {
                         </form>
                         <div className="car-list-wrapper">
                             <h3>{t('available_cars')} ({cars.length})</h3>
-                            {cars.length === 0 ? <p>{t('no_cars_added')}</p> : (
+                            {carsError ? (
+                                <p className="error-message">Failed to load cars. Please retry.</p>
+                            ) : cars.length === 0 ? (
+                                <p>{t('no_cars_added')}</p>
+                            ) : (
                                 <ul className="car-list">
                                     {cars.map(car => (
                                         <li key={car.id} className="car-item">
