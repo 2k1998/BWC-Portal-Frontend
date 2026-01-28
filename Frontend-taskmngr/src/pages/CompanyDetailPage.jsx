@@ -161,13 +161,15 @@ function CompanyDetailPage() {
             setCompanyTasks(fetchedTasks);
 
             if (hasFleetManagement(fetchedCompany)) {
+                const resolvedCompanyId = fetchedCompany?.id ?? parseInt(companyId);
+                console.log('Using companyId for fleet requests:', resolvedCompanyId);
                 console.log('Fetching cars and rentals for fleet management...');
                 setCarsError(null);
                 setRentalsError(null);
                 try {
                     const [fetchedCars, fetchedRentals] = await Promise.all([
-                        carApi.getCarsForCompany(parseInt(companyId), accessToken),
-                        rentalApi.getRentalsForCompany(parseInt(companyId), accessToken)
+                        carApi.getCarsForCompany(resolvedCompanyId, accessToken),
+                        rentalApi.getRentalsForCompany(resolvedCompanyId, accessToken)
                     ]);
                     console.log('Fetched cars:', fetchedCars);
                     console.log('Fetched rentals:', fetchedRentals);
